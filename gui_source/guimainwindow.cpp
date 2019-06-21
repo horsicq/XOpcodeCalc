@@ -34,7 +34,12 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
 
     loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::records32,sizeof(ASM_DEF::records32)/sizeof(ASM_DEF::OPCODE_RECORD));
 
-    calc();
+    ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
+    ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
+    ui->comboBoxMode->addItem(tr("Unsigned"),ModeValidator::MODE_UNSIGNED);
+
+    ui->lineEditOperand1->setValidator(&(modeValidator[0]));
+    ui->lineEditOperand2->setValidator(&(modeValidator[1]));
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -81,23 +86,68 @@ void GuiMainWindow::adjustWindow()
 
 void GuiMainWindow::calc()
 {
+    ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+
+    ModeValidator::DATA validatorData[2]={};
+
+    validatorData[0].mode=mode;
+    validatorData[1].mode=mode;
+
+    modeValidator[0].setData(validatorData[0]);
+    modeValidator[1].setData(validatorData[1]);
+
+
+    QString sOperand[2];
+    QString sResult[2];
+#ifdef OPCODE32
+    quint32 nOperand[2];
+    quint32 nResult[2];
+#else
+    quint64 nOperand[2];
+    quint64 nResult[2];
+#endif
+    sOperand[0]=ui->lineEditOperand1->text();
+    sOperand[1]=ui->lineEditOperand2->text();
+
+    if(mode==ModeValidator::MODE_HEX)
+    {
+#ifdef OPCODE32
+        nOperand[0]=sOperand[0].toULong(0,16);
+        nOperand[1]=sOperand[1].toULong(0,16);
+#else
+        nOperand[0]=sOperand[0].toULongLong(0,16);
+        nOperand[1]=sOperand[1].toULongLong(0,16);
+#endif
+    }
+
 #ifdef OPCODE32
     RECDATA32 data={0};
 
-    data.OPERAND[0]=0x10;
-    data.OPERAND[1]=0x20;
+    data.OPERAND[0]=nOperand[0];
+    data.OPERAND[1]=nOperand[1];
 
     // TODO
     op_add_32(&data);
+
+    nResult[0]=data.RESULT[0];
+    nResult[1]=data.RESULT[1];
 #else
     RECDATA64 data={0};
 
     data.OPERAND[0]=0x10;
     data.OPERAND[1]=0x20;
 
-    // TODO
     op_add_64(&data);
 #endif
+
+    if(mode==ModeValidator::MODE_HEX)
+    {
+        sResult[0]=QString::number(nResult[0],16);
+        sResult[1]=QString::number(nResult[1],16);
+    }
+
+    ui->lineEditResult1->setText(sResult[0]);
+    ui->lineEditResult2->setText(sResult[1]);
 }
 
 void GuiMainWindow::loadOpcodes(ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
@@ -136,5 +186,68 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr)
     else
     {
         pGroupBox->hide();
+    }
+}
+
+void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1)
+{
+    calc();
+}
+
+void GuiMainWindow::on_lineEditOperand2_textChanged(const QString &arg1)
+{
+    calc();
+}
+
+void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1)
+{
+    calc();
+}
+
+void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1)
+{
+    calc();
+}
+
+void GuiMainWindow::on_pushButtonFlagCF_toggled(bool checked)
+{
+    calc();
+}
+
+void GuiMainWindow::on_pushButtonFlagPF_toggled(bool checked)
+{
+    calc();
+}
+
+void GuiMainWindow::on_pushButtonFlagAF_toggled(bool checked)
+{
+    calc();
+}
+
+void GuiMainWindow::on_pushButtonFlagZF_toggled(bool checked)
+{
+    calc();
+}
+
+void GuiMainWindow::on_pushButtonFlagSF_toggled(bool checked)
+{
+    calc();
+}
+
+void GuiMainWindow::on_pushButtonFlagOF_toggled(bool checked)
+{
+    calc();
+}
+
+void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
+{
+    calc();
+}
+
+void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
+{
+    if(index!=-1)
+    {
+
     }
 }

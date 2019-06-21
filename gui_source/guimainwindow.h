@@ -27,6 +27,7 @@
 #include <QGroupBox>
 #include "dialogabout.h"
 #include "dialogoptions.h"
+#include "modevalidator.h"
 
 #include "../asm/asm.h"
 #include "../asm_defs.h"
@@ -38,9 +39,8 @@ class GuiMainWindow;
 class GuiMainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
-    explicit GuiMainWindow(QWidget *parent = 0);
+    explicit GuiMainWindow(QWidget *parent=nullptr);
     ~GuiMainWindow();
 
 private slots:
@@ -53,11 +53,28 @@ private slots:
 
     void on_comboBoxModeOpcode_currentIndexChanged(int index);
     void adjustValue(QGroupBox *pGroupBox,ASM_DEF::VALUE_RECORD vr);
+
+    void on_lineEditOperand1_textChanged(const QString &arg1);
+    void on_lineEditOperand2_textChanged(const QString &arg1);
+    void on_lineEditResult1_textChanged(const QString &arg1);
+    void on_lineEditResult2_textChanged(const QString &arg1);
+    void on_pushButtonFlagCF_toggled(bool checked);
+    void on_pushButtonFlagPF_toggled(bool checked);
+    void on_pushButtonFlagAF_toggled(bool checked);
+    void on_pushButtonFlagZF_toggled(bool checked);
+    void on_pushButtonFlagSF_toggled(bool checked);
+    void on_pushButtonFlagOF_toggled(bool checked);
+    void on_lineEditFlagsBefore_textChanged(const QString &arg1);
+
+    void on_comboBoxMode_currentIndexChanged(int index);
+
 private:
     Ui::GuiMainWindow *ui;
     XOPCODECALC::OPTIONS options;
     QMap<ASM_DEF::OP,ASM_DEF::OPCODE_RECORD> mapOpcodes;
     ASM_DEF::OPCODE_RECORD currentRecord;
+
+    ModeValidator modeValidator[2];
 };
 
 #endif // GUIMAINWINDOW_H

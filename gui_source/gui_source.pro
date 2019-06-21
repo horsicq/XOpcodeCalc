@@ -10,12 +10,14 @@ SOURCES +=\
         guimainwindow.cpp \
     main_gui.cpp \
     dialogabout.cpp \
-    dialogoptions.cpp
+    dialogoptions.cpp \
+    modevalidator.cpp
 
 HEADERS  += guimainwindow.h \
     dialogabout.h \
     dialogoptions.h \
-    ../asm_defs.h
+    ../asm_defs.h \
+    modevalidator.h
 
 FORMS    += guimainwindow.ui \
     dialogabout.ui \
