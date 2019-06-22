@@ -57,10 +57,10 @@ linux-g++{
     BITSIZE = $$system(getconf LONG_BIT)
     !contains(BITSIZE, x64) {
         message("Linux x32 build")
-        ASM_FILES = ../asm/linux32_gcc.s
+        ASM_FILES = ../asm/unix32_gcc.s
     } else {
         message("Linux x64 build")
-        ASM_FILES = ../asm/linux64_gcc.s
+        ASM_FILES = ../asm/unix64_gcc.s
     }
 
     preprocess.output = ${QMAKE_FILE_BASE}.o
@@ -69,7 +69,7 @@ linux-g++{
 
 osx{
     message("OSX x64 build")
-    ASM_FILES = ../asm/osx64_gcc.s
+    ASM_FILES = ../asm/unix64_gcc.s
     preprocess.output = ${QMAKE_FILE_BASE}.o
     preprocess.commands = gcc -arch x86_64 -c ${QMAKE_FILE_IN}
 }

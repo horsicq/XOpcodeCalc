@@ -18,7 +18,7 @@ struct RECDATA64
     unsigned long long RESULT[2];
     unsigned long long FLAG[2];
 };
-extern "C" void op_add_64(RECDATA64 *pRecData);
+extern "C" void op_add_64(RECDATA64 *pRecData) asm("op_add_64");
 extern "C" void op_inc_64(RECDATA64 *pRecData);
 #endif
 #endif // ASM_H
