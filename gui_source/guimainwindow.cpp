@@ -134,10 +134,14 @@ void GuiMainWindow::calc()
 #else
     RECDATA64 data={0};
 
-    data.OPERAND[0]=0x10;
-    data.OPERAND[1]=0x20;
+    data.OPERAND[0]=nOperand[0];
+    data.OPERAND[1]=nOperand[1];
 
+    // TODO
     op_add_64(&data);
+
+    nResult[0]=data.RESULT[0];
+    nResult[1]=data.RESULT[1];
 #endif
 
     if(mode==ModeValidator::MODE_HEX)

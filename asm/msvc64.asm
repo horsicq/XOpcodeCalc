@@ -5,7 +5,6 @@ FLAG        DQ(2)       dup(?)
 RECDATA64   ENDS
 
 __ENTER     MACRO
-            db          0F1h
             push        rbp
             mov         rbp,rsp
             push        rax
