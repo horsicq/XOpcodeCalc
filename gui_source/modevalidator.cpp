@@ -38,15 +38,25 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
     {
         result=Invalid;
 
+        bool bSuccess=false;
+        quint64 nValue=0;
+
         if(data.mode==MODE_HEX)
         {
-            bool bSuccess=false;
-            quint64 nValue=input.toULongLong(&bSuccess,16);
+            nValue=input.toULongLong(&bSuccess,16);
+        }
+        else if(data.mode==MODE_SIGNED)
+        {
+            nValue=(quint64)input.toLongLong(&bSuccess,10);
+        }
+        else if(data.mode==MODE_UNSIGNED)
+        {
+            nValue=input.toULongLong(&bSuccess,10);
+        }
 
-            if(bSuccess)
-            {
-                result=Acceptable;
-            }
+        if(bSuccess&&(nValue<=data.nMaxValue))
+        {
+            result=Acceptable;
         }
     }
 

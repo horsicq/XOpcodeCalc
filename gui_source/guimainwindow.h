@@ -25,6 +25,7 @@
 
 #include <QMainWindow>
 #include <QGroupBox>
+#include <QLineEdit>
 #include "dialogabout.h"
 #include "dialogoptions.h"
 #include "modevalidator.h"
@@ -53,6 +54,7 @@ private slots:
 
     void on_comboBoxModeOpcode_currentIndexChanged(int index);
     void adjustValue(QGroupBox *pGroupBox,ASM_DEF::VALUE_RECORD vr);
+    void adjustMode();
 
     void on_lineEditOperand1_textChanged(const QString &arg1);
     void on_lineEditOperand2_textChanged(const QString &arg1);
@@ -67,14 +69,17 @@ private slots:
     void on_lineEditFlagsBefore_textChanged(const QString &arg1);
 
     void on_comboBoxMode_currentIndexChanged(int index);
+    XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);
+    void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
 
 private:
     Ui::GuiMainWindow *ui;
     XOPCODECALC::OPTIONS options;
     QMap<ASM_DEF::OP,ASM_DEF::OPCODE_RECORD> mapOpcodes;
-    ASM_DEF::OPCODE_RECORD currentRecord;
 
     ModeValidator modeValidator[2];
+    ModeValidator modeValidatorFlag;
+    ModeValidator::MODE currentMode;
 };
 
 #endif // GUIMAINWINDOW_H

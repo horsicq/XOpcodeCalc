@@ -3,22 +3,22 @@
 #ifndef ASM_H
 #define ASM_H
 #ifdef OPCODE32
-struct RECDATA32
-{
-    unsigned int OPERAND[2];
-    unsigned int RESULT[2];
-    unsigned int FLAG[2];
-};
-extern "C" void op_add_32(RECDATA32 *pRecData);
-extern "C" void op_inc_32(RECDATA32 *pRecData);
+typedef unsigned int XVALUE;
 #else
-struct RECDATA64
-{
-    unsigned long long OPERAND[2];
-    unsigned long long RESULT[2];
-    unsigned long long FLAG[2];
-};
-extern "C" void op_add_64(RECDATA64 *pRecData) asm("op_add_64");
-extern "C" void op_inc_64(RECDATA64 *pRecData);
+typedef unsigned long long XVALUE;
 #endif
+struct RECDATA
+{
+    XVALUE OPERAND[2];
+    XVALUE RESULT[2];
+    XVALUE FLAG[2];
+};
+#ifdef Q_OS_OSX
+#define XASM(func) asm(func)
+#else
+#define XASM(func)
+#endif
+
+extern "C" void op_add(RECDATA *pRecData) XASM("op_add");
+extern "C" void op_inc(RECDATA *pRecData) XASM("op_inc");
 #endif // ASM_H

@@ -32,14 +32,20 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     DialogOptions::loadOptions(&options);
     adjustWindow();
 
-    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::records32,sizeof(ASM_DEF::records32)/sizeof(ASM_DEF::OPCODE_RECORD));
+    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::asm_records,sizeof(ASM_DEF::asm_records)/sizeof(ASM_DEF::OPCODE_RECORD));
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
     ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
     ui->comboBoxMode->addItem(tr("Unsigned"),ModeValidator::MODE_UNSIGNED);
 
+    currentMode=ModeValidator::MODE_HEX;
+
+    setLineEditValue(ui->lineEditOperand1,currentMode,0);
+    setLineEditValue(ui->lineEditOperand2,currentMode,0);
+
     ui->lineEditOperand1->setValidator(&(modeValidator[0]));
     ui->lineEditOperand2->setValidator(&(modeValidator[1]));
+    ui->lineEditFlagsBefore->setValidator(&modeValidatorFlag);
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -87,71 +93,31 @@ void GuiMainWindow::adjustWindow()
 void GuiMainWindow::calc()
 {
     ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value((ASM_DEF::OP)(ui->comboBoxModeOpcode->currentData().toInt()));
 
-    ModeValidator::DATA validatorData[2]={};
+    RECDATA data={0};
 
-    validatorData[0].mode=mode;
-    validatorData[1].mode=mode;
+    data.OPERAND[0]=getLineEditValue(ui->lineEditOperand1,mode);
+    data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,mode);
+    data.FLAG[0]=getLineEditValue(ui->lineEditFlagsBefore,mode);
 
-    modeValidator[0].setData(validatorData[0]);
-    modeValidator[1].setData(validatorData[1]);
+    data.FLAG[0]&=((ASM_DEF::AF)|(ASM_DEF::CF)|(ASM_DEF::OF)|(ASM_DEF::PF)|(ASM_DEF::SF)|(ASM_DEF::ZF));
 
+    currentRecord.asm_func(&data);
 
-    QString sOperand[2];
-    QString sResult[2];
-#ifdef OPCODE32
-    quint32 nOperand[2];
-    quint32 nResult[2];
-#else
-    quint64 nOperand[2];
-    quint64 nResult[2];
-#endif
-    sOperand[0]=ui->lineEditOperand1->text();
-    sOperand[1]=ui->lineEditOperand2->text();
+    setLineEditValue(ui->lineEditResult1,mode,data.RESULT[0]);
+    setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
 
-    if(mode==ModeValidator::MODE_HEX)
-    {
-#ifdef OPCODE32
-        nOperand[0]=sOperand[0].toULong(0,16);
-        nOperand[1]=sOperand[1].toULong(0,16);
-#else
-        nOperand[0]=sOperand[0].toULongLong(0,16);
-        nOperand[1]=sOperand[1].toULongLong(0,16);
-#endif
-    }
+    quint32 nFlag=data.FLAG[1];
 
-#ifdef OPCODE32
-    RECDATA32 data={0};
+    setLineEditValue(ui->lineEditFlagsAfter,mode,nFlag);
 
-    data.OPERAND[0]=nOperand[0];
-    data.OPERAND[1]=nOperand[1];
-
-    // TODO
-    op_add_32(&data);
-
-    nResult[0]=data.RESULT[0];
-    nResult[1]=data.RESULT[1];
-#else
-    RECDATA64 data={0};
-
-    data.OPERAND[0]=nOperand[0];
-    data.OPERAND[1]=nOperand[1];
-
-    // TODO
-    op_add_64(&data);
-
-    nResult[0]=data.RESULT[0];
-    nResult[1]=data.RESULT[1];
-#endif
-
-    if(mode==ModeValidator::MODE_HEX)
-    {
-        sResult[0]=QString::number(nResult[0],16);
-        sResult[1]=QString::number(nResult[1],16);
-    }
-
-    ui->lineEditResult1->setText(sResult[0]);
-    ui->lineEditResult2->setText(sResult[1]);
+    ui->labelFlagAF->setEnabled(nFlag&(ASM_DEF::AF));
+    ui->labelFlagCF->setEnabled(nFlag&(ASM_DEF::CF));
+    ui->labelFlagOF->setEnabled(nFlag&(ASM_DEF::OF));
+    ui->labelFlagPF->setEnabled(nFlag&(ASM_DEF::PF));
+    ui->labelFlagSF->setEnabled(nFlag&(ASM_DEF::SF));
+    ui->labelFlagZF->setEnabled(nFlag&(ASM_DEF::ZF));
 }
 
 void GuiMainWindow::loadOpcodes(ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
@@ -168,15 +134,8 @@ void GuiMainWindow::on_comboBoxModeOpcode_currentIndexChanged(int index)
 {
     if(index!=-1)
     {
-        int nData=ui->comboBoxModeOpcode->currentData().toInt();
-        currentRecord=mapOpcodes.value((ASM_DEF::OP)nData);
-
-        ui->labelOpcode->setText(currentRecord.pszExample);
-
-        adjustValue(ui->groupBoxOperand1,currentRecord.vrOperand[0]);
-        adjustValue(ui->groupBoxOperand2,currentRecord.vrOperand[1]);
-        adjustValue(ui->groupBoxResult1,currentRecord.vrResult[0]);
-        adjustValue(ui->groupBoxResult2,currentRecord.vrResult[1]);
+        adjustMode();
+        calc();
     }
 }
 
@@ -191,6 +150,36 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr)
     {
         pGroupBox->hide();
     }
+}
+
+void GuiMainWindow::adjustMode()
+{
+    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value((ASM_DEF::OP)(ui->comboBoxModeOpcode->currentData().toInt()));
+
+    ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+
+    ModeValidator::DATA validatorData[2]={};
+    ModeValidator::DATA validatorDataFlag;
+
+    validatorData[0].mode=mode;
+    validatorData[0].nMaxValue=currentRecord.vrOperand[0].nMaxValue;
+
+    validatorData[1].mode=mode;
+    validatorData[1].nMaxValue=currentRecord.vrOperand[1].nMaxValue;
+
+    validatorDataFlag.mode=mode;
+    validatorDataFlag.nMaxValue=0xFFFFFFFF;
+
+    modeValidator[0].setData(validatorData[0]);
+    modeValidator[1].setData(validatorData[1]);
+    modeValidatorFlag.setData(validatorDataFlag);
+
+    ui->labelOpcode->setText(currentRecord.pszExample);
+
+    adjustValue(ui->groupBoxOperand1,currentRecord.vrOperand[0]);
+    adjustValue(ui->groupBoxOperand2,currentRecord.vrOperand[1]);
+    adjustValue(ui->groupBoxResult1,currentRecord.vrResult[0]);
+    adjustValue(ui->groupBoxResult2,currentRecord.vrResult[1]);
 }
 
 void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1)
@@ -245,6 +234,15 @@ void GuiMainWindow::on_pushButtonFlagOF_toggled(bool checked)
 
 void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
 {
+    quint32 nFlag=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
+
+    ui->pushButtonFlagAF->setChecked(nFlag&(ASM_DEF::AF));
+    ui->pushButtonFlagCF->setChecked(nFlag&(ASM_DEF::CF));
+    ui->pushButtonFlagOF->setChecked(nFlag&(ASM_DEF::OF));
+    ui->pushButtonFlagPF->setChecked(nFlag&(ASM_DEF::PF));
+    ui->pushButtonFlagSF->setChecked(nFlag&(ASM_DEF::SF));
+    ui->pushButtonFlagZF->setChecked(nFlag&(ASM_DEF::ZF));
+
     calc();
 }
 
@@ -252,6 +250,79 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
 {
     if(index!=-1)
     {
+        RECDATA _data={0};
 
+        _data.OPERAND[0]=getLineEditValue(ui->lineEditOperand1,currentMode);
+        _data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,currentMode);
+        _data.FLAG[0]=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
+
+        currentMode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+
+        adjustMode();
+
+        setLineEditValue(ui->lineEditOperand1,currentMode,_data.OPERAND[0]);
+        setLineEditValue(ui->lineEditOperand2,currentMode,_data.OPERAND[1]);
+        setLineEditValue(ui->lineEditFlagsBefore,currentMode,_data.FLAG[0]);
+
+        calc();
     }
+}
+
+XVALUE GuiMainWindow::getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode)
+{
+    XVALUE nValue=0;
+
+    QString sText=pLineEdit->text();
+
+    if(mode==ModeValidator::MODE_HEX)
+    {
+#ifdef OPCODE32
+        nValue=sText.toULong(0,16);
+#else
+        nValue=sText.toULongLong(0,16);
+#endif
+    }
+    else if(mode==ModeValidator::MODE_SIGNED)
+    {
+#ifdef OPCODE32
+        nValue=(XVALUE)sText.toLong(0,10);
+#else
+        nValue=(XVALUE)sText.toLongLong(0,10);
+#endif
+    }
+    else if(mode==ModeValidator::MODE_UNSIGNED)
+    {
+#ifdef OPCODE32
+        nValue=sText.toULong(0,10);
+#else
+        nValue=sText.toULongLong(0,10);
+#endif
+    }
+
+    return nValue;
+}
+
+void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode, XVALUE nValue)
+{
+    QString sText;
+
+    if(mode==ModeValidator::MODE_HEX)
+    {
+        sText=QString::number(nValue,16);
+    }
+    else if(mode==ModeValidator::MODE_SIGNED)
+    {
+
+#ifdef OPCODE32
+        sText=QString::number((qint32)nValue,10);
+#else
+        sText=QString::number((qint64)nValue,10);
+#endif
+    }
+    else if(mode==ModeValidator::MODE_UNSIGNED)
+    {
+        sText=QString::number(nValue,10);
+    }
+
+    pLineEdit->setText(sText);
 }

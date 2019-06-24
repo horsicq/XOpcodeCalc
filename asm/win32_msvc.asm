@@ -45,17 +45,17 @@ __LEAVE     MACRO
             retn        
             ENDM
 
-op_add_32   PROC 
+op_add   	PROC 
             __ENTER
             add         eax,ecx
             __LEAVE 
-op_add_32   ENDP 
+op_add      ENDP 
 
-op_inc_32   PROC 
+op_inc      PROC 
             __ENTER
             inc         eax
             __LEAVE 
-op_inc_32   ENDP 
+op_inc      ENDP 
 
 
 END

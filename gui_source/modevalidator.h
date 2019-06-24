@@ -31,12 +31,13 @@ public:
     enum MODE
     {
         MODE_HEX=0,
-        MODE_SIGNED=0,
-        MODE_UNSIGNED=0,
+        MODE_SIGNED,
+        MODE_UNSIGNED,
     };
     struct DATA
     {
         MODE mode;
+        quint64 nMaxValue;
     };
 
     explicit ModeValidator(QObject *parent=nullptr);

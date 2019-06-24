@@ -17,7 +17,8 @@ HEADERS  += guimainwindow.h \
     dialogabout.h \
     dialogoptions.h \
     ../asm_defs.h \
-    modevalidator.h
+    modevalidator.h \
+    ../asm/asm.h
 
 FORMS    += guimainwindow.ui \
     dialogabout.ui \

@@ -39,6 +39,8 @@
 #endif
 #endif
 
+#include <QtGlobal>
+
 #define X_APPLICATIONNAME "XOpcodeCalc"
 #define X_APPLICATIONVERSION "0.01"
 #define X_ORGANIZATIONNAME "NTInfo"
