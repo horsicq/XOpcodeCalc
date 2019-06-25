@@ -32,7 +32,11 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     DialogOptions::loadOptions(&options);
     adjustWindow();
 
-    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::asm_records,sizeof(ASM_DEF::asm_records)/sizeof(ASM_DEF::OPCODE_RECORD));
+#ifdef OPCODE32
+    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::asm_records32,sizeof(ASM_DEF::asm_records32)/sizeof(ASM_DEF::OPCODE_RECORD));
+#else
+    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::asm_records64,sizeof(ASM_DEF::asm_records64)/sizeof(ASM_DEF::OPCODE_RECORD));
+#endif
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
     ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
@@ -101,7 +105,7 @@ void GuiMainWindow::calc()
     data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,mode);
     data.FLAG[0]=getLineEditValue(ui->lineEditFlagsBefore,mode);
 
-    data.FLAG[0]&=((ASM_DEF::AF)|(ASM_DEF::CF)|(ASM_DEF::OF)|(ASM_DEF::PF)|(ASM_DEF::SF)|(ASM_DEF::ZF));
+    data.FLAG[0]&=((ASM_DEF::AF)|(ASM_DEF::CF)|(ASM_DEF::OF)|(ASM_DEF::PF)|(ASM_DEF::SF)|(ASM_DEF::ZF)); // Filter
 
     currentRecord.asm_func(&data);
 
@@ -109,6 +113,8 @@ void GuiMainWindow::calc()
     setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
 
     quint32 nFlag=data.FLAG[1];
+
+    nFlag&=(~(0x202)); // remove
 
     setLineEditValue(ui->lineEditFlagsAfter,mode,nFlag);
 
@@ -204,31 +210,37 @@ void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1)
 
 void GuiMainWindow::on_pushButtonFlagCF_toggled(bool checked)
 {
+    adjustFlags(ASM_DEF::CF,checked);
     calc();
 }
 
 void GuiMainWindow::on_pushButtonFlagPF_toggled(bool checked)
 {
+    adjustFlags(ASM_DEF::PF,checked);
     calc();
 }
 
 void GuiMainWindow::on_pushButtonFlagAF_toggled(bool checked)
 {
+    adjustFlags(ASM_DEF::AF,checked);
     calc();
 }
 
 void GuiMainWindow::on_pushButtonFlagZF_toggled(bool checked)
 {
+    adjustFlags(ASM_DEF::ZF,checked);
     calc();
 }
 
 void GuiMainWindow::on_pushButtonFlagSF_toggled(bool checked)
 {
+    adjustFlags(ASM_DEF::SF,checked);
     calc();
 }
 
 void GuiMainWindow::on_pushButtonFlagOF_toggled(bool checked)
 {
+    adjustFlags(ASM_DEF::OF,checked);
     calc();
 }
 
@@ -325,4 +337,22 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
     }
 
     pLineEdit->setText(sText);
+}
+
+void GuiMainWindow::adjustFlags(quint32 nFlag, bool bState)
+{
+    ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+
+    XVALUE nValue=getLineEditValue(ui->lineEditFlagsBefore,mode);
+
+    if(bState)
+    {
+        nValue|=nFlag;
+    }
+    else
+    {
+        nValue&=(~nFlag);
+    }
+
+    setLineEditValue(ui->lineEditFlagsBefore,mode,nValue);
 }

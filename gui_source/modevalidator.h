@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QValidator>
+#include "../asm/asm.h"
 
 class ModeValidator : public QValidator
 {

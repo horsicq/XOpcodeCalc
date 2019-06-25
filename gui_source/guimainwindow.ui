@@ -125,7 +125,11 @@
           <number>1</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="lineEditOperand1"/>
+          <widget class="QLineEdit" name="lineEditOperand1">
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -152,7 +156,11 @@
           <number>1</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="lineEditOperand2"/>
+          <widget class="QLineEdit" name="lineEditOperand2">
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -179,7 +187,11 @@
           <number>1</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="lineEditResult1"/>
+          <widget class="QLineEdit" name="lineEditResult1">
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -206,7 +218,11 @@
           <number>1</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="lineEditResult2"/>
+          <widget class="QLineEdit" name="lineEditResult2">
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -410,7 +426,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditFlagsBefore"/>
+        <widget class="QLineEdit" name="lineEditFlagsBefore">
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_2">
@@ -600,7 +620,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditFlagsAfter"/>
+        <widget class="QLineEdit" name="lineEditFlagsAfter">
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_3">

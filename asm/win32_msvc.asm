@@ -44,18 +44,78 @@ __LEAVE     MACRO
             pop         ebp
             retn        
             ENDM
-
-op_add   	PROC 
+;################################
+; ADD
+;################################
+op_add      PROC
             __ENTER
             add         eax,ecx
             __LEAVE 
-op_add      ENDP 
-
+op_add      ENDP
+;################################
+; SUB
+;################################
+op_sub     PROC
+            __ENTER
+            sub         eax,ecx
+            __LEAVE
+op_sub      ENDP
+;################################
+; ADC
+;################################
+op_adc     PROC
+            __ENTER
+            adc         eax,ecx
+            __LEAVE
+op_adc      ENDP
+;################################
+; SBB
+;################################
+op_sbb     PROC
+            __ENTER
+            sbb         eax,ecx
+            __LEAVE
+op_sbb      ENDP
+;################################
+; AND
+;################################
+op_and     PROC
+            __ENTER
+            and         eax,ecx
+            __LEAVE
+op_and      ENDP
+;################################
+; XOR
+;################################
+op_xor     PROC
+            __ENTER
+            xor         eax,ecx
+            __LEAVE
+op_xor      ENDP
+;################################
+; OR
+;################################
+op_or      PROC
+            __ENTER
+            or          eax,ecx
+            __LEAVE
+op_or       ENDP
+;################################
+; INC
+;################################
 op_inc      PROC 
             __ENTER
             inc         eax
             __LEAVE 
 op_inc      ENDP 
+;################################
+; DEC
+;################################
+op_dec     PROC
+            __ENTER
+            dec         eax
+            __LEAVE
+op_dec      ENDP
 
 
 END

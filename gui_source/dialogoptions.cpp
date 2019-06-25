@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,13 +39,13 @@ DialogOptions::~DialogOptions()
 
 void DialogOptions::loadOptions(XOPCODECALC::OPTIONS *pOptions)
 {
-    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"xopcodecalc.ini",QSettings::IniFormat);
+    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"xocalc.ini",QSettings::IniFormat);
     pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
 }
 
 void DialogOptions::saveOptions(XOPCODECALC::OPTIONS *pOptions)
 {
-    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"xopcodecalc.ini",QSettings::IniFormat);
+    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"xocalc.ini",QSettings::IniFormat);
 
     settings.setValue("StayOnTop",pOptions->bStayOnTop);
 }

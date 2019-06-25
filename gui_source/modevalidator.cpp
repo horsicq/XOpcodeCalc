@@ -39,24 +39,54 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         result=Invalid;
 
         bool bSuccess=false;
-        quint64 nValue=0;
+        XVALUE nValue=0;
 
         if(data.mode==MODE_HEX)
         {
+        #ifdef OPCODE32
+            nValue=input.toULong(&bSuccess,16);
+        #else
             nValue=input.toULongLong(&bSuccess,16);
+        #endif
         }
         else if(data.mode==MODE_SIGNED)
         {
-            nValue=(quint64)input.toLongLong(&bSuccess,10);
+        #ifdef OPCODE32
+            nValue=(XVALUE)input.toLong(&bSuccess,16);
+        #else
+            nValue=(XVALUE)input.toLongLong(&bSuccess,10);
+        #endif
         }
         else if(data.mode==MODE_UNSIGNED)
         {
+        #ifdef OPCODE32
+            nValue=input.toULong(&bSuccess,10);
+        #else
             nValue=input.toULongLong(&bSuccess,10);
+        #endif
+        }
+
+        if(data.mode==MODE_SIGNED)
+        {
+            if(input=="-")
+            {
+                result=Intermediate;
+            }
         }
 
         if(bSuccess&&(nValue<=data.nMaxValue))
         {
-            result=Acceptable;
+            if(data.mode==MODE_SIGNED)
+            {
+                if(qAbs(nValue)<=data.nMaxValue)
+                {
+                    result=Acceptable;
+                }
+            }
+            else
+            {
+                result=Acceptable;
+            }
         }
     }
 

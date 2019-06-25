@@ -71,6 +71,7 @@ private slots:
     void on_comboBoxMode_currentIndexChanged(int index);
     XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);
     void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
+    void adjustFlags(quint32 nFlag,bool bState);
 
 private:
     Ui::GuiMainWindow *ui;

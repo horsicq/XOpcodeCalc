@@ -20,5 +20,12 @@ struct RECDATA
 #endif
 
 extern "C" void op_add(RECDATA *pRecData) XASM("op_add");
+extern "C" void op_sub(RECDATA *pRecData) XASM("op_sub");
+extern "C" void op_adc(RECDATA *pRecData) XASM("op_adc");
+extern "C" void op_sbb(RECDATA *pRecData) XASM("op_sbb");
+extern "C" void op_and(RECDATA *pRecData) XASM("op_and");
+extern "C" void op_xor(RECDATA *pRecData) XASM("op_xor");
+extern "C" void op_or(RECDATA *pRecData) XASM("op_or");
 extern "C" void op_inc(RECDATA *pRecData) XASM("op_inc");
+extern "C" void op_dec(RECDATA *pRecData) XASM("op_dec");
 #endif // ASM_H
