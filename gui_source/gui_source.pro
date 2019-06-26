@@ -56,7 +56,7 @@ win32-msvc*{
 
 linux-g++{
     BITSIZE = $$system(getconf LONG_BIT)
-    !contains(BITSIZE, x64) {
+    !contains(BITSIZE, 64) {
         message("Linux x32 build")
         ASM_FILES = ../asm/unix32_gcc.s
     } else {

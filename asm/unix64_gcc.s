@@ -33,15 +33,75 @@
             pop         rbp
             ret        
 .endm
-    
-            .globl	op_add_64
-op_add_64:
+#################################
+# ADD
+#################################
+            .globl	op_add
+op_add:
             __ENTER
             add         rax,rcx
             __LEAVE
-
-            .globl	op_inc_64
-op_inc_64:
+#################################
+# SUB
+#################################
+            .globl	op_sub
+op_sub:
+            __ENTER
+            sub         rax,rcx
+            __LEAVE
+#################################
+# ADC
+#################################
+            .globl	op_adc
+op_adc:
+            __ENTER
+            adc         rax,rcx
+            __LEAVE
+#################################
+# SBB
+#################################
+            .globl	op_sbb
+op_sbb:
+            __ENTER
+            sbb         rax,rcx
+            __LEAVE
+#################################
+# AND
+#################################
+            .globl	op_and
+op_and:
+            __ENTER
+            and         rax,rcx
+            __LEAVE
+#################################
+# XOR
+#################################
+            .globl	op_xor
+op_xor:
+            __ENTER
+            xor         rax,rcx
+            __LEAVE
+#################################
+# OR
+#################################
+            .globl	op_or
+op_or:
+            __ENTER
+            or          rax,rcx
+            __LEAVE
+#################################
+# INC
+#################################
+            .globl	op_inc
+op_inc:
             __ENTER
             inc         rax
             __LEAVE 
+#################################
+# DEC
+#################################
+            .globl	op_dec
+op_dec:
+            __ENTER
+            dec         rax
+            __LEAVE
