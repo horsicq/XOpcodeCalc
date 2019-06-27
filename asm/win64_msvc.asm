@@ -7,16 +7,14 @@ RECDATA64   ENDS
 __ENTER     MACRO
             push        rbp
             mov         rbp,rsp
-            push        rax
-            push        rdx
-            push        rcx
-            push        rsi
+            pusha
             pushf
             
             mov         rsi,RCX ; // Microsoft x64 calling convention
             mov         rax,(RECDATA64 PTR [rsi]).OPERAND[0]
             mov         rcx,(RECDATA64 PTR [rsi]).OPERAND[8]
             mov         rdx,0
+            mov         rbx,0
             push        (RECDATA64 PTR [rsi]).FLAG[0]
             popf
             ENDM
@@ -28,10 +26,7 @@ __LEAVE     MACRO
             pop         (RECDATA64 PTR [rsi]).FLAG[8]
             
             popf
-            pop         rsi
-            pop         rcx
-            pop         rdx
-            pop         rax
+            popa
             mov         rsp,rbp
             pop         rbp
             ret        
@@ -110,6 +105,127 @@ op_dec      PROC
             dec         rax
             __LEAVE
 op_dec      ENDP
+;################################
+; TEST
+;################################
+op_test     PROC
+            __ENTER
+            test        rax,rcx
+            __LEAVE
+op_test     ENDP
+;################################
+; CMP
+;################################
+op_cmp      PROC
+            __ENTER
+            cmp         rax,rcx
+            __LEAVE
+op_cmp      ENDP
+;################################
+; MUL
+;################################
+op_mul      PROC
+            __ENTER
+            mul         rcx
+            __LEAVE
+op_mul      ENDP
+;################################
+; IMUL
+;################################
+op_imul     PROC
+            __ENTER
+            imul        rcx
+            __LEAVE
+op_imul     ENDP
+;################################
+; DIV
+;################################
+op_div      PROC
+            __ENTER
+            div         rcx
+            __LEAVE
+op_div      ENDP
+;################################
+; IDIV
+;################################
+op_idiv     PROC
+            __ENTER
+            idiv        rcx
+            __LEAVE
+op_idiv     ENDP
+;################################
+; NOT
+;################################
+op_not     PROC
+            __ENTER
+            not         rax
+            __LEAVE
+op_not      ENDP
+;################################
+; NEG
+;################################
+op_neg     PROC
+            __ENTER
+            neg         rax
+            __LEAVE
+op_neg      ENDP
+;################################
+; SHR
+;################################
+op_shr     PROC
+            __ENTER
+            shr         rax,cl
+            __LEAVE
+op_shr      ENDP
+;################################
+; SHL
+;################################
+op_shl     PROC
+            __ENTER
+            shl         rax,cl
+            __LEAVE
+op_shl      ENDP
+;################################
+; SAR
+;################################
+op_sar     PROC
+            __ENTER
+            sar         rax,cl
+            __LEAVE
+op_sar      ENDP
+;################################
+; ROL
+;################################
+op_rol     PROC
+            __ENTER
+            rol         rax,cl
+            __LEAVE
+op_rol      ENDP
+;################################
+; ROR
+;################################
+op_ror     PROC
+            __ENTER
+            ror         rax,cl
+            __LEAVE
+op_ror      ENDP
+;################################
+; RCL
+;################################
+op_rcl     PROC
+            __ENTER
+            rcl         rax,cl
+            __LEAVE
+op_rcl      ENDP
+;################################
+; RCR
+;################################
+op_rcr     PROC
+            __ENTER
+            rcr         rax,cl
+            __LEAVE
+op_rcr      ENDP
+
 _TEXT       ENDS
 
 END

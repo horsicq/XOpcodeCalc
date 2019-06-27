@@ -4,16 +4,14 @@
 .macro      __ENTER
             push        rbp
             mov         rbp,rsp
-            push        rax
-            push        rdx
-            push        rcx
-            push        rsi
+            pusha
             pushf
             
             mov         rsi,rdi # System V
             mov         rax,QWORD PTR[rsi+0]
             mov         rcx,QWORD PTR[rsi+8]
             mov         rdx,0
+            mov         rbx,0
             push        QWORD PTR[rsi+32]
             popf
 .endm
@@ -25,10 +23,7 @@
             pop         QWORD PTR[rsi+40]
             
             popf
-            pop         rsi
-            pop         rcx
-            pop         rdx
-            pop         rax
+            popa
             mov         rsp,rbp
             pop         rbp
             ret        
@@ -104,4 +99,124 @@ op_inc:
 op_dec:
             __ENTER
             dec         rax
+            __LEAVE
+#################################
+# TEST
+#################################
+            .globl	op_test
+op_test:
+            __ENTER
+            test        rax,rcx
+            __LEAVE
+#################################
+# CMP
+#################################
+            .globl	op_cmp
+op_cmp:
+            __ENTER
+            cmp         rax,rcx
+            __LEAVE
+#################################
+# MUL
+#################################
+            .globl	op_mul
+op_mul:
+            __ENTER
+            mul         rcx
+            __LEAVE
+#################################
+# IMUL
+#################################
+            .globl	op_imul
+op_imul:
+            __ENTER
+            imul        rcx
+            __LEAVE
+#################################
+# DIV
+#################################
+            .globl	op_div
+op_div:
+            __ENTER
+            div         rcx
+            __LEAVE
+#################################
+# IDIV
+#################################
+            .globl	op_idiv
+op_idiv:
+            __ENTER
+            idiv        rcx
+            __LEAVE
+#################################
+# NOT
+#################################
+            .globl	op_not
+op_not:
+            __ENTER
+            not         rax
+            __LEAVE
+#################################
+# NEG
+#################################
+            .globl	op_neg
+op_neg:
+            __ENTER
+            neg         rax
+            __LEAVE
+#################################
+# SHR
+#################################
+            .globl	op_shr
+op_shr:
+            __ENTER
+            shr         rax,cl
+            __LEAVE
+#################################
+# SHL
+#################################
+            .globl	op_shl
+op_shl:
+            __ENTER
+            shl         rax,cl
+            __LEAVE
+#################################
+# SAR
+#################################
+            .globl	op_sar
+op_sar:
+            __ENTER
+            sar         rax,cl
+            __LEAVE
+#################################
+# ROL
+#################################
+            .globl	op_rol
+op_rol:
+            __ENTER
+            rol         rax,cl
+            __LEAVE
+#################################
+# ROR
+#################################
+            .globl	op_ror
+op_ror:
+            __ENTER
+            ror         rax,cl
+            __LEAVE
+#################################
+# RCL
+#################################
+            .globl	op_rcl
+op_rcl:
+            __ENTER
+            rcl         rax,cl
+            __LEAVE
+#################################
+# RCR
+#################################
+            .globl	op_rcr
+op_rcr:
+            __ENTER
+            rcr         rax,cl
             __LEAVE

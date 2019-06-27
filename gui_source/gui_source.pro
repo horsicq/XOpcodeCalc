@@ -16,9 +16,9 @@ SOURCES +=\
 HEADERS  += guimainwindow.h \
     dialogabout.h \
     dialogoptions.h \
-    ../asm_defs.h \
     modevalidator.h \
-    ../asm/asm.h
+    ../asm/asm.h \
+    ../asm_defs.h
 
 FORMS    += guimainwindow.ui \
     dialogabout.ui \

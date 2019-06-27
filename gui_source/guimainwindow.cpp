@@ -107,10 +107,32 @@ void GuiMainWindow::calc()
 
     data.FLAG[0]&=((ASM_DEF::AF)|(ASM_DEF::CF)|(ASM_DEF::OF)|(ASM_DEF::PF)|(ASM_DEF::SF)|(ASM_DEF::ZF)); // Filter
 
-    currentRecord.asm_func(&data);
 
-    setLineEditValue(ui->lineEditResult1,mode,data.RESULT[0]);
-    setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
+    bool bSuccess=true;
+
+    if(     (currentRecord.opcode==ASM_DEF::OP_DIV)||
+            (currentRecord.opcode==ASM_DEF::OP_IDIV))
+    {
+        if(data.OPERAND[1]==0)
+        {
+            bSuccess=false;
+        }
+    }
+
+    if(bSuccess)
+    {
+        currentRecord.asm_func(&data);
+
+        setLineEditValue(ui->lineEditResult1,mode,data.RESULT[0]);
+        setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
+    }
+    else
+    {
+        ui->lineEditResult1->clear();
+        ui->lineEditResult2->clear();
+
+        data.FLAG[1]=data.FLAG[0];
+    }
 
     quint32 nFlag=data.FLAG[1];
 
