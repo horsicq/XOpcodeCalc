@@ -25,7 +25,13 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
+#ifdef Q_OS_MAC
+#ifndef QT_DEBUG
+    QString sLibraryPath=QString(argv[0]);
+    sLibraryPath=sLibraryPath.remove("MacOS/xocalc")+"PlugIns";
+    QCoreApplication::setLibraryPaths(QStringList(sLibraryPath));
+#endif
+#endif
     QCoreApplication::setOrganizationName(X_ORGANIZATIONNAME);
     QCoreApplication::setOrganizationDomain(X_ORGANIZATIONDOMAIN);
     QCoreApplication::setApplicationName(X_APPLICATIONNAME);

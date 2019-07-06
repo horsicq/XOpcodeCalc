@@ -78,7 +78,7 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         {
             if(data.mode==MODE_SIGNED)
             {
-                if(qAbs(nValue)<=data.nMaxValue)
+                if(qAbs((SXVALUE)nValue)<=data.nMaxValue)
                 {
                     result=Acceptable;
                 }

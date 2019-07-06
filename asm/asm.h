@@ -4,8 +4,10 @@
 #define ASM_H
 #ifdef OPCODE32
 typedef unsigned int XVALUE;
+typedef int SXVALUE;
 #else
 typedef unsigned long long XVALUE;
+typedef long long SXVALUE;
 #endif
 struct RECDATA
 {

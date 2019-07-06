@@ -4,7 +4,12 @@
 .macro      __ENTER
             push        rbp
             mov         rbp,rsp
-            pusha
+            push        rax
+            push        rcx
+            push        rdx
+            push        rbx
+            push        rsi
+            push        rdi
             pushf
             
             mov         rsi,rdi # System V
@@ -23,7 +28,12 @@
             pop         QWORD PTR[rsi+40]
             
             popf
-            popa
+            pop         rdi
+            pop         rsi
+            pop         rbx
+            pop         rdx
+            pop         rcx
+            pop         rax
             mov         rsp,rbp
             pop         rbp
             ret        

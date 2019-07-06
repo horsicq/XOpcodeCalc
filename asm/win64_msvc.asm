@@ -7,7 +7,12 @@ RECDATA64   ENDS
 __ENTER     MACRO
             push        rbp
             mov         rbp,rsp
-            pusha
+            push        rax
+            push        rcx
+            push        rdx
+            push        rbx
+            push        rsi
+            push        rdi
             pushf
             
             mov         rsi,RCX ; // Microsoft x64 calling convention
@@ -26,7 +31,12 @@ __LEAVE     MACRO
             pop         (RECDATA64 PTR [rsi]).FLAG[8]
             
             popf
-            popa
+            pop         rdi
+            pop         rsi
+            pop         rbx
+            pop         rdx
+            pop         rcx
+            pop         rax
             mov         rsp,rbp
             pop         rbp
             ret        
