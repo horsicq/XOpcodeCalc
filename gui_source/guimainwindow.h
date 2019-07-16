@@ -48,14 +48,7 @@ private slots:
     void on_pushButtonExit_clicked();
     void on_pushButtonAbout_clicked();
     void on_pushButton_clicked();
-    void adjustWindow();
-    void calc();
-    void loadOpcodes(ASM_DEF::OPCODE_RECORD *pRecords,qint32 nRecordsSize);
-
     void on_comboBoxModeOpcode_currentIndexChanged(int index);
-    void adjustValue(QGroupBox *pGroupBox,ASM_DEF::VALUE_RECORD vr);
-    void adjustMode();
-
     void on_lineEditOperand1_textChanged(const QString &arg1);
     void on_lineEditOperand2_textChanged(const QString &arg1);
     void on_lineEditResult1_textChanged(const QString &arg1);
@@ -67,8 +60,13 @@ private slots:
     void on_pushButtonFlagSF_toggled(bool checked);
     void on_pushButtonFlagOF_toggled(bool checked);
     void on_lineEditFlagsBefore_textChanged(const QString &arg1);
-
     void on_comboBoxMode_currentIndexChanged(int index);
+
+    void adjustWindow();
+    void calc();
+    void loadOpcodes(ASM_DEF::OPCODE_RECORD *pRecords,qint32 nRecordsSize);
+    void adjustValue(QGroupBox *pGroupBox,ASM_DEF::VALUE_RECORD vr);
+    void adjustMode();
     XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);
     void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
     void adjustFlags(quint32 nFlag,bool bState);
@@ -77,7 +75,6 @@ private:
     Ui::GuiMainWindow *ui;
     XOPCODECALC::OPTIONS options;
     QMap<ASM_DEF::OP,ASM_DEF::OPCODE_RECORD> mapOpcodes;
-
     ModeValidator modeValidator[2];
     ModeValidator modeValidatorFlag;
     ModeValidator::MODE currentMode;
