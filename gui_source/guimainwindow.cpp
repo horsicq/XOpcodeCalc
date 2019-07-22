@@ -107,7 +107,6 @@ void GuiMainWindow::calc()
 
     data.FLAG[0]&=((ASM_DEF::AF)|(ASM_DEF::CF)|(ASM_DEF::OF)|(ASM_DEF::PF)|(ASM_DEF::SF)|(ASM_DEF::ZF)); // Filter
 
-
     bool bSuccess=true;
 
     if(     (currentRecord.opcode==ASM_DEF::OP_DIV)||
