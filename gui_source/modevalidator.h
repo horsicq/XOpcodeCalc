@@ -28,6 +28,7 @@
 class ModeValidator : public QValidator
 {
     Q_OBJECT
+
 public:
     enum MODE
     {

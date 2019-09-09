@@ -40,6 +40,7 @@ class GuiMainWindow;
 class GuiMainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
     explicit GuiMainWindow(QWidget *parent=nullptr);
     ~GuiMainWindow();
