@@ -357,7 +357,7 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
     {
 
 #ifdef OPCODE32
-        sText=QString::number(static_cast<qint32>()nValue),10);
+        sText=QString::number(static_cast<qint32>(nValue),10);
 #else
         sText=QString::number(static_cast<qint64>(nValue),10);
 #endif
