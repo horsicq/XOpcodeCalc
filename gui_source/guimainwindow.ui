@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>474</width>
-    <height>312</height>
+    <width>482</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -694,12 +694,6 @@
      </layout>
     </item>
    </layout>
-   <zorder></zorder>
-   <zorder>groupBox_3</zorder>
-   <zorder>groupBox_6</zorder>
-   <zorder>verticalSpacer</zorder>
-   <zorder></zorder>
-   <zorder>labelOpcode</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

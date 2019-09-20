@@ -7,7 +7,7 @@ TEMPLATE = app
 
 
 SOURCES +=\
-        guimainwindow.cpp \
+    guimainwindow.cpp \
     main_gui.cpp \
     dialogabout.cpp \
     dialogoptions.cpp \
@@ -18,7 +18,8 @@ HEADERS  += guimainwindow.h \
     dialogoptions.h \
     modevalidator.h \
     ../asm/asm.h \
-    ../asm_defs.h
+    ../asm_defs.h \
+    ../global.h \
 
 FORMS    += guimainwindow.ui \
     dialogabout.ui \

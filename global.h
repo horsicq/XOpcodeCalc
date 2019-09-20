@@ -21,9 +21,9 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-// Check windows
-#if _WIN32 || _WIN64
-#if _WIN64
+// Check Windows
+#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN64)
 #define OPCODE64
 #else
 #define OPCODE32
@@ -31,8 +31,8 @@
 #endif
 
 // Check GCC
-#if __GNUC__
-#if __x86_64__ || __ppc64__
+#if defined(__GNUC__)
+#if defined(__x86_64__) || defined(__ppc64__)
 #define OPCODE64
 #else
 #define OPCODE32
@@ -42,7 +42,7 @@
 #include <QtGlobal>
 
 #define X_APPLICATIONNAME "XOpcodeCalc"
-#define X_APPLICATIONVERSION "0.01"
+#define X_APPLICATIONVERSION "0.02"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 

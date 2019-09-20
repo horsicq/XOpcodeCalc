@@ -15,6 +15,7 @@ struct RECDATA
     XVALUE RESULT[2];
     XVALUE FLAG[2];
 };
+#define RECDATA_INIT {{},{},{}}
 #ifdef Q_OS_OSX
 #define XASM(func) asm(func)
 #else

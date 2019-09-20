@@ -33,9 +33,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     adjustWindow();
 
 #ifdef OPCODE32
-    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::asm_records32,sizeof(ASM_DEF::asm_records32)/sizeof(ASM_DEF::OPCODE_RECORD));
+    loadOpcodes(ASM_DEF::asm_records32,sizeof(ASM_DEF::asm_records32)/sizeof(ASM_DEF::OPCODE_RECORD));
 #else
-    loadOpcodes((ASM_DEF::OPCODE_RECORD *)ASM_DEF::asm_records64,sizeof(ASM_DEF::asm_records64)/sizeof(ASM_DEF::OPCODE_RECORD));
+    loadOpcodes(ASM_DEF::asm_records64,sizeof(ASM_DEF::asm_records64)/sizeof(ASM_DEF::OPCODE_RECORD));
 #endif
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
@@ -96,10 +96,10 @@ void GuiMainWindow::adjustWindow()
 
 void GuiMainWindow::calc()
 {
-    ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
-    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value((ASM_DEF::OP)(ui->comboBoxModeOpcode->currentData().toInt()));
+    ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
+    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxModeOpcode->currentData().toInt()));
 
-    RECDATA data={0};
+    RECDATA data=RECDATA_INIT;
 
     data.OPERAND[0]=getLineEditValue(ui->lineEditOperand1,mode);
     data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,mode);
@@ -133,9 +133,9 @@ void GuiMainWindow::calc()
         data.FLAG[1]=data.FLAG[0];
     }
 
-    quint32 nFlag=data.FLAG[1];
+    XVALUE nFlag=data.FLAG[1];
 
-    nFlag&=(~(0x202)); // remove
+    nFlag&=(~(static_cast<XVALUE>(0x202))); // remove
 
     setLineEditValue(ui->lineEditFlagsAfter,mode,nFlag);
 
@@ -147,13 +147,13 @@ void GuiMainWindow::calc()
     ui->labelFlagZF->setEnabled(nFlag&(ASM_DEF::ZF));
 }
 
-void GuiMainWindow::loadOpcodes(ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
+void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
 {
     for(int i=0;i<nRecordsSize;i++)
     {
         mapOpcodes.insert(pRecords[i].opcode,pRecords[i]);
 
-        ui->comboBoxModeOpcode->addItem(pRecords[i].pszName,(int)pRecords[i].opcode);
+        ui->comboBoxModeOpcode->addItem(pRecords[i].pszName,static_cast<int>(pRecords[i].opcode));
     }
 }
 
@@ -181,9 +181,9 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr)
 
 void GuiMainWindow::adjustMode()
 {
-    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value((ASM_DEF::OP)(ui->comboBoxModeOpcode->currentData().toInt()));
+    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxModeOpcode->currentData().toInt()));
 
-    ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+    ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
     ModeValidator::DATA validatorData[2]={};
     ModeValidator::DATA validatorDataFlag;
@@ -211,21 +211,29 @@ void GuiMainWindow::adjustMode()
 
 void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
+
     calc();
 }
 
 void GuiMainWindow::on_lineEditOperand2_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
+
     calc();
 }
 
 void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
+
     calc();
 }
 
 void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
+
     calc();
 }
 
@@ -267,7 +275,9 @@ void GuiMainWindow::on_pushButtonFlagOF_toggled(bool checked)
 
 void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
 {
-    quint32 nFlag=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
+    Q_UNUSED(arg1)
+
+    XVALUE nFlag=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
 
     ui->pushButtonFlagAF->setChecked(nFlag&(ASM_DEF::AF));
     ui->pushButtonFlagCF->setChecked(nFlag&(ASM_DEF::CF));
@@ -283,13 +293,13 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
 {
     if(index!=-1)
     {
-        RECDATA _data={0};
+        RECDATA _data=RECDATA_INIT;
 
         _data.OPERAND[0]=getLineEditValue(ui->lineEditOperand1,currentMode);
         _data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,currentMode);
         _data.FLAG[0]=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
 
-        currentMode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+        currentMode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
         adjustMode();
 
@@ -310,25 +320,25 @@ XVALUE GuiMainWindow::getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE
     if(mode==ModeValidator::MODE_HEX)
     {
 #ifdef OPCODE32
-        nValue=sText.toULong(0,16);
+        nValue=sText.toULong(nullptr,16);
 #else
-        nValue=sText.toULongLong(0,16);
+        nValue=sText.toULongLong(nullptr,16);
 #endif
     }
     else if(mode==ModeValidator::MODE_SIGNED)
     {
 #ifdef OPCODE32
-        nValue=(XVALUE)sText.toLong(0,10);
+        nValue=static_cast<XVALUE>(sText.toLong(nullptr,10));
 #else
-        nValue=(XVALUE)sText.toLongLong(0,10);
+        nValue=static_cast<XVALUE>(sText.toLongLong(nullptr,10));
 #endif
     }
     else if(mode==ModeValidator::MODE_UNSIGNED)
     {
 #ifdef OPCODE32
-        nValue=sText.toULong(0,10);
+        nValue=sText.toULong(nullptr,10);
 #else
-        nValue=sText.toULongLong(0,10);
+        nValue=sText.toULongLong(nullptr,10);
 #endif
     }
 
@@ -347,9 +357,9 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
     {
 
 #ifdef OPCODE32
-        sText=QString::number((qint32)nValue,10);
+        sText=QString::number(static_cast<qint32>()nValue),10);
 #else
-        sText=QString::number((qint64)nValue,10);
+        sText=QString::number(static_cast<qint64>(nValue),10);
 #endif
     }
     else if(mode==ModeValidator::MODE_UNSIGNED)
@@ -362,7 +372,7 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
 
 void GuiMainWindow::adjustFlags(quint32 nFlag, bool bState)
 {
-    ModeValidator::MODE mode=(ModeValidator::MODE)(ui->comboBoxMode->currentData().toInt());
+    ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
     XVALUE nValue=getLineEditValue(ui->lineEditFlagsBefore,mode);
 

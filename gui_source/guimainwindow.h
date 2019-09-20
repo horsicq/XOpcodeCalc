@@ -65,7 +65,7 @@ private slots:
 
     void adjustWindow();
     void calc();
-    void loadOpcodes(ASM_DEF::OPCODE_RECORD *pRecords,qint32 nRecordsSize);
+    void loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords,qint32 nRecordsSize);
     void adjustValue(QGroupBox *pGroupBox,ASM_DEF::VALUE_RECORD vr);
     void adjustMode();
     XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);

@@ -32,6 +32,8 @@ void ModeValidator::setData(ModeValidator::DATA data)
 
 QValidator::State ModeValidator::validate(QString &input, int &pos) const
 {
+    Q_UNUSED(pos)
+
     QValidator::State result=Acceptable;
 
     if(!input.isEmpty())
@@ -78,7 +80,7 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         {
             if(data.mode==MODE_SIGNED)
             {
-                if(qAbs((SXVALUE)nValue)<=data.nMaxValue)
+                if(qAbs((SXVALUE)nValue)<=(SXVALUE)data.nMaxValue)
                 {
                     result=Acceptable;
                 }
