@@ -109,8 +109,8 @@ void GuiMainWindow::calc()
 
     bool bSuccess=true;
 
-    if(     (currentRecord.opcode==ASM_DEF::OP_DIV)||
-            (currentRecord.opcode==ASM_DEF::OP_IDIV))
+    if( (currentRecord.opcode==ASM_DEF::OP_DIV)||
+        (currentRecord.opcode==ASM_DEF::OP_IDIV))
     {
         if(data.OPERAND[1]==0)
         {

@@ -41,30 +41,31 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         result=Invalid;
 
         bool bSuccess=false;
-        XVALUE nValue=0;
+        XVALUE nValueU=0;
+        SXVALUE nValueS=0;
 
         if(data.mode==MODE_HEX)
         {
         #ifdef OPCODE32
-            nValue=input.toULong(&bSuccess,16);
+            nValueU=input.toULong(&bSuccess,16);
         #else
-            nValue=input.toULongLong(&bSuccess,16);
+            nValueS=input.toULongLong(&bSuccess,16);
         #endif
         }
         else if(data.mode==MODE_SIGNED)
         {
         #ifdef OPCODE32
-            nValue=(XVALUE)input.toLong(&bSuccess,16);
+            nValueS=input.toLong(&bSuccess,16);
         #else
-            nValue=(XVALUE)input.toLongLong(&bSuccess,10);
+            nValueS=input.toLongLong(&bSuccess,10);
         #endif
         }
         else if(data.mode==MODE_UNSIGNED)
         {
         #ifdef OPCODE32
-            nValue=input.toULong(&bSuccess,10);
+            nValueU=input.toULong(&bSuccess,10);
         #else
-            nValue=input.toULongLong(&bSuccess,10);
+            nValueU=input.toULongLong(&bSuccess,10);
         #endif
         }
 
@@ -74,18 +75,15 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
             {
                 result=Intermediate;
             }
-        }
 
-        if(bSuccess&&(nValue<=data.nMaxValue))
-        {
-            if(data.mode==MODE_SIGNED)
+            if(bSuccess&&(((XVALUE)nValueS)<=data.nMaxValue))
             {
-                if(qAbs((SXVALUE)nValue)<=(SXVALUE)data.nMaxValue)
-                {
-                    result=Acceptable;
-                }
+                result=Acceptable;
             }
-            else
+        }
+        else
+        {
+            if(bSuccess&&(nValueU<=data.nMaxValue))
             {
                 result=Acceptable;
             }
