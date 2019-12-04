@@ -32,11 +32,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     DialogOptions::loadOptions(&options);
     adjustWindow();
 
-#ifdef OPCODE32
-    loadOpcodes(ASM_DEF::asm_records32,sizeof(ASM_DEF::asm_records32)/sizeof(ASM_DEF::OPCODE_RECORD));
-#else
-    loadOpcodes(ASM_DEF::asm_records64,sizeof(ASM_DEF::asm_records64)/sizeof(ASM_DEF::OPCODE_RECORD));
-#endif
+    ui->comboBoxOpcodeGroup->addItem(tr("Two operands"));
+    ui->comboBoxOpcodeGroup->addItem(tr("One operand"));
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
     ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
@@ -97,7 +94,7 @@ void GuiMainWindow::adjustWindow()
 void GuiMainWindow::calc()
 {
     ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
-    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxModeOpcode->currentData().toInt()));
+    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
     RECDATA data=RECDATA_INIT;
 
@@ -149,15 +146,20 @@ void GuiMainWindow::calc()
 
 void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
 {
+    QSignalBlocker blocker(ui->comboBoxOpcode);
+
+    mapOpcodes.clear();
+    ui->comboBoxOpcode->clear();
+
     for(int i=0;i<nRecordsSize;i++)
     {
         mapOpcodes.insert(pRecords[i].opcode,pRecords[i]);
 
-        ui->comboBoxModeOpcode->addItem(pRecords[i].pszName,static_cast<int>(pRecords[i].opcode));
+        ui->comboBoxOpcode->addItem(pRecords[i].pszName,static_cast<int>(pRecords[i].opcode));
     }
 }
 
-void GuiMainWindow::on_comboBoxModeOpcode_currentIndexChanged(int index)
+void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int index)
 {
     if(index!=-1)
     {
@@ -181,7 +183,7 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr)
 
 void GuiMainWindow::adjustMode()
 {
-    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxModeOpcode->currentData().toInt()));
+    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
     ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
@@ -355,12 +357,7 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
     }
     else if(mode==ModeValidator::MODE_SIGNED)
     {
-
-#ifdef OPCODE32
-        sText=QString::number(static_cast<qint32>(nValue),10);
-#else
-        sText=QString::number(static_cast<qint64>(nValue),10);
-#endif
+        sText=QString::number(static_cast<SXVALUE>(nValue),10);
     }
     else if(mode==ModeValidator::MODE_UNSIGNED)
     {
@@ -386,4 +383,19 @@ void GuiMainWindow::adjustFlags(quint32 nFlag, bool bState)
     }
 
     setLineEditValue(ui->lineEditFlagsBefore,mode,nValue);
+}
+
+void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
+{
+    if(index!=-1)
+    {
+        switch(index)
+        {
+            case OG_TWOOPERANDS:    loadOpcodes(ASM_DEF::asm_twooperands,sizeof(ASM_DEF::asm_twooperands)/sizeof(ASM_DEF::OPCODE_RECORD));    break;
+            case OG_ONEOPERAND:     loadOpcodes(ASM_DEF::asm_oneoperand,sizeof(ASM_DEF::asm_oneoperand)/sizeof(ASM_DEF::OPCODE_RECORD));      break;
+        }
+
+        adjustMode();
+        calc();
+    }
 }

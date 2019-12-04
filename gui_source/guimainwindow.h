@@ -41,6 +41,12 @@ class GuiMainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    enum OG
+    {
+        OG_TWOOPERANDS=0,
+        OG_ONEOPERAND
+    };
+
 public:
     explicit GuiMainWindow(QWidget *parent=nullptr);
     ~GuiMainWindow();
@@ -49,7 +55,7 @@ private slots:
     void on_pushButtonExit_clicked();
     void on_pushButtonAbout_clicked();
     void on_pushButton_clicked();
-    void on_comboBoxModeOpcode_currentIndexChanged(int index);
+    void on_comboBoxOpcode_currentIndexChanged(int index);
     void on_lineEditOperand1_textChanged(const QString &arg1);
     void on_lineEditOperand2_textChanged(const QString &arg1);
     void on_lineEditResult1_textChanged(const QString &arg1);
@@ -62,7 +68,6 @@ private slots:
     void on_pushButtonFlagOF_toggled(bool checked);
     void on_lineEditFlagsBefore_textChanged(const QString &arg1);
     void on_comboBoxMode_currentIndexChanged(int index);
-
     void adjustWindow();
     void calc();
     void loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords,qint32 nRecordsSize);
@@ -71,6 +76,7 @@ private slots:
     XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);
     void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
     void adjustFlags(quint32 nFlag,bool bState);
+    void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
 
 private:
     Ui::GuiMainWindow *ui;
