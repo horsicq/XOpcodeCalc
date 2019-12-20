@@ -17,16 +17,18 @@
             mov         rcx,QWORD PTR[rsi+8]
             mov         rdx,0
             mov         rbx,0
-            push        QWORD PTR[rsi+32]
+            push        QWORD PTR[rsi+48]
             popf
 .endm
             
 .macro      __LEAVE
             mov         QWORD PTR[rsi+16],rax
             mov         QWORD PTR[rsi+24],rdx
+            mov         QWORD PTR[rsi+32],rcx
+            mov         QWORD PTR[rsi+40],rbx
             pushf       
-            pop         QWORD PTR[rsi+40]
-            
+            pop         QWORD PTR[rsi+56]
+
             popf
             pop         rdi
             pop         rsi

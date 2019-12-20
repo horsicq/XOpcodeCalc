@@ -6,7 +6,7 @@
 
 RECDATA32   STRUCT
 OPERAND     DD(2)       dup(?)
-RESULT      DD(2)       dup(?)
+RESULT      DD(4)       dup(?)
 FLAG        DD(2)       dup(?)
 RECDATA32   ENDS
 
@@ -30,6 +30,8 @@ __ENTER     MACRO
 __LEAVE     MACRO
             mov         [esi].RESULT[0],eax
             mov         [esi].RESULT[4],edx
+            mov         [esi].RESULT[8],ecx
+            mov         [esi].RESULT[12],ebx
             pushf       
             pop         [esi].FLAG[4]
             

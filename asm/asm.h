@@ -12,7 +12,7 @@ typedef long long SXVALUE;
 struct RECDATA
 {
     XVALUE OPERAND[2];
-    XVALUE RESULT[2];
+    XVALUE RESULT[4];
     XVALUE FLAG[2];
 };
 #define RECDATA_INIT {{},{},{}}
