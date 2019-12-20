@@ -237,6 +237,14 @@ op_rcr     PROC
             rcr         rax,cl
             __LEAVE
 op_rcr      ENDP
+;################################
+; CPUID
+;################################
+op_cpuid    PROC
+            __ENTER
+            cpuid
+            __LEAVE
+op_cpuid    ENDP
 
 _TEXT       ENDS
 

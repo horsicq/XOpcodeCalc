@@ -44,7 +44,8 @@ class GuiMainWindow : public QMainWindow
     enum OG
     {
         OG_TWOOPERANDS=0,
-        OG_ONEOPERAND
+        OG_ONEOPERAND,
+        OG_SPECIAL
     };
 
 public:
@@ -75,7 +76,7 @@ private slots:
     void adjustMode();
     XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);
     void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
-    void adjustFlags(quint32 nFlag,bool bState);
+    void adjustFlags(XVALUE nFlag, bool bState);
     void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
 
 private:

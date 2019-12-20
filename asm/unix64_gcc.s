@@ -232,3 +232,11 @@ op_rcr:
             __ENTER
             rcr         rax,cl
             __LEAVE
+#################################
+# CPUID
+#################################
+            .globl	op_cpuid
+op_cpuid:
+            __ENTER
+            cpuid
+            __LEAVE

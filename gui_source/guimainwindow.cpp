@@ -32,8 +32,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     DialogOptions::loadOptions(&options);
     adjustWindow();
 
-    ui->comboBoxOpcodeGroup->addItem(tr("Two operands"));
-    ui->comboBoxOpcodeGroup->addItem(tr("One operand"));
+    ui->comboBoxOpcodeGroup->addItem(tr("Two operands"),OG_TWOOPERANDS);
+    ui->comboBoxOpcodeGroup->addItem(tr("One operand"),OG_ONEOPERAND);
+    ui->comboBoxOpcodeGroup->addItem(tr("Special"),OG_SPECIAL);
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
     ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
@@ -121,11 +122,15 @@ void GuiMainWindow::calc()
 
         setLineEditValue(ui->lineEditResult1,mode,data.RESULT[0]);
         setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
+        setLineEditValue(ui->lineEditResult3,mode,data.RESULT[2]);
+        setLineEditValue(ui->lineEditResult4,mode,data.RESULT[3]);
     }
     else
     {
         ui->lineEditResult1->clear();
         ui->lineEditResult2->clear();
+        ui->lineEditResult3->clear();
+        ui->lineEditResult4->clear();
 
         data.FLAG[1]=data.FLAG[0];
     }
@@ -209,6 +214,8 @@ void GuiMainWindow::adjustMode()
     adjustValue(ui->groupBoxOperand2,currentRecord.vrOperand[1]);
     adjustValue(ui->groupBoxResult1,currentRecord.vrResult[0]);
     adjustValue(ui->groupBoxResult2,currentRecord.vrResult[1]);
+    adjustValue(ui->groupBoxResult3,currentRecord.vrResult[2]);
+    adjustValue(ui->groupBoxResult4,currentRecord.vrResult[3]);
 }
 
 void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1)
@@ -367,7 +374,7 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
     pLineEdit->setText(sText);
 }
 
-void GuiMainWindow::adjustFlags(quint32 nFlag, bool bState)
+void GuiMainWindow::adjustFlags(XVALUE nFlag, bool bState)
 {
     ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
@@ -389,10 +396,11 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
 {
     if(index!=-1)
     {
-        switch(index)
+        switch(ui->comboBoxOpcodeGroup->currentData(Qt::UserRole).toUInt())
         {
-            case OG_TWOOPERANDS:    loadOpcodes(ASM_DEF::asm_twooperands,sizeof(ASM_DEF::asm_twooperands)/sizeof(ASM_DEF::OPCODE_RECORD));    break;
-            case OG_ONEOPERAND:     loadOpcodes(ASM_DEF::asm_oneoperand,sizeof(ASM_DEF::asm_oneoperand)/sizeof(ASM_DEF::OPCODE_RECORD));      break;
+            case OG_TWOOPERANDS:    loadOpcodes(ASM_DEF::asm_twooperands,sizeof(ASM_DEF::asm_twooperands)/sizeof(ASM_DEF::OPCODE_RECORD));      break;
+            case OG_ONEOPERAND:     loadOpcodes(ASM_DEF::asm_oneoperand,sizeof(ASM_DEF::asm_oneoperand)/sizeof(ASM_DEF::OPCODE_RECORD));        break;
+            case OG_SPECIAL:        loadOpcodes(ASM_DEF::asm_special,sizeof(ASM_DEF::asm_special)/sizeof(ASM_DEF::OPCODE_RECORD));              break;
         }
 
         adjustMode();

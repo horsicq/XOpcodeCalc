@@ -46,4 +46,5 @@ extern "C" void op_rol(RECDATA *pRecData)       XASM("op_rol");
 extern "C" void op_ror(RECDATA *pRecData)       XASM("op_ror");
 extern "C" void op_rcl(RECDATA *pRecData)       XASM("op_rcl");
 extern "C" void op_rcr(RECDATA *pRecData)       XASM("op_rcr");
+extern "C" void op_cpuid(RECDATA *pRecData)     XASM("op_cpuid");
 #endif // ASM_H
