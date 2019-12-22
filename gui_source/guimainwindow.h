@@ -45,6 +45,7 @@ class GuiMainWindow : public QMainWindow
     {
         OG_TWOOPERANDS=0,
         OG_ONEOPERAND,
+        OG_SHIFT,
         OG_SPECIAL
     };
 

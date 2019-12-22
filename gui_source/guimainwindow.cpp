@@ -34,6 +34,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
 
     ui->comboBoxOpcodeGroup->addItem(tr("Two operands"),OG_TWOOPERANDS);
     ui->comboBoxOpcodeGroup->addItem(tr("One operand"),OG_ONEOPERAND);
+    ui->comboBoxOpcodeGroup->addItem(tr("Shift"),OG_SHIFT);
     ui->comboBoxOpcodeGroup->addItem(tr("Special"),OG_SPECIAL);
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
@@ -400,6 +401,7 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
         {
             case OG_TWOOPERANDS:    loadOpcodes(ASM_DEF::asm_twooperands,sizeof(ASM_DEF::asm_twooperands)/sizeof(ASM_DEF::OPCODE_RECORD));      break;
             case OG_ONEOPERAND:     loadOpcodes(ASM_DEF::asm_oneoperand,sizeof(ASM_DEF::asm_oneoperand)/sizeof(ASM_DEF::OPCODE_RECORD));        break;
+            case OG_SHIFT:          loadOpcodes(ASM_DEF::asm_shift,sizeof(ASM_DEF::asm_shift)/sizeof(ASM_DEF::OPCODE_RECORD));                  break;
             case OG_SPECIAL:        loadOpcodes(ASM_DEF::asm_special,sizeof(ASM_DEF::asm_special)/sizeof(ASM_DEF::OPCODE_RECORD));              break;
         }
 
