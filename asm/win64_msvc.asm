@@ -253,6 +253,14 @@ op_bswap    PROC
             bswap       rax
             __LEAVE
 op_bswap    ENDP
+;################################
+; BSF
+;################################
+op_bsf      PROC
+            __ENTER
+            bsf         rax,rcx
+            __LEAVE
+op_bsf      ENDP
 
 _TEXT       ENDS
 

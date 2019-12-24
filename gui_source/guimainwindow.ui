@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>413</height>
+    <width>317</width>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -126,21 +126,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="labelOpcode">
+       <widget class="QLineEdit" name="lineEditOpcode">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

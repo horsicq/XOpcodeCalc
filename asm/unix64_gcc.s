@@ -248,3 +248,11 @@ op_bswap:
             __ENTER
             bswap       rax
             __LEAVE
+#################################
+# BSF
+#################################
+            .globl	op_bsf
+op_bsf:
+            __ENTER
+            bsf         rax,rcx
+            __LEAVE

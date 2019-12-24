@@ -29,12 +29,19 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
 
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
 
+    QFont font=ui->lineEditOpcode->font();
+    font.setPointSizeF(font.pointSizeF()*2);
+    font.setBold(true);
+    ui->lineEditOpcode->setFont(font);
+
     DialogOptions::loadOptions(&options);
     adjustWindow();
 
     ui->comboBoxOpcodeGroup->addItem(tr("Two operands"),OG_TWOOPERANDS);
     ui->comboBoxOpcodeGroup->addItem(tr("One operand"),OG_ONEOPERAND);
+    ui->comboBoxOpcodeGroup->addItem(tr("Mul/Div"),OG_MULDIV);
     ui->comboBoxOpcodeGroup->addItem(tr("Shift"),OG_SHIFT);
+    ui->comboBoxOpcodeGroup->addItem(tr("Bits"),OG_BITS);
     ui->comboBoxOpcodeGroup->addItem(tr("Special"),OG_SPECIAL);
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
@@ -209,7 +216,7 @@ void GuiMainWindow::adjustMode()
     modeValidator[1].setData(validatorData[1]);
     modeValidatorFlag.setData(validatorDataFlag);
 
-    ui->labelOpcode->setText(currentRecord.pszExample);
+    ui->lineEditOpcode->setText(currentRecord.pszExample);
 
     adjustValue(ui->groupBoxOperand1,currentRecord.vrOperand[0]);
     adjustValue(ui->groupBoxOperand2,currentRecord.vrOperand[1]);
@@ -401,7 +408,9 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
         {
             case OG_TWOOPERANDS:    loadOpcodes(ASM_DEF::asm_twooperands,sizeof(ASM_DEF::asm_twooperands)/sizeof(ASM_DEF::OPCODE_RECORD));      break;
             case OG_ONEOPERAND:     loadOpcodes(ASM_DEF::asm_oneoperand,sizeof(ASM_DEF::asm_oneoperand)/sizeof(ASM_DEF::OPCODE_RECORD));        break;
+            case OG_MULDIV:         loadOpcodes(ASM_DEF::asm_muldiv,sizeof(ASM_DEF::asm_muldiv)/sizeof(ASM_DEF::OPCODE_RECORD));                break;
             case OG_SHIFT:          loadOpcodes(ASM_DEF::asm_shift,sizeof(ASM_DEF::asm_shift)/sizeof(ASM_DEF::OPCODE_RECORD));                  break;
+            case OG_BITS:           loadOpcodes(ASM_DEF::asm_bits,sizeof(ASM_DEF::asm_bits)/sizeof(ASM_DEF::OPCODE_RECORD));                    break;
             case OG_SPECIAL:        loadOpcodes(ASM_DEF::asm_special,sizeof(ASM_DEF::asm_special)/sizeof(ASM_DEF::OPCODE_RECORD));              break;
         }
 

@@ -250,4 +250,12 @@ op_bswap    PROC
             bswap       eax
             __LEAVE
 op_bswap    ENDP
+;################################
+; BSF
+;################################
+op_bsf     PROC
+            __ENTER
+            bsf         eax,ecx
+            __LEAVE
+op_bsf      ENDP
 END
