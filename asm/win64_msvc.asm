@@ -245,6 +245,14 @@ op_cpuid    PROC
             cpuid
             __LEAVE
 op_cpuid    ENDP
+;################################
+; BSWAP
+;################################
+op_bswap    PROC
+            __ENTER
+            bswap       rax
+            __LEAVE
+op_bswap    ENDP
 
 _TEXT       ENDS
 

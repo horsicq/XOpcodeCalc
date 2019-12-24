@@ -240,3 +240,11 @@ op_cpuid:
             __ENTER
             cpuid
             __LEAVE
+#################################
+# BSWAP
+#################################
+            .globl	op_bswap
+op_bswap:
+            __ENTER
+            bswap       rax
+            __LEAVE
