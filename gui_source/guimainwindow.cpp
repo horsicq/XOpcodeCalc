@@ -30,7 +30,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent) :
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
 
     QFont font=ui->lineEditOpcode->font();
-    font.setPointSizeF(font.pointSizeF()*2);
+    font.setPointSizeF(font.pointSizeF()*1.5);
     font.setBold(true);
     ui->lineEditOpcode->setFont(font);
 

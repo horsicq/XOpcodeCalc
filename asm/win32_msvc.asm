@@ -258,4 +258,46 @@ op_bsf     PROC
             bsf         eax,ecx
             __LEAVE
 op_bsf      ENDP
+;################################
+; BSR
+;################################
+op_bsr     PROC
+            __ENTER
+            bsr         eax,ecx
+            __LEAVE
+op_bsr      ENDP
+;################################
+; BT
+;################################
+op_bt      PROC
+            __ENTER
+            bt          eax,ecx
+            __LEAVE
+op_bt       ENDP
+;################################
+; BTS
+;################################
+op_bts     PROC
+            __ENTER
+            bts         eax,ecx
+            __LEAVE
+op_bts      ENDP
+;################################
+; BTR
+;################################
+op_btr     PROC
+            __ENTER
+            btr         eax,ecx
+            __LEAVE
+op_btr      ENDP
+;################################
+; BTC
+;################################
+op_btc     PROC
+            __ENTER
+            btc         eax,ecx
+            __LEAVE
+op_btc      ENDP
+;################################
+;################################
 END

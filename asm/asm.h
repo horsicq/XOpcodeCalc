@@ -48,5 +48,11 @@ extern "C" void op_rcl(RECDATA *pRecData)       XASM("op_rcl");
 extern "C" void op_rcr(RECDATA *pRecData)       XASM("op_rcr");
 extern "C" void op_cpuid(RECDATA *pRecData)     XASM("op_cpuid");
 extern "C" void op_bswap(RECDATA *pRecData)     XASM("op_bswap");
+extern "C" void op_bt(RECDATA *pRecData)        XASM("op_bt");
 extern "C" void op_bsf(RECDATA *pRecData)       XASM("op_bsf");
+extern "C" void op_bsr(RECDATA *pRecData)       XASM("op_bsr");
+extern "C" void op_bts(RECDATA *pRecData)       XASM("op_bts");
+extern "C" void op_btr(RECDATA *pRecData)       XASM("op_btr");
+extern "C" void op_btc(RECDATA *pRecData)       XASM("op_btc");
+
 #endif // ASM_H
