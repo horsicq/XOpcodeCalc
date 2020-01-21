@@ -22,14 +22,12 @@
 #define GUIMAINWINDOW_H
 
 #include "../global.h"
-
 #include <QMainWindow>
 #include <QGroupBox>
 #include <QLineEdit>
 #include "dialogabout.h"
 #include "dialogoptions.h"
 #include "modevalidator.h"
-
 #include "../asm/asm.h"
 #include "../asm_defs.h"
 
