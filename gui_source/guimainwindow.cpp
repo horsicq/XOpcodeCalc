@@ -76,14 +76,6 @@ void GuiMainWindow::on_pushButtonAbout_clicked()
     di.exec();
 }
 
-void GuiMainWindow::on_pushButton_clicked()
-{
-    DialogOptions dialogOptions(this,&options);
-    dialogOptions.exec();
-
-    adjustWindow();
-}
-
 void GuiMainWindow::adjustWindow()
 {
     Qt::WindowFlags wf=windowFlags();
@@ -417,4 +409,12 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
         adjustMode();
         calc();
     }
+}
+
+void GuiMainWindow::on_pushButtonOptions_clicked()
+{
+    DialogOptions dialogOptions(this,&options);
+    dialogOptions.exec();
+
+    adjustWindow();
 }

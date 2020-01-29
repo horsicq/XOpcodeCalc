@@ -56,7 +56,6 @@ public:
 private slots:
     void on_pushButtonExit_clicked();
     void on_pushButtonAbout_clicked();
-    void on_pushButton_clicked();
     void on_comboBoxOpcode_currentIndexChanged(int index);
     void on_lineEditOperand1_textChanged(const QString &arg1);
     void on_lineEditOperand2_textChanged(const QString &arg1);
@@ -79,6 +78,7 @@ private slots:
     void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
     void adjustFlags(XVALUE nFlag, bool bState);
     void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
+    void on_pushButtonOptions_clicked();
 
 private:
     Ui::GuiMainWindow *ui;
