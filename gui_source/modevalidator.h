@@ -34,7 +34,7 @@ public:
     {
         MODE_HEX=0,
         MODE_SIGNED,
-        MODE_UNSIGNED,
+        MODE_UNSIGNED
     };
     struct DATA
     {
