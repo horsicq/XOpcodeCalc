@@ -13,15 +13,17 @@ SOURCES +=\
     dialogoptions.cpp \
     modevalidator.cpp
 
-HEADERS  += guimainwindow.h \
+HEADERS +=\
+    guimainwindow.h \
     dialogabout.h \
     dialogoptions.h \
     modevalidator.h \
     ../asm/asm.h \
     ../asm_defs.h \
-    ../global.h \
+    ../global.h
 
-FORMS    += guimainwindow.ui \
+FORMS += \
+    guimainwindow.ui \
     dialogabout.ui \
     dialogoptions.ui
 
@@ -37,7 +39,6 @@ macx {
 
 RESOURCES += \
     resources.qrc
-
 
 preprocess.name = assembler
 preprocess.input = ASM_FILES
