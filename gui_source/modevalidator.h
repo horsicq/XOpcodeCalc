@@ -42,7 +42,7 @@ public:
         quint64 nMaxValue;
     };
 
-    explicit ModeValidator(QObject *parent=nullptr);
+    explicit ModeValidator(QObject *pParent=nullptr);
     void setData(DATA data);
     virtual State validate(QString &input,int &pos) const;
 

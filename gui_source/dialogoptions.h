@@ -42,7 +42,7 @@ class DialogOptions : public QDialog
     };
 
 public:
-    explicit DialogOptions(QWidget *parent,XOPCODECALC::OPTIONS *pOptions);
+    explicit DialogOptions(QWidget *pParent,XOPCODECALC::OPTIONS *pOptions);
     ~DialogOptions();
 
     static void loadOptions(XOPCODECALC::OPTIONS *pOptions);

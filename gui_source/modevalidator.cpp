@@ -20,7 +20,7 @@
 //
 #include "modevalidator.h"
 
-ModeValidator::ModeValidator(QObject *parent) : QValidator(parent)
+ModeValidator::ModeValidator(QObject *pParent) : QValidator(pParent)
 {
     data={};
 }

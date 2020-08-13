@@ -21,8 +21,8 @@
 #include "dialogoptions.h"
 #include "ui_dialogoptions.h"
 
-DialogOptions::DialogOptions(QWidget *parent, XOPCODECALC::OPTIONS *pOptions) :
-    QDialog(parent),
+DialogOptions::DialogOptions(QWidget *pParent, XOPCODECALC::OPTIONS *pOptions) :
+    QDialog(pParent),
     ui(new Ui::DialogOptions)
 {
     ui->setupUi(this);
