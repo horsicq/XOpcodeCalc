@@ -164,9 +164,9 @@ void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 n
     }
 }
 
-void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int index)
+void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int nIndex)
 {
-    if(index!=-1)
+    if(nIndex!=-1)
     {
         adjustMode();
         calc();

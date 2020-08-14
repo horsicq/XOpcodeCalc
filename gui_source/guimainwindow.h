@@ -56,7 +56,7 @@ public:
 private slots:
     void on_pushButtonExit_clicked();
     void on_pushButtonAbout_clicked();
-    void on_comboBoxOpcode_currentIndexChanged(int index);
+    void on_comboBoxOpcode_currentIndexChanged(int nIndex);
     void on_lineEditOperand1_textChanged(const QString &arg1);
     void on_lineEditOperand2_textChanged(const QString &arg1);
     void on_lineEditResult1_textChanged(const QString &arg1);
