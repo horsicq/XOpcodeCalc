@@ -44,7 +44,7 @@ public:
 
     explicit ModeValidator(QObject *pParent=nullptr);
     void setData(DATA data);
-    virtual State validate(QString &input,int &pos) const;
+    virtual State validate(QString &sInput,int &pos) const;
 
 private:
     DATA data;

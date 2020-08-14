@@ -30,13 +30,13 @@ void ModeValidator::setData(ModeValidator::DATA data)
     this->data=data;
 }
 
-QValidator::State ModeValidator::validate(QString &input, int &pos) const
+QValidator::State ModeValidator::validate(QString &sInput, int &pos) const
 {
     Q_UNUSED(pos)
 
     QValidator::State result=Acceptable;
 
-    if(!input.isEmpty())
+    if(!sInput.isEmpty())
     {
         result=Invalid;
 
@@ -47,7 +47,7 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         if(data.mode==MODE_HEX)
         {
         #ifdef OPCODE32
-            nValueU=input.toULong(&bSuccess,16);
+            nValueU=sInput.toULong(&bSuccess,16);
         #else
             nValueS=input.toULongLong(&bSuccess,16);
         #endif
@@ -55,7 +55,7 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         else if(data.mode==MODE_SIGNED)
         {
         #ifdef OPCODE32
-            nValueS=input.toLong(&bSuccess,16);
+            nValueS=sInput.toLong(&bSuccess,16);
         #else
             nValueS=input.toLongLong(&bSuccess,10);
         #endif
@@ -63,7 +63,7 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
         else if(data.mode==MODE_UNSIGNED)
         {
         #ifdef OPCODE32
-            nValueU=input.toULong(&bSuccess,10);
+            nValueU=sInput.toULong(&bSuccess,10);
         #else
             nValueU=input.toULongLong(&bSuccess,10);
         #endif
@@ -71,7 +71,7 @@ QValidator::State ModeValidator::validate(QString &input, int &pos) const
 
         if(data.mode==MODE_SIGNED)
         {
-            if(input=="-")
+            if(sInput=="-")
             {
                 result=Intermediate;
             }
