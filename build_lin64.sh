@@ -58,8 +58,9 @@ mv      $SOURCE_PATH/release/$BUILD_NAME/base/libicuuc.so.56.1          $SOURCE_
 mv      $SOURCE_PATH/release/$BUILD_NAME/base/libicudata.so.56.1        $SOURCE_PATH/release/$BUILD_NAME/base/libicudata.so.56
 
 echo "#!/bin/sh" >> release/$BUILD_NAME/xocalc.sh
-echo "export LD_LIBRARY_PATH=\"./base:$LD_LIBRARY_PATH\"" >> release/$BUILD_NAME/xocalc.sh
-echo "./base/xocalc $*" >> release/$BUILD_NAME/xocalc.sh
+echo "CWD=\$(dirname \$0)" >> release/$BUILD_NAME/xocalc.sh
+echo "export LD_LIBRARY_PATH=\"\$CWD/base:\$LD_LIBRARY_PATH\"" >> release/$BUILD_NAME/xocalc.sh
+echo "\$CWD/base/xocalc \$*" >> release/$BUILD_NAME/xocalc.sh
 
 chmod +x release/$BUILD_NAME/xocalc.sh
 
