@@ -49,7 +49,7 @@ QValidator::State ModeValidator::validate(QString &sInput, int &pos) const
         #ifdef OPCODE32
             nValueU=sInput.toULong(&bSuccess,16);
         #else
-            nValueS=input.toULongLong(&bSuccess,16);
+            nValueS=sInput.toULongLong(&bSuccess,16);
         #endif
         }
         else if(data.mode==MODE_SIGNED)
@@ -57,7 +57,7 @@ QValidator::State ModeValidator::validate(QString &sInput, int &pos) const
         #ifdef OPCODE32
             nValueS=sInput.toLong(&bSuccess,16);
         #else
-            nValueS=input.toLongLong(&bSuccess,10);
+            nValueS=sInput.toLongLong(&bSuccess,10);
         #endif
         }
         else if(data.mode==MODE_UNSIGNED)
@@ -65,7 +65,7 @@ QValidator::State ModeValidator::validate(QString &sInput, int &pos) const
         #ifdef OPCODE32
             nValueU=sInput.toULong(&bSuccess,10);
         #else
-            nValueU=input.toULongLong(&bSuccess,10);
+            nValueU=sInput.toULongLong(&bSuccess,10);
         #endif
         }
 
