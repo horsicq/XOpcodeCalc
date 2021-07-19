@@ -334,6 +334,14 @@ op_movsx_r16    PROC
             __LEAVE
 op_movsx_r16    ENDP
 ;################################
+; XADD
+;################################
+op_xadd     PROC
+            __ENTER
+            xadd        rax,rcx
+            __LEAVE
+op_xadd     ENDP
+;################################
 ;################################
 _TEXT       ENDS
 

@@ -53,6 +53,7 @@ extern "C" void op_inc(RECDATA *pRecData)       XASM("op_inc");
 extern "C" void op_dec(RECDATA *pRecData)       XASM("op_dec");
 extern "C" void op_test(RECDATA *pRecData)      XASM("op_test");
 extern "C" void op_cmp(RECDATA *pRecData)       XASM("op_cmp");
+extern "C" void op_xadd(RECDATA *pRecData)      XASM("op_xadd");
 extern "C" void op_movzx_r8(RECDATA *pRecData)  XASM("op_movzx_r8");
 extern "C" void op_movzx_r16(RECDATA *pRecData) XASM("op_movzx_r16");
 extern "C" void op_movsx_r8(RECDATA *pRecData)  XASM("op_movsx_r8");

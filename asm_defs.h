@@ -66,6 +66,7 @@ enum OP
     OP_BTR,
     OP_BTC,
     OP_BSR,
+    OP_XADD,
     OP_MOVZX_R8,
     OP_MOVZX_R16,
     OP_MOVSX_R8,
@@ -110,10 +111,11 @@ const OPCODE_RECORD asm_twooperands[]=
 {OP_OR,         &op_or,         "or",           {{"EAX",    LIM32}, {"ECX",     LIM32}},    {{"EAX",    LIM32}, {"",    0},     {"",    0},     {"",    0}},    "OR EAX,ECX"},
 {OP_TEST,       &op_test,       "test",         {{"EAX",    LIM32}, {"ECX",     LIM32}},    {{"",       0},     {"",    0},     {"",    0},     {"",    0}},    "TEST EAX,ECX"},
 {OP_CMP,        &op_cmp,        "cmp",          {{"EAX",    LIM32}, {"ECX",     LIM32}},    {{"",       0},     {"",    0},     {"",    0},     {"",    0}},    "CMP EAX,ECX"},
+{OP_XADD,       &op_xadd,       "xadd",         {{"EAX",    LIM32}, {"ECX",     LIM32}},    {{"EAX",    LIM32}, {"ECX", LIM32}, {"",    0},     {"",    0}},    "XADD EAX,ECX"},
 {OP_MOVZX_R8,   &op_movzx_r8,   "movzx r32,r8", {{"EAX",    LIM32}, {"CL",      LIM8}},     {{"EAX",    LIM32}, {"",    0},     {"",    0},     {"",    0}},    "MOVZX EAX,CL"},
 {OP_MOVZX_R16,  &op_movzx_r16,  "movzx r32,r16",{{"EAX",    LIM32}, {"CX",      LIM16}},    {{"EAX",    LIM32}, {"",    0},     {"",    0},     {"",    0}},    "MOVZX EAX,CX"},
 {OP_MOVSX_R8,   &op_movsx_r8,   "movsx r32,r8", {{"EAX",    LIM32}, {"CL",      LIM8}},     {{"EAX",    LIM32}, {"",    0},     {"",    0},     {"",    0}},    "MOVSX EAX,CL"},
-{OP_MOVSX_R16,  &op_movsx_r16,  "movsx r32,r16",{{"EAX",    LIM32}, {"CX",      LIM16}},    {{"EAX",    LIM32}, {"",    0},     {"",    0},     {"",    0}},    "MOVSX EAX,CX"},
+{OP_MOVSX_R16,  &op_movsx_r16,  "movsx r32,r16",{{"EAX",    LIM32}, {"CX",      LIM16}},    {{"EAX",    LIM32}, {"",     0},     {"",    0},     {"",    0}},    "MOVSX EAX,CX"},
 };
 const OPCODE_RECORD asm_oneoperand[]=
 {
@@ -165,10 +167,11 @@ const OPCODE_RECORD asm_twooperands[]=
 {OP_OR,         &op_or,         "or",           {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "OR RAX,RCX"},
 {OP_TEST,       &op_test,       "test",         {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"",       0},     {"",    0},     {"",    0},     {"",    0}},    "TEST RAX,RCX"},
 {OP_CMP,        &op_cmp,        "cmp",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"",       0},     {"",    0},     {"",    0},     {"",    0}},    "CMP RAX,RCX"},
-{OP_MOVZX_R8,   &op_movzx_r8,   "movzx r64,r8", {{"EAX",    LIM64}, {"CL",      LIM8}},     {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVZX RAX,CL"},
-{OP_MOVZX_R16,  &op_movzx_r16,  "movzx r64,r16",{{"EAX",    LIM64}, {"CX",      LIM16}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVZX RAX,CX"},
-{OP_MOVSX_R8,   &op_movsx_r8,   "movsx r64,r8", {{"EAX",    LIM64}, {"CL",      LIM8}},     {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVSX RAX,CL"},
-{OP_MOVSX_R16,  &op_movsx_r16,  "movsx r64,r16",{{"EAX",    LIM64}, {"CX",      LIM16}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVSX RAX,CX"},
+{OP_XADD,       &op_xadd,       "xadd",         {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"RCX", LIM64}, {"",    0},     {"",    0}},    "XADD RAX,RCX"},
+{OP_MOVZX_R8,   &op_movzx_r8,   "movzx r64,r8", {{"RAX",    LIM64}, {"CL",      LIM8}},     {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVZX RAX,CL"},
+{OP_MOVZX_R16,  &op_movzx_r16,  "movzx r64,r16",{{"RAX",    LIM64}, {"CX",      LIM16}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVZX RAX,CX"},
+{OP_MOVSX_R8,   &op_movsx_r8,   "movsx r64,r8", {{"RAX",    LIM64}, {"CL",      LIM8}},     {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVSX RAX,CL"},
+{OP_MOVSX_R16,  &op_movsx_r16,  "movsx r64,r16",{{"RAX",    LIM64}, {"CX",      LIM16}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "MOVSX RAX,CX"},
 };
 const OPCODE_RECORD asm_oneoperand[]=
 {

@@ -121,9 +121,17 @@ void GuiMainWindow::calc()
         currentRecord.asm_func(&data);
 
         setLineEditValue(ui->lineEditResult1,mode,data.RESULT[0]);
-        setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
-        setLineEditValue(ui->lineEditResult3,mode,data.RESULT[2]);
-        setLineEditValue(ui->lineEditResult4,mode,data.RESULT[3]);
+
+        if(currentRecord.opcode==ASM_DEF::OP_XADD)
+        {
+            setLineEditValue(ui->lineEditResult2,mode,data.RESULT[2]);
+            setLineEditValue(ui->lineEditResult3,mode,data.RESULT[1]);
+        }
+        else
+        {
+            setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
+            setLineEditValue(ui->lineEditResult3,mode,data.RESULT[2]);
+        }
     }
     else
     {
