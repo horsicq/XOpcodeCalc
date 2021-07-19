@@ -297,5 +297,37 @@ op_btc:
             __ENTER
             btc         rax,rcx
             __LEAVE
+#################################
+# MOVZX R64,R8
+#################################
+            .globl	op_movzx_r8
+op_movzx_r8:
+            __ENTER
+            movzx       rax,cl
+            __LEAVE
+#################################
+# MOVZX R64,R16
+#################################
+            .globl	op_movzx_r16
+op_movzx_r16:
+            __ENTER
+            movzx       rax,cx
+            __LEAVE
+#################################
+# MOVSX R64,R8
+#################################
+            .globl	op_movsx_r8
+op_movsx_r8:
+            __ENTER
+            movsx       rax,cl
+            __LEAVE
+#################################
+# MOVSX R64,R16
+#################################
+            .globl	op_movsx_r16
+op_movsx_r16:
+            __ENTER
+            movsx       rax,cx
+            __LEAVE
 ;################################
 ;################################

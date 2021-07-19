@@ -301,6 +301,38 @@ op_btc      PROC
             btc         rax,rcx
             __LEAVE
 op_btc      ENDP
+;#################################
+;# MOVZX R64,R8
+;#################################
+op_movzx_r8 PROC
+            __ENTER
+            movzx       rax,cl
+            __LEAVE
+op_movzx_r8 ENDP
+;#################################
+;# MOVZX R64,R16
+;#################################
+op_movzx_r16    PROC
+            __ENTER
+            movzx       rax,cx
+            __LEAVE
+op_movzx_r16    ENDP
+;#################################
+;# MOVSX R64,R8
+;#################################
+op_movsx_r8 PROC
+            __ENTER
+            movsx       rax,cl
+            __LEAVE
+op_movsx_r8 ENDP
+;#################################
+;# MOVSX R64,R16
+;#################################
+op_movsx_r16    PROC
+            __ENTER
+            movsx       rax,cx
+            __LEAVE
+op_movsx_r16    ENDP
 ;################################
 ;################################
 _TEXT       ENDS

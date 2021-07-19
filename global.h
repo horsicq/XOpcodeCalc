@@ -41,7 +41,8 @@
 
 #include <QtGlobal>
 
-#define X_APPLICATIONNAME "XOpcodeCalc"
+#define X_APPLICATIONDISPLAYNAME "XOpcodeCalc"
+#define X_APPLICATIONNAME "xocalc"
 #define X_APPLICATIONVERSION "0.03"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"

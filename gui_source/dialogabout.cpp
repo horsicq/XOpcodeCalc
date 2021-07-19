@@ -28,7 +28,7 @@ DialogAbout::DialogAbout(QWidget *pParent) :
     ui->setupUi(this);
 
     ui->labelInfo->setText(QString("<html><head/><body><p align=\"center\">"
-                                   "<span style=\" font-weight:600;\">Copyright(C) 2019-2020 hors</span></p>"
+                                   "<span style=\" font-weight:600;\">Copyright(C) 2019-2021 hors</span></p>"
                                    "<p align=\"center\"><span style=\" font-weight:600;\">"
                                    "Version: </span>%1 (%2)</p><p align=\"center\">"
                                    "<span style=\" font-weight:600;\">Website: </span><a href=\"http://ntinfo.biz\">"

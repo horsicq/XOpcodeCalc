@@ -166,7 +166,7 @@
          <item>
           <widget class="QGroupBox" name="groupBoxOperand1">
            <property name="title">
-            <string>Operand1</string>
+            <string notr="true">Operand1</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
             <property name="spacing">
@@ -210,7 +210,7 @@
          <item>
           <widget class="QGroupBox" name="groupBoxOperand2">
            <property name="title">
-            <string>Operand2</string>
+            <string notr="true">Operand2</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <property name="spacing">
@@ -494,7 +494,7 @@
          <item>
           <widget class="QGroupBox" name="groupBoxResult1">
            <property name="title">
-            <string>Result1</string>
+            <string notr="true">Result1</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <property name="spacing">
@@ -538,7 +538,7 @@
          <item>
           <widget class="QGroupBox" name="groupBoxResult2">
            <property name="title">
-            <string>Result2</string>
+            <string notr="true">Result2</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <property name="spacing">
@@ -573,7 +573,7 @@
          <item>
           <widget class="QGroupBox" name="groupBoxResult3">
            <property name="title">
-            <string>Result3</string>
+            <string notr="true">Result3</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_10">
             <property name="spacing">
@@ -617,7 +617,7 @@
          <item>
           <widget class="QGroupBox" name="groupBoxResult4">
            <property name="title">
-            <string>Result4</string>
+            <string notr="true">Result4</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
             <property name="spacing">
