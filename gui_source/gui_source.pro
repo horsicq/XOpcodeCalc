@@ -47,11 +47,11 @@ win32-msvc*{
     preprocess.output = ${QMAKE_FILE_BASE}.obj
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("Win x86 build")
-        ASM_FILES = ../asm/win32_msvc.asm
+        ASM_FILES = ../asm/msvc32.asm
         preprocess.commands = ml /c /coff ${QMAKE_FILE_IN}
     } else {
         message("Win x86_64 build")
-        ASM_FILES = ../asm/win64_msvc.asm
+        ASM_FILES = ../asm/msvc64.asm
         preprocess.commands = ml64 /c /coff ${QMAKE_FILE_IN}
     }
 }
@@ -60,10 +60,10 @@ linux-g++{
     BITSIZE = $$system(getconf LONG_BIT)
     !contains(BITSIZE, 64) {
         message("Linux x32 build")
-        ASM_FILES = ../asm/unix32_gcc.s
+        ASM_FILES = ../asm/gcc32.s
     } else {
         message("Linux x64 build")
-        ASM_FILES = ../asm/unix64_gcc.s
+        ASM_FILES = ../asm/gcc64.s
     }
 
     preprocess.output = ${QMAKE_FILE_BASE}.o
@@ -72,7 +72,7 @@ linux-g++{
 
 osx{
     message("OSX x64 build")
-    ASM_FILES = ../asm/unix64_gcc.s
+    ASM_FILES = ../asm/gcc64.s
     preprocess.output = ${QMAKE_FILE_BASE}.o
     preprocess.commands = gcc -arch x86_64 -c ${QMAKE_FILE_IN}
 }
