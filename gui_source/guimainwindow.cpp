@@ -141,12 +141,36 @@ void GuiMainWindow::calc()
 
     setLineEditValue(ui->lineEditFlagsAfter,mode,nFlag);
 
-    ui->labelFlagAF->setEnabled(nFlag&(ASM_DEF::AF));
-    ui->labelFlagCF->setEnabled(nFlag&(ASM_DEF::CF));
-    ui->labelFlagOF->setEnabled(nFlag&(ASM_DEF::OF));
-    ui->labelFlagPF->setEnabled(nFlag&(ASM_DEF::PF));
-    ui->labelFlagSF->setEnabled(nFlag&(ASM_DEF::SF));
-    ui->labelFlagZF->setEnabled(nFlag&(ASM_DEF::ZF));
+    bool bAF=nFlag&(ASM_DEF::AF);
+    bool bCF=nFlag&(ASM_DEF::CF);
+    bool bOF=nFlag&(ASM_DEF::OF);
+    bool bPF=nFlag&(ASM_DEF::PF);
+    bool bSF=nFlag&(ASM_DEF::SF);
+    bool bZF=nFlag&(ASM_DEF::ZF);
+
+    ui->labelFlagAF->setEnabled(bAF);
+    ui->labelFlagCF->setEnabled(bCF);
+    ui->labelFlagOF->setEnabled(bOF);
+    ui->labelFlagPF->setEnabled(bPF);
+    ui->labelFlagSF->setEnabled(bSF);
+    ui->labelFlagZF->setEnabled(bZF);
+
+    ui->labelJA->setEnabled((bCF==false)&&(bZF==false));
+    ui->labelJBE->setEnabled((bCF==true)||(bZF==true));
+    ui->labelJGE->setEnabled(bSF==bOF);
+    ui->labelJL->setEnabled(bSF!=bOF);
+    ui->labelJLE->setEnabled((bZF==true)||(bSF!=bOF));
+    ui->labelJG->setEnabled((bZF==false)&&(bSF==bOF));
+    ui->labelJB->setEnabled(bCF==true);
+    ui->labelJAE->setEnabled(bCF==false);
+    ui->labelJE->setEnabled(bZF==true);
+    ui->labelJNE->setEnabled(bZF==false);
+    ui->labelJP->setEnabled(bPF==true);
+    ui->labelJNP->setEnabled(bPF==false);
+    ui->labelJS->setEnabled(bSF==true);
+    ui->labelJNS->setEnabled(bSF==false);
+    ui->labelJO->setEnabled(bOF==true);
+    ui->labelJNO->setEnabled(bOF==false);
 }
 
 void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)

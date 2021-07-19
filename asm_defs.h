@@ -197,7 +197,7 @@ const OPCODE_RECORD asm_shift[]=
 };
 const OPCODE_RECORD asm_bits[]=
 {
-{OP_BT,         &op_bt,         "bt",           {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"EAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BT RAX,RCX"},
+{OP_BT,         &op_bt,         "bt",           {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BT RAX,RCX"},
 {OP_BTS,        &op_bts,        "bts",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BTS RAX,RCX"},
 {OP_BTR,        &op_btr,        "btr",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BTR RAX,RCX"},
 {OP_BTC,        &op_btc,        "btc",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BTC RAX,RCX"},

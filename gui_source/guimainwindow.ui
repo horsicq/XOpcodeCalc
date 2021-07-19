@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>317</width>
-    <height>412</height>
+    <width>340</width>
+    <height>502</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -282,7 +282,7 @@
              </size>
             </property>
             <property name="text">
-             <string>CF</string>
+             <string notr="true">CF</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -310,7 +310,7 @@
              </size>
             </property>
             <property name="text">
-             <string>PF</string>
+             <string notr="true">PF</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -338,7 +338,7 @@
              </size>
             </property>
             <property name="text">
-             <string>AF</string>
+             <string notr="true">AF</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -366,7 +366,7 @@
              </size>
             </property>
             <property name="text">
-             <string>ZF</string>
+             <string notr="true">ZF</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -394,7 +394,7 @@
              </size>
             </property>
             <property name="text">
-             <string>SF</string>
+             <string notr="true">SF</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -422,7 +422,7 @@
              </size>
             </property>
             <property name="text">
-             <string>OF</string>
+             <string notr="true">OF</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -474,9 +474,6 @@
        <string>Result</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_11">
-       <property name="spacing">
-        <number>0</number>
-       </property>
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -686,7 +683,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>CF</string>
+             <string notr="true">CF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -711,7 +708,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>PF</string>
+             <string notr="true">PF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -736,7 +733,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>AF</string>
+             <string notr="true">AF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -761,7 +758,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>ZF</string>
+             <string notr="true">ZF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -786,7 +783,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>SF</string>
+             <string notr="true">SF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -811,7 +808,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>OF</string>
+             <string notr="true">OF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -853,6 +850,266 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="5" column="3">
+          <widget class="QLabel" name="labelJNS">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JNS</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="labelJB">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JB/JNAE/JC</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QLabel" name="labelJS">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JS</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="labelJGE">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JGE/JNL</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelJL">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JL/JNGE</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="3">
+          <widget class="QLabel" name="labelJNO">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JNO</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="labelJLE">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JLE/JNG</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="labelJA">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JA/JNBE</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelJBE">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JBE/JNA</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelJG">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JG/JNLE</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelJAE">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JAE/JNB/JNC</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QLabel" name="labelJO">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JO</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="labelJE">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JE/JZ</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QLabel" name="labelJNE">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JNE/JNZ</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="labelJP">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JP/JPE</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="labelJNP">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="text">
+            <string notr="true">JNP/JPO</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
