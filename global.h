@@ -46,13 +46,6 @@
 #define X_APPLICATIONVERSION "0.03"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
-
-namespace XOPCODECALC
-{
-    struct OPTIONS
-    {
-        bool bStayOnTop;
-    };
-}
+#define X_OPTIONSFILE "xocalc.ini"
 
 #endif // GLOBAL_H

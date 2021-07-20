@@ -34,7 +34,16 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
     font.setBold(true);
     ui->lineEditOpcode->setFont(font);
 
-    DialogOptions::loadOptions(&options);
+    g_xOptions.setName(X_OPTIONSFILE);
+
+    QList<XOptions::ID> listIDs;
+
+    listIDs.append(XOptions::ID_STYLE);
+    listIDs.append(XOptions::ID_STAYONTOP);
+
+    g_xOptions.setValueIDs(listIDs);
+    g_xOptions.load();
+
     adjustWindow();
 
     ui->comboBoxOpcodeGroup->addItem(tr("Two operands"),OG_TWOOPERANDS);
@@ -48,19 +57,20 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
     ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
     ui->comboBoxMode->addItem(tr("Unsigned"),ModeValidator::MODE_UNSIGNED);
 
-    currentMode=ModeValidator::MODE_HEX;
+    g_currentMode=ModeValidator::MODE_HEX;
 
-    setLineEditValue(ui->lineEditOperand1,currentMode,0);
-    setLineEditValue(ui->lineEditOperand2,currentMode,0);
+    setLineEditValue(ui->lineEditOperand1,g_currentMode,0);
+    setLineEditValue(ui->lineEditOperand2,g_currentMode,0);
 
-    ui->lineEditOperand1->setValidator(&(modeValidator[0]));
-    ui->lineEditOperand2->setValidator(&(modeValidator[1]));
-    ui->lineEditFlagsBefore->setValidator(&modeValidatorFlag);
+    ui->lineEditOperand1->setValidator(&(g_modeValidator[0]));
+    ui->lineEditOperand2->setValidator(&(g_modeValidator[1]));
+    ui->lineEditFlagsBefore->setValidator(&g_modeValidatorFlag);
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
-    DialogOptions::saveOptions(&options);
+    g_xOptions.save();
+
     delete ui;
 }
 
@@ -78,24 +88,13 @@ void GuiMainWindow::on_pushButtonAbout_clicked()
 
 void GuiMainWindow::adjustWindow()
 {
-    Qt::WindowFlags wf=windowFlags();
-    if(options.bStayOnTop)
-    {
-        wf|=Qt::WindowStaysOnTopHint;
-    }
-    else
-    {
-        wf&=~(Qt::WindowStaysOnTopHint);
-    }
-    setWindowFlags(wf);
-
-    show();
+    g_xOptions.adjustStayOnTop(this);
 }
 
 void GuiMainWindow::calc()
 {
     ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
-    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
+    ASM_DEF::OPCODE_RECORD currentRecord=g_mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
     RECDATA data=RECDATA_INIT;
 
@@ -185,12 +184,12 @@ void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 n
 {
     QSignalBlocker blocker(ui->comboBoxOpcode);
 
-    mapOpcodes.clear();
+    g_mapOpcodes.clear();
     ui->comboBoxOpcode->clear();
 
     for(int i=0;i<nRecordsSize;i++)
     {
-        mapOpcodes.insert(pRecords[i].opcode,pRecords[i]);
+        g_mapOpcodes.insert(pRecords[i].opcode,pRecords[i]);
 
         ui->comboBoxOpcode->addItem(pRecords[i].pszName,static_cast<int>(pRecords[i].opcode));
     }
@@ -220,7 +219,7 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr)
 
 void GuiMainWindow::adjustMode()
 {
-    ASM_DEF::OPCODE_RECORD currentRecord=mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
+    ASM_DEF::OPCODE_RECORD currentRecord=g_mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
     ModeValidator::MODE mode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
@@ -236,9 +235,9 @@ void GuiMainWindow::adjustMode()
     validatorDataFlag.mode=mode;
     validatorDataFlag.nMaxValue=0xFFFFFFFF;
 
-    modeValidator[0].setData(validatorData[0]);
-    modeValidator[1].setData(validatorData[1]);
-    modeValidatorFlag.setData(validatorDataFlag);
+    g_modeValidator[0].setData(validatorData[0]);
+    g_modeValidator[1].setData(validatorData[1]);
+    g_modeValidatorFlag.setData(validatorDataFlag);
 
     ui->lineEditOpcode->setText(currentRecord.pszExample);
 
@@ -318,7 +317,7 @@ void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 
-    XVALUE nFlag=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
+    XVALUE nFlag=getLineEditValue(ui->lineEditFlagsBefore,g_currentMode);
 
     ui->pushButtonFlagAF->setChecked(nFlag&(ASM_DEF::AF));
     ui->pushButtonFlagCF->setChecked(nFlag&(ASM_DEF::CF));
@@ -336,17 +335,17 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
     {
         RECDATA _data=RECDATA_INIT;
 
-        _data.OPERAND[0]=getLineEditValue(ui->lineEditOperand1,currentMode);
-        _data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,currentMode);
-        _data.FLAG[0]=getLineEditValue(ui->lineEditFlagsBefore,currentMode);
+        _data.OPERAND[0]=getLineEditValue(ui->lineEditOperand1,g_currentMode);
+        _data.OPERAND[1]=getLineEditValue(ui->lineEditOperand2,g_currentMode);
+        _data.FLAG[0]=getLineEditValue(ui->lineEditFlagsBefore,g_currentMode);
 
-        currentMode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
+        g_currentMode=static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
         adjustMode();
 
-        setLineEditValue(ui->lineEditOperand1,currentMode,_data.OPERAND[0]);
-        setLineEditValue(ui->lineEditOperand2,currentMode,_data.OPERAND[1]);
-        setLineEditValue(ui->lineEditFlagsBefore,currentMode,_data.FLAG[0]);
+        setLineEditValue(ui->lineEditOperand1,g_currentMode,_data.OPERAND[0]);
+        setLineEditValue(ui->lineEditOperand2,g_currentMode,_data.OPERAND[1]);
+        setLineEditValue(ui->lineEditFlagsBefore,g_currentMode,_data.FLAG[0]);
 
         calc();
     }
@@ -445,7 +444,8 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
 
 void GuiMainWindow::on_pushButtonOptions_clicked()
 {
-    DialogOptions dialogOptions(this,&options);
+    DialogOptions dialogOptions(this,&g_xOptions);
+
     dialogOptions.exec();
 
     adjustWindow();

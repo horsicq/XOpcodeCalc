@@ -21,15 +21,16 @@
 #include "dialogoptions.h"
 #include "ui_dialogoptions.h"
 
-DialogOptions::DialogOptions(QWidget *pParent, XOPCODECALC::OPTIONS *pOptions) :
+DialogOptions::DialogOptions(QWidget *pParent,XOptions *pOptions) :
     QDialog(pParent),
     ui(new Ui::DialogOptions)
 {
     ui->setupUi(this);
 
-    this->pOptions=pOptions;
+    this->g_pOptions=pOptions;
 
-    ui->checkBoxStayOnTop->setChecked(pOptions->bStayOnTop);
+    g_pOptions->setCheckBox(ui->checkBoxStayOnTop,XOptions::ID_STAYONTOP);
+    g_pOptions->setComboBox(ui->comboBoxStyle,XOptions::ID_STYLE);
 }
 
 DialogOptions::~DialogOptions()
@@ -37,24 +38,16 @@ DialogOptions::~DialogOptions()
     delete ui;
 }
 
-void DialogOptions::loadOptions(XOPCODECALC::OPTIONS *pOptions)
-{
-    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"xocalc.ini",QSettings::IniFormat);
-    pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
-}
-
-void DialogOptions::saveOptions(XOPCODECALC::OPTIONS *pOptions)
-{
-    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"xocalc.ini",QSettings::IniFormat);
-
-    settings.setValue("StayOnTop",pOptions->bStayOnTop);
-}
-
 void DialogOptions::on_pushButtonOK_clicked()
 {
-    pOptions->bStayOnTop=ui->checkBoxStayOnTop->isChecked();
+    g_pOptions->getCheckBox(ui->checkBoxStayOnTop,XOptions::ID_STAYONTOP);
+    g_pOptions->getComboBox(ui->comboBoxStyle,XOptions::ID_STYLE);
 
-    saveOptions(pOptions);
+    if(g_pOptions->isRestartNeeded())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Please restart the application"));
+    }
+
     this->close();
 }
 

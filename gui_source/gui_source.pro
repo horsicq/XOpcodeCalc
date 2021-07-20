@@ -29,6 +29,11 @@ FORMS += \
 
 include(../build.pri)
 
+!contains(XCONFIG, xoptions) {
+    XCONFIG += xoptions
+    include(../XOptions/xoptions.pri)
+}
+
 win32 {
     RC_ICONS = ../icons/main.ico
 }

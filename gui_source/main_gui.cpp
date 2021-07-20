@@ -48,8 +48,20 @@ int main(int argc, char *argv[])
     }
 
     QApplication a(argc, argv);
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
-    
+
+    XOptions xOptions;
+
+    xOptions.setName(X_OPTIONSFILE);
+
+    QList<XOptions::ID> listIDs;
+
+    listIDs.append(XOptions::ID_STYLE);
+
+    xOptions.setValueIDs(listIDs);
+    xOptions.load();
+
+    XOptions::adjustApplicationView(X_APPLICATIONNAME,&xOptions);
+
     GuiMainWindow w;
     w.show();
 

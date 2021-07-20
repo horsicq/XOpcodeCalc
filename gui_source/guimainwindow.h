@@ -30,6 +30,7 @@
 #include "modevalidator.h"
 #include "../asm/asm.h"
 #include "../asm_defs.h"
+#include "xoptions.h"
 
 namespace Ui {
 class GuiMainWindow;
@@ -82,11 +83,11 @@ private slots:
 
 private:
     Ui::GuiMainWindow *ui;
-    XOPCODECALC::OPTIONS options;
-    QMap<ASM_DEF::OP,ASM_DEF::OPCODE_RECORD> mapOpcodes;
-    ModeValidator modeValidator[2];
-    ModeValidator modeValidatorFlag;
-    ModeValidator::MODE currentMode;
+    XOptions g_xOptions;
+    QMap<ASM_DEF::OP,ASM_DEF::OPCODE_RECORD> g_mapOpcodes;
+    ModeValidator g_modeValidator[2];
+    ModeValidator g_modeValidatorFlag;
+    ModeValidator::MODE g_currentMode;
 };
 
 #endif // GUIMAINWINDOW_H
