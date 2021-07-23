@@ -182,7 +182,11 @@ void GuiMainWindow::calc()
 
 void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
 {
+#if QT_VERSION >= 0x050300
     QSignalBlocker blocker(ui->comboBoxOpcode);
+#else
+    const bool bBlocked1=ui->comboBoxOpcode->blockSignals(true);
+#endif
 
     g_mapOpcodes.clear();
     ui->comboBoxOpcode->clear();
@@ -193,6 +197,10 @@ void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 n
 
         ui->comboBoxOpcode->addItem(pRecords[i].pszName,static_cast<int>(pRecords[i].opcode));
     }
+
+#if QT_VERSION < 0x050300
+    ui->comboBoxOpcode->blockSignals(bBlocked1);
+#endif
 }
 
 void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int nIndex)
