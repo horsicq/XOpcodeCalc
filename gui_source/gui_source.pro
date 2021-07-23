@@ -76,6 +76,20 @@ linux-g++{
     preprocess.commands = gcc -c ${QMAKE_FILE_IN}
 }
 
+linux-g++64{
+    BITSIZE = $$system(getconf LONG_BIT)
+    !contains(BITSIZE, 64) {
+        message("Linux gcc x32 build")
+        ASM_FILES = ../asm/gcc32.s
+    } else {
+        message("Linux gcc x64 build")
+        ASM_FILES = ../asm/gcc64.s
+    }
+
+    preprocess.output = ${QMAKE_FILE_BASE}.o
+    preprocess.commands = gcc -c ${QMAKE_FILE_IN}
+}
+
 win32-g++{
     contains(QT_ARCH, i386) {
         message("Win gcc x32 build")
