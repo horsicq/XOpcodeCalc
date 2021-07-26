@@ -4,7 +4,7 @@
 
 X86/X64 Opcode calculator. The program works on OSX, Linux and Windows.
 
-![alt text](https://github.com/horsicq/XOpcodeCalc/blob/master/screenshot_gui.jpg "Screenshot gui")
+![alt text](https://github.com/horsicq/XOpcodeCalc/blob/master/docs/1.png "1")
 
 How to build on Linux(Debian package)
 =======
