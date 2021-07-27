@@ -22,8 +22,6 @@ if [ -z "$X_ERROR" ]; then
         deploy_qt_library QtWidgets xocalc
         deploy_qt_library QtGui xocalc
         deploy_qt_library QtCore xocalc
-        deploy_qt_library QtDBus xocalc
-        deploy_qt_library QtPrintSupport xocalc
 
         deploy_qt_plugin platforms libqcocoa xocalc
         deploy_qt_plugin platforms libqminimal xocalc
