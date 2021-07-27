@@ -17,8 +17,6 @@ if [ -z "$X_ERROR" ]; then
     if [ -z "$X_ERROR" ]; then
         cp -R "$X_SOURCE_PATH/build/release/xocalc.app"    "$X_SOURCE_PATH/release/$X_BUILD_NAME"
 
-        mkdir -p $X_SOURCE_PATH/release/$X_BUILD_NAME/xocalc.app/Contents/Resources/signatures
-
         fiximport "$X_SOURCE_PATH/build/release/xocalc.app/Contents/MacOS/xocalc"
 
         deploy_qt_library QtWidgets xocalc
