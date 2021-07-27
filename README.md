@@ -4,6 +4,8 @@
 
 X86/X64 Opcode calculator. The program works on OSX, Linux and Windows.
 
+![alt text](https://github.com/horsicq/XOpcodeCalc/blob/master/mascots/XOpcodeCalc.png "Mascot")
+
 ![alt text](https://github.com/horsicq/XOpcodeCalc/blob/master/docs/1.png "1")
 
 How to build on Linux(Debian package)
@@ -78,11 +80,13 @@ Install Qt 5.15.2 for VS2019: https://github.com/horsicq/build_tools
 
 Install 7-Zip: https://github.com/horsicq/build_tools
 
+Install Inno Setup: https://github.com/horsicq/build_tools
+
 Clone project: git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
 
-Edit build_msvc_win32.bat ( check VSVARS_PATH, SEVENZIP_PATH, QMAKE_PATH variables)
+Edit build_msvc_win32.bat ( check VSVARS_PATH, SEVENZIP_PATH, INNOSETUP_PATH, QMAKE_PATH variables)
 
-Edit build_msvc_win64.bat ( check VSVARS_PATH, SEVENZIP_PATH, QMAKE_PATH variables)
+Edit build_msvc_win64.bat ( check VSVARS_PATH, SEVENZIP_PATH, INNOSETUP_PATH, QMAKE_PATH variables)
 
 Run build_msvc_win32.bat
 
