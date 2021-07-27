@@ -2,7 +2,7 @@
 export QMAKE_PATH=$HOME/Qt/5.15.2/clang_64/bin/qmake
 
 export X_SOURCE_PATH=$PWD
-export X_BUILD_NAME=xopcodecalc_mac_portable
+export X_BUILD_NAME=xopcodecalc_mac
 export X_RELEASE_VERSION=$(cat "release_version.txt")
 
 source build_tools/mac.sh
@@ -31,7 +31,7 @@ if [ -z "$X_ERROR" ]; then
         deploy_qt_plugin platforms libqminimal xocalc
         deploy_qt_plugin platforms libqoffscreen xocalc
 
-        make_release
+        make_release xocalc
         make_clear
     fi
 fi
