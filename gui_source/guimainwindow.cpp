@@ -131,6 +131,8 @@ void GuiMainWindow::calc()
             setLineEditValue(ui->lineEditResult2,mode,data.RESULT[1]);
             setLineEditValue(ui->lineEditResult3,mode,data.RESULT[2]);
         }
+
+        setLineEditValue(ui->lineEditResult4,mode,data.RESULT[3]);
     }
     else
     {
