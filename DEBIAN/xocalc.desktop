@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=#VERSION#
 Type=Application
-Name=XOpcodeCalculator
+Name=XOpcodeCalc
 Comment=Opcode calculator
 TryExec=xocalc
 Exec=xocalc
