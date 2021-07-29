@@ -23,7 +23,7 @@ cd XOpcodeCalc
 
 Run build script: bash -x build_dpkg.sh
 
-Install deb package: sudo dpkg -i release/die_[Version].deb
+Install deb package: sudo dpkg -i release/xopcodecalc_[Version].deb
 
 Run: *xocalc*
 
