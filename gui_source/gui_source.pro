@@ -97,3 +97,6 @@ osx{
 }
 
 QMAKE_EXTRA_COMPILERS += preprocess
+
+DISTFILES += \
+    CMakeLists.txt
