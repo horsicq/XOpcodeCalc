@@ -1,13 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
-#project(asm_lib LANGUAGES ASM)
-project(asm_lib LANGUAGES C)
+if(MSVC)
+    project(asm_lib LANGUAGES ASM_MASM)
+else()
+    project(asm_lib LANGUAGES ASM)
+endif()
+#project(asm_lib LANGUAGES C)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(WIN32)
+if(MSVC)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         add_library(asm_lib STATIC
             ${PROJECT_SOURCE_DIR}/msvc64.asm
@@ -29,7 +33,7 @@ else()
     endif()
 endif()
 
-if(WIN32)
+if(MSVC)
     set (CMAKE_PREFIX_PATH "C:/Qt/5.15.2/msvc2019/")
 endif()
 
