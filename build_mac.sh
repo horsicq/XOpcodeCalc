@@ -13,21 +13,21 @@ if [ -z "$X_ERROR" ]; then
     make_init
     make_build "$X_SOURCE_PATH/xopcodecalc_source.pro"
 
-    check_file "$X_SOURCE_PATH/build/release/xocalc.app/Contents/MacOS/xocalc"
+    check_file "$X_SOURCE_PATH/build/release/XOcalc.app/Contents/MacOS/XOcalc"
     if [ -z "$X_ERROR" ]; then
-        cp -R "$X_SOURCE_PATH/build/release/xocalc.app"    "$X_SOURCE_PATH/release/$X_BUILD_NAME"
+        cp -R "$X_SOURCE_PATH/build/release/XOcalc.app"    "$X_SOURCE_PATH/release/$X_BUILD_NAME"
 
-        fiximport "$X_SOURCE_PATH/build/release/xocalc.app/Contents/MacOS/xocalc"
+        fiximport "$X_SOURCE_PATH/build/release/XOcalc.app/Contents/MacOS/XOcalc"
 
-        deploy_qt_library QtWidgets xocalc
-        deploy_qt_library QtGui xocalc
-        deploy_qt_library QtCore xocalc
+        deploy_qt_library QtWidgets XOcalc
+        deploy_qt_library QtGui XOcalc
+        deploy_qt_library QtCore XOcalc
 
-        deploy_qt_plugin platforms libqcocoa xocalc
-        deploy_qt_plugin platforms libqminimal xocalc
-        deploy_qt_plugin platforms libqoffscreen xocalc
+        deploy_qt_plugin platforms libqcocoa XOcalc
+        deploy_qt_plugin platforms libqminimal XOcalc
+        deploy_qt_plugin platforms libqoffscreen XOcalc
 
-        make_release xocalc
+        make_release XOcalc
         make_clear
     fi
 fi

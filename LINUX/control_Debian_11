@@ -1,0 +1,7 @@
+Package: xopcodecalculator
+Version: #VERSION#
+Architecture: #ARCH#
+Maintainer: hors <horsicq@gmail.com>
+Depends: libqt5core5a, libqt5gui5, libqt5widgets5, libqt5dbus5
+Homepage: http://ntinfo.biz
+Description: x86/64 Opcode calculator

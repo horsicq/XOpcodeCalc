@@ -3,6 +3,11 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = xocalc
+
+macx {
+    TARGET = XOcalc
+}
+
 TEMPLATE = app
 
 CONFIG += c++11
@@ -37,6 +42,8 @@ include(../build.pri)
 
 win32 {
     RC_ICONS = ../icons/main.ico
+    CONFIG -= embed_manifest_exe
+    QMAKE_MANIFEST = windows.manifest.xml
 }
 
 macx {

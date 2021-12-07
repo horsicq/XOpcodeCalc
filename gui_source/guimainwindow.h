@@ -47,6 +47,7 @@ class GuiMainWindow : public QMainWindow
         OG_MULDIV,
         OG_SHIFT,
         OG_BITS,
+        OG_BCD,
         OG_SPECIAL
     };
 

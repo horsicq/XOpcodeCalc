@@ -27,7 +27,7 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONDISPLAYNAME,X_APPLICATIONVERSION));
+    setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME,X_APPLICATIONVERSION));
 
     QFont font=ui->lineEditOpcode->font();
     font.setPointSizeF(font.pointSizeF()*1.5);
@@ -48,9 +48,10 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
 
     ui->comboBoxOpcodeGroup->addItem(tr("Two operands"),OG_TWOOPERANDS);
     ui->comboBoxOpcodeGroup->addItem(tr("One operand"),OG_ONEOPERAND);
-    ui->comboBoxOpcodeGroup->addItem(tr("Mul/Div"),OG_MULDIV);
+    ui->comboBoxOpcodeGroup->addItem(QString("Mul/Div"),OG_MULDIV);
     ui->comboBoxOpcodeGroup->addItem(tr("Shift"),OG_SHIFT);
     ui->comboBoxOpcodeGroup->addItem(tr("Bits"),OG_BITS);
+    ui->comboBoxOpcodeGroup->addItem(QString("BCD"),OG_BCD);
     ui->comboBoxOpcodeGroup->addItem(tr("Special"),OG_SPECIAL);
 
     ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
@@ -444,6 +445,7 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
             case OG_MULDIV:         loadOpcodes(ASM_DEF::asm_muldiv,sizeof(ASM_DEF::asm_muldiv)/sizeof(ASM_DEF::OPCODE_RECORD));                break;
             case OG_SHIFT:          loadOpcodes(ASM_DEF::asm_shift,sizeof(ASM_DEF::asm_shift)/sizeof(ASM_DEF::OPCODE_RECORD));                  break;
             case OG_BITS:           loadOpcodes(ASM_DEF::asm_bits,sizeof(ASM_DEF::asm_bits)/sizeof(ASM_DEF::OPCODE_RECORD));                    break;
+            case OG_BCD:            loadOpcodes(ASM_DEF::asm_bcd,sizeof(ASM_DEF::asm_bcd)/sizeof(ASM_DEF::OPCODE_RECORD));                      break;
             case OG_SPECIAL:        loadOpcodes(ASM_DEF::asm_special,sizeof(ASM_DEF::asm_special)/sizeof(ASM_DEF::OPCODE_RECORD));              break;
         }
 
