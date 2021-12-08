@@ -1,7 +1,7 @@
 0.04
 -----------------------------------------------------------------------
 [+] Source code qt6 compatibility
-[+] New opcodes
+[+] New opcodes for 32 bis mode
 [+] CMAKE build system
 [+] Many bugs have been fixed.
 #######################################################################
