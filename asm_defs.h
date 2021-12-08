@@ -71,12 +71,14 @@ enum OP
     OP_MOVZX_R16,
     OP_MOVSX_R8,
     OP_MOVSX_R16,
+#ifndef OPCODE64
     OP_DAA,
     OP_DAS,
     OP_AAA,
     OP_AAS,
     OP_AAM,
     OP_AAD
+#endif
 };
 
 const XVALUE CF=0x0001;
@@ -221,15 +223,6 @@ const OPCODE_RECORD asm_bits[]=
 {OP_BTC,        &op_btc,        "btc",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BTC RAX,RCX"},
 {OP_BSF,        &op_bsf,        "bsf",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BSF RAX,RCX"},
 {OP_BSR,        &op_bsr,        "bsr",          {{"RAX",    LIM64}, {"RCX",     LIM64}},    {{"RAX",    LIM64}, {"",    0},     {"",    0},     {"",    0}},    "BSR RAX,RCX"},
-};
-const OPCODE_RECORD asm_bcd[]=
-{
-{OP_DAA,        &op_daa,        "daa",          {{"AX",    LIM16},  {"",        0}},        {{"AX",     LIM16}, {"",    0},     {"",    0},     {"",    0}},    "DAA"},
-{OP_DAS,        &op_das,        "das",          {{"AX",    LIM16},  {"",        0}},        {{"AX",     LIM16}, {"",    0},     {"",    0},     {"",    0}},    "DAS"},
-{OP_AAA,        &op_aaa,        "aaa",          {{"AX",    LIM16},  {"",        0}},        {{"AX",     LIM16}, {"",    0},     {"",    0},     {"",    0}},    "AAA"},
-{OP_AAS,        &op_aas,        "aas",          {{"AX",    LIM16},  {"",        0}},        {{"AX",     LIM16}, {"",    0},     {"",    0},     {"",    0}},    "AAS"},
-{OP_AAM,        &op_aam,        "aam",          {{"AX",    LIM16},  {"",        0}},        {{"AX",     LIM16}, {"",    0},     {"",    0},     {"",    0}},    "AAM"},
-{OP_AAD,        &op_aad,        "aad",          {{"AX",    LIM16},  {"",        0}},        {{"AX",     LIM16}, {"",    0},     {"",    0},     {"",    0}},    "AAD"},
 };
 const OPCODE_RECORD asm_special[]=
 {
