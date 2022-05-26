@@ -38,8 +38,8 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
 
     QList<XOptions::ID> listIDs;
 
-    listIDs.append(XOptions::ID_STYLE);
-    listIDs.append(XOptions::ID_STAYONTOP);
+    listIDs.append(XOptions::ID_VIEW_STYLE);
+    listIDs.append(XOptions::ID_VIEW_STAYONTOP);
 
     g_xOptions.setValueIDs(listIDs);
     g_xOptions.load();
