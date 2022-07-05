@@ -4,3 +4,6 @@
 [submodule "build_tools"]
 	path = build_tools
 	url = https://github.com/horsicq/build_tools
+[submodule "XAboutWidget"]
+	path = XAboutWidget
+	url = https://github.com/horsicq/XAboutWidget
