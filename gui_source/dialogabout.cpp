@@ -27,9 +27,40 @@ DialogAbout::DialogAbout(QWidget *pParent) :
 {
     ui->setupUi(this);
 
-    // TODO adjust!
-    ui->labelVersion->setText(QString("<html><head/><body><p align=\"center\"><span style=\" "
-                                      "font-weight:600;\">Version:</span> %1(%2)</p></body></html>").arg(X_APPLICATIONVERSION,__DATE__));
+    XAboutWidget::DATA _data={};
+
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">%1</span></p>")
+            .arg(XOptions::getTitle(X_APPLICATIONDISPLAYNAME,X_APPLICATIONVERSION));
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">Copyright (C) 2019-2022 Hors</span></p>");
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">%1: </span><a href=\"mailto:horsicq@gmail.com\"><span style=\" text-decoration: underline; color:#ff0000;\">horsicq@gmail.com</span></a></p>")
+            .arg(tr("Bugreports"));
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">%1: </span><a href=\"http://ntinfo.biz\"><span style=\" text-decoration: underline; color:#ff0000;\">http://ntinfo.biz</span></a></p>")
+            .arg(tr("Website"));
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">%1(Paypal): </span><a href=\"ntinfo.re@gmail.com\"><span style=\" text-decoration: underline; color:#ff0000;\">ntinfo.re@gmail.com</span></a></p>")
+            .arg(tr("Donate"));
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">%1(BTC): </span><a href=\"3DqddVBX9PKqMvNPXZ3gPHBNNRtD9CnmJo\"><span style=\" text-decoration: underline; color:#ff0000;\">3DqddVBX9PKqMvNPXZ3gPHBNNRtD9CnmJo</span></a></p>")
+            .arg(tr("Donate"));
+    _data.sInfo+=QString("<p align=\"center\"><span style=\" font-weight:600;\">%1: </span><a href=\"https://github.com/horsicq/XOpcodeCalc\"><span style=\" text-decoration: underline; color:#ff0000;\">https://github.com/horsicq/XOpcodeCalc</span></a></p>")
+            .arg(tr("Source code"));
+
+    _data.sLibraries+=QString("<p align=\"center\"><span style=\" font-weight:600;\">QT Library %1 </span><a href=\"http://qt-project.org\"><span style=\" text-decoration: underline; color:#ff0000;\">http://qt-project.org</span></a></p>")
+            .arg(QT_VERSION_STR);
+
+    _data.sLogoPath=":/images/main.png";
+    _data.sUpdatesLink="https://github.com/horsicq/XOpcodeCalc/releases";
+
+#ifndef QT_DEBUG
+    _data.sThanksPath=XOptions().getApplicationDataPath()+QDir::separator()+"images"+QDir::separator()+"thanks";
+#else
+    QDir dir(XOptions().getApplicationDataPath());
+
+    dir.cdUp();
+    dir.cdUp();
+
+    _data.sThanksPath=dir.absolutePath()+QDir::separator()+"images"+QDir::separator()+"thanks";
+#endif
+
+    ui->widgetAbout->setData(_data);
 }
 
 DialogAbout::~DialogAbout()

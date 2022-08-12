@@ -9,6 +9,7 @@ call %X_SOURCE_PATH%\build_tools\windows.cmd check_file %X_SOURCE_PATH%\build\re
 IF NOT [%X_ERROR%] == [] goto exit
 
 copy %X_SOURCE_PATH%\build\release\xocalc.exe %X_SOURCE_PATH%\release\%X_BUILD_NAME%\
+xcopy %X_SOURCE_PATH%\images %X_SOURCE_PATH%\release\%X_BUILD_NAME%\images /E /I
 
 call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Widgets
 call %X_SOURCE_PATH%\build_tools\windows.cmd deploy_qt_library Qt5Gui

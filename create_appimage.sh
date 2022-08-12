@@ -7,10 +7,11 @@ source build_tools/linux.sh
 
 create_image_app_dir xocalc
 
-cp -f $X_SOURCE_PATH/build/release/xocalc                            $X_SOURCE_PATH/release/appDir/usr/bin/
+cp -f $X_SOURCE_PATH/build/release/xocalc                           $X_SOURCE_PATH/release/appDir/usr/bin/
 cp -f $X_SOURCE_PATH/LINUX/xocalc.desktop                           $X_SOURCE_PATH/release/appDir/usr/share/applications/
 sed -i "s/#VERSION#/1.0/"                                           $X_SOURCE_PATH/release/appDir/usr/share/applications/xocalc.desktop
-cp -Rf $X_SOURCE_PATH/LINUX/hicolor/                               $X_SOURCE_PATH/release/appDir/usr/share/icons/
+cp -Rf $X_SOURCE_PATH/LINUX/hicolor/                                $X_SOURCE_PATH/release/appDir/usr/share/icons/
+cp -Rf $X_SOURCE_PATH/images/                                       $X_SOURCE_PATH/release/appDir/usr/lib/xocalc/
 
 cd $X_SOURCE_PATH/release
 

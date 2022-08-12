@@ -43,7 +43,7 @@
 
 #define X_APPLICATIONDISPLAYNAME "XOpcodeCalc"
 #define X_APPLICATIONNAME "xocalc"
-#define X_APPLICATIONVERSION "0.04"
+#define X_APPLICATIONVERSION "0.05"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_OPTIONSFILE "xocalc.ini"
