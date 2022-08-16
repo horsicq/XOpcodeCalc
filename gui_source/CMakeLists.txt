@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(xocalc VERSION 0.04 LANGUAGES CXX)
+project(xocalc VERSION 0.05 LANGUAGES CXX)
 
 include_guard(DIRECTORY)
 

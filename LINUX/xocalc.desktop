@@ -5,6 +5,6 @@ Name=XOpcodeCalc
 Comment=Opcode calculator
 TryExec=xocalc
 Exec=xocalc
-Icon=xocalc
+Icon=xopcodecalc
 Terminal=false
 Categories=Development;
