@@ -36,12 +36,9 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
 
     g_xOptions.setName(X_OPTIONSFILE);
 
-    QList<XOptions::ID> listIDs;
+    g_xOptions.addID(XOptions::ID_VIEW_STYLE,"Fusion");
+    g_xOptions.addID(XOptions::ID_VIEW_STAYONTOP,false);
 
-    listIDs.append(XOptions::ID_VIEW_STYLE);
-    listIDs.append(XOptions::ID_VIEW_STAYONTOP);
-
-    g_xOptions.setValueIDs(listIDs);
     g_xOptions.load();
 
     adjustWindow();

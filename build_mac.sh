@@ -20,7 +20,7 @@ if [ -z "$X_ERROR" ]; then
 
         deploy_qt XOcalc
 
-        make_release
+        make_release XOcalc
         make_clear
     fi
 fi
