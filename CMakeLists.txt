@@ -15,3 +15,4 @@ endif()
 
 add_subdirectory(asm)
 add_subdirectory(gui_source)
+install (DIRECTORY images DESTINATION ${CMAKE_INSTALL_LIBDIR}/xopcodecalc)
