@@ -46,16 +46,16 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) :
     ui->comboBoxOpcodeGroup->addItem(tr("Two operands"),OG_TWOOPERANDS);
     ui->comboBoxOpcodeGroup->addItem(tr("One operand"),OG_ONEOPERAND);
     ui->comboBoxOpcodeGroup->addItem(QString("Mul/Div"),OG_MULDIV);
-    ui->comboBoxOpcodeGroup->addItem(tr("Shift"),OG_SHIFT);
-    ui->comboBoxOpcodeGroup->addItem(tr("Bits"),OG_BITS);
+    ui->comboBoxOpcodeGroup->addItem(QString("Shift"),OG_SHIFT);
+    ui->comboBoxOpcodeGroup->addItem(QString("Bits"),OG_BITS);
 #ifndef OPCODE64
     ui->comboBoxOpcodeGroup->addItem(QString("BCD"),OG_BCD);
 #endif
-    ui->comboBoxOpcodeGroup->addItem(tr("Special"),OG_SPECIAL);
+    ui->comboBoxOpcodeGroup->addItem(QString("Special"),OG_SPECIAL);
 
-    ui->comboBoxMode->addItem(tr("HEX"),ModeValidator::MODE_HEX);
-    ui->comboBoxMode->addItem(tr("Signed"),ModeValidator::MODE_SIGNED);
-    ui->comboBoxMode->addItem(tr("Unsigned"),ModeValidator::MODE_UNSIGNED);
+    ui->comboBoxMode->addItem(QString("HEX"),ModeValidator::MODE_HEX);
+    ui->comboBoxMode->addItem(QString("Signed"),ModeValidator::MODE_SIGNED);
+    ui->comboBoxMode->addItem(QString("Unsigned"),ModeValidator::MODE_UNSIGNED);
 
     g_currentMode=ModeValidator::MODE_HEX;
 
