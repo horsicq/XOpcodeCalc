@@ -11,4 +11,8 @@ x86/64 Opcode calculator. The program works on macOS, Linux and Windows.
 * How to build: https://github.com/horsicq/XOpcodeCalc/blob/master/docs/BUILD.md
 * Changelog: https://github.com/horsicq/XOpcodeCalc/blob/master/changelog.txt
 
+## Special Thanks
+
+- [PELock Software Protection & Reverse Engineering](https://www.pelock.com)
+
 ![Opcode calculator logo](https://github.com/horsicq/XOpcodeCalc/blob/master/mascots/mascot.png "Mascot")
