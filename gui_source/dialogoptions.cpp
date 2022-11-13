@@ -19,39 +19,33 @@
  * SOFTWARE.
  */
 #include "dialogoptions.h"
+
 #include "ui_dialogoptions.h"
 
-DialogOptions::DialogOptions(QWidget *pParent,XOptions *pOptions) :
-    QDialog(pParent),
-    ui(new Ui::DialogOptions)
-{
+DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : QDialog(pParent), ui(new Ui::DialogOptions) {
     ui->setupUi(this);
 
-    this->g_pOptions=pOptions;
+    this->g_pOptions = pOptions;
 
-    g_pOptions->setCheckBox(ui->checkBoxStayOnTop,XOptions::ID_VIEW_STAYONTOP);
-    g_pOptions->setComboBox(ui->comboBoxStyle,XOptions::ID_VIEW_STYLE);
+    g_pOptions->setCheckBox(ui->checkBoxStayOnTop, XOptions::ID_VIEW_STAYONTOP);
+    g_pOptions->setComboBox(ui->comboBoxStyle, XOptions::ID_VIEW_STYLE);
 }
 
-DialogOptions::~DialogOptions()
-{
+DialogOptions::~DialogOptions() {
     delete ui;
 }
 
-void DialogOptions::on_pushButtonOK_clicked()
-{
-    g_pOptions->getCheckBox(ui->checkBoxStayOnTop,XOptions::ID_VIEW_STAYONTOP);
-    g_pOptions->getComboBox(ui->comboBoxStyle,XOptions::ID_VIEW_STYLE);
+void DialogOptions::on_pushButtonOK_clicked() {
+    g_pOptions->getCheckBox(ui->checkBoxStayOnTop, XOptions::ID_VIEW_STAYONTOP);
+    g_pOptions->getComboBox(ui->comboBoxStyle, XOptions::ID_VIEW_STYLE);
 
-    if(g_pOptions->isRestartNeeded())
-    {
-        QMessageBox::information(this,tr("Information"),tr("Please restart the application"));
+    if (g_pOptions->isRestartNeeded()) {
+        QMessageBox::information(this, tr("Information"), tr("Please restart the application"));
     }
 
     this->close();
 }
 
-void DialogOptions::on_pushButtonCancel_clicked()
-{
+void DialogOptions::on_pushButtonCancel_clicked() {
     this->close();
 }

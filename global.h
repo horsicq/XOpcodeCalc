@@ -48,4 +48,4 @@
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_OPTIONSFILE "xocalc.ini"
 
-#endif // GLOBAL_H
+#endif  // GLOBAL_H

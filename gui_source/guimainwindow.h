@@ -21,40 +21,39 @@
 #ifndef GUIMAINWINDOW_H
 #define GUIMAINWINDOW_H
 
-#include "../global.h"
-#include <QMainWindow>
 #include <QGroupBox>
 #include <QLineEdit>
+#include <QMainWindow>
+
+#include "../asm/asm.h"
+#include "../asm_defs.h"
+#include "../global.h"
 #include "dialogabout.h"
 #include "dialogoptions.h"
 #include "modevalidator.h"
-#include "../asm/asm.h"
-#include "../asm_defs.h"
 #include "xoptions.h"
 
 namespace Ui {
 class GuiMainWindow;
 }
 
-class GuiMainWindow : public QMainWindow
-{
+class GuiMainWindow : public QMainWindow {
     Q_OBJECT
 
-    enum OG
-    {
-        OG_TWOOPERANDS=0,
+    enum OG {
+        OG_TWOOPERANDS = 0,
         OG_ONEOPERAND,
         OG_MULDIV,
         OG_SHIFT,
         OG_BITS,
-    #ifndef OPCODE64
+#ifndef OPCODE64
         OG_BCD,
-    #endif
+#endif
         OG_SPECIAL
     };
 
 public:
-    explicit GuiMainWindow(QWidget *pParent=nullptr);
+    explicit GuiMainWindow(QWidget *pParent = nullptr);
     ~GuiMainWindow();
 
 private slots:
@@ -75,11 +74,11 @@ private slots:
     void on_comboBoxMode_currentIndexChanged(int index);
     void adjustWindow();
     void calc();
-    void loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords,qint32 nRecordsSize);
-    void adjustValue(QGroupBox *pGroupBox,ASM_DEF::VALUE_RECORD vr);
+    void loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize);
+    void adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr);
     void adjustMode();
-    XVALUE getLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode);
-    void setLineEditValue(QLineEdit *pLineEdit,ModeValidator::MODE mode,XVALUE nValue);
+    XVALUE getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode);
+    void setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode, XVALUE nValue);
     void adjustFlags(XVALUE nFlag, bool bState);
     void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
     void on_pushButtonOptions_clicked();
@@ -87,10 +86,10 @@ private slots:
 private:
     Ui::GuiMainWindow *ui;
     XOptions g_xOptions;
-    QMap<ASM_DEF::OP,ASM_DEF::OPCODE_RECORD> g_mapOpcodes;
+    QMap<ASM_DEF::OP, ASM_DEF::OPCODE_RECORD> g_mapOpcodes;
     ModeValidator g_modeValidator[2];
     ModeValidator g_modeValidatorFlag;
     ModeValidator::MODE g_currentMode;
 };
 
-#endif // GUIMAINWINDOW_H
+#endif  // GUIMAINWINDOW_H

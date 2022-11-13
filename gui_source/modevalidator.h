@@ -23,31 +23,29 @@
 
 #include <QObject>
 #include <QValidator>
+
 #include "../asm/asm.h"
 
-class ModeValidator : public QValidator
-{
+class ModeValidator : public QValidator {
     Q_OBJECT
 
 public:
-    enum MODE
-    {
-        MODE_HEX=0,
+    enum MODE {
+        MODE_HEX = 0,
         MODE_SIGNED,
         MODE_UNSIGNED
     };
-    struct DATA
-    {
+    struct DATA {
         MODE mode;
         quint64 nMaxValue;
     };
 
-    explicit ModeValidator(QObject *pParent=nullptr);
+    explicit ModeValidator(QObject *pParent = nullptr);
     void setData(DATA data);
-    virtual State validate(QString &sInput,int &pos) const;
+    virtual State validate(QString &sInput, int &pos) const;
 
 private:
     DATA data;
 };
 
-#endif // MODEVALIDATOR_H
+#endif  // MODEVALIDATOR_H

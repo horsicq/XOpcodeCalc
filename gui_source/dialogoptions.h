@@ -22,29 +22,28 @@
 #define DIALOGOPTIONS_H
 
 #include <QDialog>
-#include <QSettings>
 #include <QDir>
 #include <QMessageBox>
-#include "xoptions.h"
+#include <QSettings>
+
 #include "../global.h"
+#include "xoptions.h"
 
 namespace Ui {
 class DialogOptions;
 }
 
-class DialogOptions : public QDialog
-{
+class DialogOptions : public QDialog {
     Q_OBJECT
 
-    enum OPTION_PAGES
-    {
-        OP_SCAN=0,
+    enum OPTION_PAGES {
+        OP_SCAN = 0,
         OP_APPEARANCE,
         OP_CONTEXT
     };
 
 public:
-    explicit DialogOptions(QWidget *pParent,XOptions *pOptions);
+    explicit DialogOptions(QWidget *pParent, XOptions *pOptions);
     ~DialogOptions();
 
 private slots:
@@ -56,4 +55,4 @@ private:
     XOptions *g_pOptions;
 };
 
-#endif // DIALOGOPTIONS_H
+#endif  // DIALOGOPTIONS_H

@@ -20,72 +20,57 @@
  */
 #include "modevalidator.h"
 
-ModeValidator::ModeValidator(QObject *pParent) : QValidator(pParent)
-{
-    data={};
+ModeValidator::ModeValidator(QObject *pParent) : QValidator(pParent) {
+    data = {};
 }
 
-void ModeValidator::setData(ModeValidator::DATA data)
-{
-    this->data=data;
+void ModeValidator::setData(ModeValidator::DATA data) {
+    this->data = data;
 }
 
-QValidator::State ModeValidator::validate(QString &sInput, int &pos) const
-{
+QValidator::State ModeValidator::validate(QString &sInput, int &pos) const {
     Q_UNUSED(pos)
 
-    QValidator::State result=Acceptable;
+    QValidator::State result = Acceptable;
 
-    if(!sInput.isEmpty())
-    {
-        result=Invalid;
+    if (!sInput.isEmpty()) {
+        result = Invalid;
 
-        bool bSuccess=false;
-        XVALUE nValueU=0;
-        SXVALUE nValueS=0;
+        bool bSuccess = false;
+        XVALUE nValueU = 0;
+        SXVALUE nValueS = 0;
 
-        if(data.mode==MODE_HEX)
-        {
-        #ifdef OPCODE32
-            nValueU=sInput.toULong(&bSuccess,16);
-        #else
-            nValueS=sInput.toULongLong(&bSuccess,16);
-        #endif
-        }
-        else if(data.mode==MODE_SIGNED)
-        {
-        #ifdef OPCODE32
-            nValueS=sInput.toLong(&bSuccess,16);
-        #else
-            nValueS=sInput.toLongLong(&bSuccess,10);
-        #endif
-        }
-        else if(data.mode==MODE_UNSIGNED)
-        {
-        #ifdef OPCODE32
-            nValueU=sInput.toULong(&bSuccess,10);
-        #else
-            nValueU=sInput.toULongLong(&bSuccess,10);
-        #endif
+        if (data.mode == MODE_HEX) {
+#ifdef OPCODE32
+            nValueU = sInput.toULong(&bSuccess, 16);
+#else
+            nValueS = sInput.toULongLong(&bSuccess, 16);
+#endif
+        } else if (data.mode == MODE_SIGNED) {
+#ifdef OPCODE32
+            nValueS = sInput.toLong(&bSuccess, 16);
+#else
+            nValueS = sInput.toLongLong(&bSuccess, 10);
+#endif
+        } else if (data.mode == MODE_UNSIGNED) {
+#ifdef OPCODE32
+            nValueU = sInput.toULong(&bSuccess, 10);
+#else
+            nValueU = sInput.toULongLong(&bSuccess, 10);
+#endif
         }
 
-        if(data.mode==MODE_SIGNED)
-        {
-            if(sInput=="-")
-            {
-                result=Intermediate;
+        if (data.mode == MODE_SIGNED) {
+            if (sInput == "-") {
+                result = Intermediate;
             }
 
-            if(bSuccess&&(((XVALUE)nValueS)<=data.nMaxValue))
-            {
-                result=Acceptable;
+            if (bSuccess && (((XVALUE)nValueS) <= data.nMaxValue)) {
+                result = Acceptable;
             }
-        }
-        else
-        {
-            if(bSuccess&&(nValueU<=data.nMaxValue))
-            {
-                result=Acceptable;
+        } else {
+            if (bSuccess && (nValueU <= data.nMaxValue)) {
+                result = Acceptable;
             }
         }
     }
