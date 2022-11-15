@@ -20,15 +20,18 @@
  */
 #include "modevalidator.h"
 
-ModeValidator::ModeValidator(QObject *pParent) : QValidator(pParent) {
+ModeValidator::ModeValidator(QObject *pParent) : QValidator(pParent)
+{
     data = {};
 }
 
-void ModeValidator::setData(ModeValidator::DATA data) {
+void ModeValidator::setData(ModeValidator::DATA data)
+{
     this->data = data;
 }
 
-QValidator::State ModeValidator::validate(QString &sInput, int &pos) const {
+QValidator::State ModeValidator::validate(QString &sInput, int &pos) const
+{
     Q_UNUSED(pos)
 
     QValidator::State result = Acceptable;

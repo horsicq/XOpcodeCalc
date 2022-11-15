@@ -22,7 +22,8 @@
 
 #include "ui_guimainwindow.h"
 
-GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow) {
+GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow)
+{
     ui->setupUi(this);
 
     setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION));
@@ -65,27 +66,32 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
     ui->lineEditFlagsBefore->setValidator(&g_modeValidatorFlag);
 }
 
-GuiMainWindow::~GuiMainWindow() {
+GuiMainWindow::~GuiMainWindow()
+{
     g_xOptions.save();
 
     delete ui;
 }
 
-void GuiMainWindow::on_pushButtonExit_clicked() {
+void GuiMainWindow::on_pushButtonExit_clicked()
+{
     this->close();
 }
 
-void GuiMainWindow::on_pushButtonAbout_clicked() {
+void GuiMainWindow::on_pushButtonAbout_clicked()
+{
     DialogAbout di(this);
 
     di.exec();
 }
 
-void GuiMainWindow::adjustWindow() {
+void GuiMainWindow::adjustWindow()
+{
     g_xOptions.adjustStayOnTop(this);
 }
 
-void GuiMainWindow::calc() {
+void GuiMainWindow::calc()
+{
     ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
     ASM_DEF::OPCODE_RECORD currentRecord = g_mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
@@ -166,7 +172,8 @@ void GuiMainWindow::calc() {
     ui->labelJNO->setEnabled(bOF == false);
 }
 
-void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize) {
+void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
+{
 #if QT_VERSION >= 0x050300
     QSignalBlocker blocker(ui->comboBoxOpcode);
 #else
@@ -187,14 +194,16 @@ void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 n
 #endif
 }
 
-void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int nIndex) {
+void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int nIndex)
+{
     if (nIndex != -1) {
         adjustMode();
         calc();
     }
 }
 
-void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr) {
+void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr)
+{
     if (vr.nMaxValue) {
         pGroupBox->show();
         pGroupBox->setTitle(vr.pszRegName);
@@ -203,7 +212,8 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr) 
     }
 }
 
-void GuiMainWindow::adjustMode() {
+void GuiMainWindow::adjustMode()
+{
     ASM_DEF::OPCODE_RECORD currentRecord = g_mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
     ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
@@ -234,61 +244,72 @@ void GuiMainWindow::adjustMode() {
     adjustValue(ui->groupBoxResult4, currentRecord.vrResult[3]);
 }
 
-void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1) {
+void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1)
+{
     Q_UNUSED(arg1)
 
     calc();
 }
 
-void GuiMainWindow::on_lineEditOperand2_textChanged(const QString &arg1) {
+void GuiMainWindow::on_lineEditOperand2_textChanged(const QString &arg1)
+{
     Q_UNUSED(arg1)
 
     calc();
 }
 
-void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1) {
+void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1)
+{
     Q_UNUSED(arg1)
 
     calc();
 }
 
-void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1) {
+void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1)
+{
     Q_UNUSED(arg1)
 
     calc();
 }
 
-void GuiMainWindow::on_pushButtonFlagCF_toggled(bool checked) {
+void GuiMainWindow::on_pushButtonFlagCF_toggled(bool checked)
+{
     adjustFlags(ASM_DEF::CF, checked);
     calc();
 }
 
-void GuiMainWindow::on_pushButtonFlagPF_toggled(bool checked) {
+void GuiMainWindow::on_pushButtonFlagPF_toggled(bool checked)
+{
     adjustFlags(ASM_DEF::PF, checked);
     calc();
 }
 
-void GuiMainWindow::on_pushButtonFlagAF_toggled(bool checked) {
+void GuiMainWindow::on_pushButtonFlagAF_toggled(bool checked)
+{
     adjustFlags(ASM_DEF::AF, checked);
     calc();
 }
 
-void GuiMainWindow::on_pushButtonFlagZF_toggled(bool checked) {
+void GuiMainWindow::on_pushButtonFlagZF_toggled(bool checked)
+{
     adjustFlags(ASM_DEF::ZF, checked);
     calc();
 }
 
-void GuiMainWindow::on_pushButtonFlagSF_toggled(bool checked) {
+void GuiMainWindow::on_pushButtonFlagSF_toggled(bool checked)
+{
     adjustFlags(ASM_DEF::SF, checked);
     calc();
 }
 
-void GuiMainWindow::on_pushButtonFlagOF_toggled(bool checked) {
+void GuiMainWindow::on_pushButtonFlagOF_toggled(bool checked)
+{
     adjustFlags(ASM_DEF::OF, checked);
     calc();
 }
 
-void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1) {
+void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
+{
     Q_UNUSED(arg1)
 
     XVALUE nFlag = getLineEditValue(ui->lineEditFlagsBefore, g_currentMode);
@@ -303,7 +324,8 @@ void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1) {
     calc();
 }
 
-void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index) {
+void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
+{
     if (index != -1) {
         RECDATA _data = RECDATA_INIT;
 
@@ -323,7 +345,8 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index) {
     }
 }
 
-XVALUE GuiMainWindow::getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode) {
+XVALUE GuiMainWindow::getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode)
+{
     XVALUE nValue = 0;
 
     QString sText = pLineEdit->text();
@@ -351,7 +374,8 @@ XVALUE GuiMainWindow::getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE
     return nValue;
 }
 
-void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode, XVALUE nValue) {
+void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode, XVALUE nValue)
+{
     QString sText;
 
     if (mode == ModeValidator::MODE_HEX) {
@@ -365,7 +389,8 @@ void GuiMainWindow::setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE m
     pLineEdit->setText(sText);
 }
 
-void GuiMainWindow::adjustFlags(XVALUE nFlag, bool bState) {
+void GuiMainWindow::adjustFlags(XVALUE nFlag, bool bState)
+{
     ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
     XVALUE nValue = getLineEditValue(ui->lineEditFlagsBefore, mode);
@@ -379,7 +404,8 @@ void GuiMainWindow::adjustFlags(XVALUE nFlag, bool bState) {
     setLineEditValue(ui->lineEditFlagsBefore, mode, nValue);
 }
 
-void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index) {
+void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
+{
     if (index != -1) {
         switch (ui->comboBoxOpcodeGroup->currentData(Qt::UserRole).toUInt()) {
             case OG_TWOOPERANDS:
@@ -412,7 +438,8 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index) {
     }
 }
 
-void GuiMainWindow::on_pushButtonOptions_clicked() {
+void GuiMainWindow::on_pushButtonOptions_clicked()
+{
     DialogOptions dialogOptions(this, &g_xOptions);
 
     dialogOptions.exec();

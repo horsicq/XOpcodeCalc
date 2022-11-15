@@ -36,7 +36,8 @@ struct RECDATA {
 };
 #define RECDATA_INIT \
     {                \
-        {}, {}, {    \
+        {}, {},      \
+        {            \
         }            \
     }
 #ifdef Q_OS_OSX
