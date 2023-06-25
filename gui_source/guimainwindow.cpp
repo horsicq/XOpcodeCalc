@@ -408,29 +408,15 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
 {
     if (index != -1) {
         switch (ui->comboBoxOpcodeGroup->currentData(Qt::UserRole).toUInt()) {
-            case OG_TWOOPERANDS:
-                loadOpcodes(ASM_DEF::asm_twooperands, sizeof(ASM_DEF::asm_twooperands) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
-            case OG_ONEOPERAND:
-                loadOpcodes(ASM_DEF::asm_oneoperand, sizeof(ASM_DEF::asm_oneoperand) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
-            case OG_MULDIV:
-                loadOpcodes(ASM_DEF::asm_muldiv, sizeof(ASM_DEF::asm_muldiv) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
-            case OG_SHIFT:
-                loadOpcodes(ASM_DEF::asm_shift, sizeof(ASM_DEF::asm_shift) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
-            case OG_BITS:
-                loadOpcodes(ASM_DEF::asm_bits, sizeof(ASM_DEF::asm_bits) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
+            case OG_TWOOPERANDS: loadOpcodes(ASM_DEF::asm_twooperands, sizeof(ASM_DEF::asm_twooperands) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
+            case OG_ONEOPERAND: loadOpcodes(ASM_DEF::asm_oneoperand, sizeof(ASM_DEF::asm_oneoperand) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
+            case OG_MULDIV: loadOpcodes(ASM_DEF::asm_muldiv, sizeof(ASM_DEF::asm_muldiv) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
+            case OG_SHIFT: loadOpcodes(ASM_DEF::asm_shift, sizeof(ASM_DEF::asm_shift) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
+            case OG_BITS: loadOpcodes(ASM_DEF::asm_bits, sizeof(ASM_DEF::asm_bits) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
 #ifndef OPCODE64
-            case OG_BCD:
-                loadOpcodes(ASM_DEF::asm_bcd, sizeof(ASM_DEF::asm_bcd) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
+            case OG_BCD: loadOpcodes(ASM_DEF::asm_bcd, sizeof(ASM_DEF::asm_bcd) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
 #endif
-            case OG_SPECIAL:
-                loadOpcodes(ASM_DEF::asm_special, sizeof(ASM_DEF::asm_special) / sizeof(ASM_DEF::OPCODE_RECORD));
-                break;
+            case OG_SPECIAL: loadOpcodes(ASM_DEF::asm_special, sizeof(ASM_DEF::asm_special) / sizeof(ASM_DEF::OPCODE_RECORD)); break;
         }
 
         adjustMode();
