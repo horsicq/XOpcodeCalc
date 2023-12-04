@@ -13,3 +13,6 @@
 [submodule "XGithub"]
 	path = XGithub
 	url = https://github.com/horsicq/XGithub
+[submodule "Controls"]
+	path = Controls
+	url = https://github.com/horsicq/Controls
