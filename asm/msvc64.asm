@@ -246,6 +246,14 @@ op_cpuid    PROC
             __LEAVE
 op_cpuid    ENDP
 ;################################
+; RDTSC
+;################################
+op_rdtsc    PROC
+            __ENTER
+            rdtsc
+            __LEAVE
+op_rdtsc    ENDP
+;################################
 ; BSWAP
 ;################################
 op_bswap    PROC

@@ -82,6 +82,7 @@ private slots:
     void adjustFlags(XVALUE nFlag, bool bState);
     void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
     void on_pushButtonOptions_clicked();
+    void on_toolButtonOpcode_clicked();
 
 private:
     Ui::GuiMainWindow *ui;

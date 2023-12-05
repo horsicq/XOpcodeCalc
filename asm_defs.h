@@ -56,6 +56,7 @@ enum OP {
     OP_RCL,
     OP_RCR,
     OP_CPUID,
+    OP_RDTSC,
     OP_BSWAP,
     OP_BT,
     OP_BSF,
@@ -160,6 +161,7 @@ const OPCODE_RECORD asm_bcd[] = {
 };
 const OPCODE_RECORD asm_special[] = {
     {OP_CPUID, &op_cpuid, "cpuid", {{"EAX", LIM32}, {"ECX", LIM32}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"ECX", LIM32}, {"EBX", LIM32}}, "CPUID"},
+    {OP_RDTSC, &op_rdtsc, "rdtsc", {{"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "RDTSC"},
 };
 #else
 const OPCODE_RECORD asm_twooperands[] = {
@@ -210,6 +212,7 @@ const OPCODE_RECORD asm_bits[] = {
 };
 const OPCODE_RECORD asm_special[] = {
     {OP_CPUID, &op_cpuid, "cpuid", {{"EAX", LIM32}, {"ECX", LIM32}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"ECX", LIM32}, {"EBX", LIM32}}, "CPUID"},
+    {OP_RDTSC, &op_rdtsc, "rdtsc", {{"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "RDTSC"},
 };
 #endif
 }  // namespace ASM_DEF

@@ -28,10 +28,10 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
 
     setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION));
 
-    QFont font = ui->lineEditOpcode->font();
+    QFont font = ui->toolButtonOpcode->font();
     font.setPointSizeF(font.pointSizeF() * 1.5);
     font.setBold(true);
-    ui->lineEditOpcode->setFont(font);
+    ui->toolButtonOpcode->setFont(font);
 
     g_xOptions.setName(X_OPTIONSFILE);
 
@@ -92,6 +92,13 @@ void GuiMainWindow::adjustWindow()
 
 void GuiMainWindow::calc()
 {
+    ui->lineEditOperand1->blockSignals(true);
+    ui->lineEditOperand2->blockSignals(true);
+    ui->lineEditResult1->blockSignals(true);
+    ui->lineEditResult2->blockSignals(true);
+    ui->lineEditResult3->blockSignals(true);
+    ui->lineEditResult4->blockSignals(true);
+
     ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
     ASM_DEF::OPCODE_RECORD currentRecord = g_mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
@@ -170,6 +177,13 @@ void GuiMainWindow::calc()
     ui->labelJNS->setEnabled(bSF == false);
     ui->labelJO->setEnabled(bOF == true);
     ui->labelJNO->setEnabled(bOF == false);
+
+    ui->lineEditOperand1->blockSignals(false);
+    ui->lineEditOperand2->blockSignals(false);
+    ui->lineEditResult1->blockSignals(false);
+    ui->lineEditResult2->blockSignals(false);
+    ui->lineEditResult3->blockSignals(false);
+    ui->lineEditResult4->blockSignals(false);
 }
 
 void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
@@ -234,7 +248,7 @@ void GuiMainWindow::adjustMode()
     g_modeValidator[1].setData(validatorData[1]);
     g_modeValidatorFlag.setData(validatorDataFlag);
 
-    ui->lineEditOpcode->setText(currentRecord.pszExample);
+    ui->toolButtonOpcode->setText(currentRecord.pszExample);
 
     adjustValue(ui->groupBoxOperand1, currentRecord.vrOperand[0]);
     adjustValue(ui->groupBoxOperand2, currentRecord.vrOperand[1]);
@@ -432,3 +446,9 @@ void GuiMainWindow::on_pushButtonOptions_clicked()
 
     adjustWindow();
 }
+
+void GuiMainWindow::on_toolButtonOpcode_clicked()
+{
+    calc();
+}
+

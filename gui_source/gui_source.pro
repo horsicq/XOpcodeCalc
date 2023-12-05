@@ -45,6 +45,11 @@ include(../build.pri)
     include(../XAboutWidget/xaboutwidget.pri)
 }
 
+!contains(XCONFIG, xlineedithex) {
+    XCONFIG += xlineedithex
+    include(../Controls/xlineedithex.pri)
+}
+
 win32 {
     RC_ICONS = ../icons/main.ico
     CONFIG -= embed_manifest_exe
