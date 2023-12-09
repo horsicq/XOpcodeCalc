@@ -451,4 +451,3 @@ void GuiMainWindow::on_toolButtonOpcode_clicked()
 {
     calc();
 }
-
