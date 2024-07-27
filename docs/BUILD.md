@@ -39,7 +39,7 @@ cd XOpcodeCalc
 
 Run: *xocalc*
 
-How to build on OSX
+How to build on macOS
 =======
 
 Install Qt 5.15.2: https://github.com/horsicq/build_tools
@@ -69,7 +69,7 @@ Edit build_winxp.bat ( check VS_PATH,  SEVENZIP_PATH, QT_PATH variables)
 
 Run build_winxp.bat
 
-How to build on Windows(7-10)
+How to build on Windows(7-11)
 =======
 
 Install Visual Studio 2019: https://github.com/horsicq/build_tools
