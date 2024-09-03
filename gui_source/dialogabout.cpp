@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2024 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,17 +62,7 @@ DialogAbout::DialogAbout(QWidget *pParent) : QDialog(pParent), ui(new Ui::Dialog
 
     _data.sLogoPath = ":/images/main.png";
     _data.sUpdatesLink = "https://github.com/horsicq/XOpcodeCalc/releases";
-
-#ifndef QT_DEBUG
-    _data.sThanksPath = XOptions().getApplicationDataPath() + QDir::separator() + "images" + QDir::separator() + "thanks";
-#else
-    QDir dir(XOptions().getApplicationDataPath());
-
-    dir.cdUp();
-    dir.cdUp();
-
-    _data.sThanksPath = dir.absolutePath() + QDir::separator() + "images" + QDir::separator() + "thanks";
-#endif
+    _data.sThanksLink = "https://github.com/horsicq/XOpcodeCalc/blob/master/THANKS.md";
 
     ui->widgetAbout->setData(_data);
 }
