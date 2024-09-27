@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2024 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@
 
 #define X_APPLICATIONDISPLAYNAME "XOpcodeCalc"
 #define X_APPLICATIONNAME "xocalc"
-#define X_APPLICATIONVERSION "0.05"
+#define X_APPLICATIONVERSION "0.06"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_OPTIONSFILE "xocalc.ini"

@@ -5,7 +5,7 @@
 .CODE
 
 RECDATA32   STRUCT
-OPERAND     DD(2)       dup(?)
+OPERAND     DD(4)       dup(?)
 RESULT      DD(4)       dup(?)
 FLAG        DD(2)       dup(?)
 RECDATA32   ENDS
@@ -21,8 +21,8 @@ __ENTER     MACRO
             mov         esi,DWORD PTR[ebp+8]
             mov         eax,[esi].OPERAND[0]
             mov         ecx,[esi].OPERAND[4]
-            mov         edx,0
-            mov         ebx,0
+            mov         edx,[esi].OPERAND[8]
+            mov         ebx,[esi].OPERAND[12]
             push        [esi].FLAG[0]
             popf
             ENDM

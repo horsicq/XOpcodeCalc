@@ -1,5 +1,5 @@
 RECDATA64   STRUCT
-OPERAND     DQ(2)       dup(?)
+OPERAND     DQ(4)       dup(?)
 RESULT      DQ(4)       dup(?)
 FLAG        DQ(2)       dup(?)
 RECDATA64   ENDS
@@ -18,8 +18,8 @@ __ENTER     MACRO
             mov         rsi,RCX ; // Microsoft x64 calling convention
             mov         rax,(RECDATA64 PTR [rsi]).OPERAND[0]
             mov         rcx,(RECDATA64 PTR [rsi]).OPERAND[8]
-            mov         rdx,0
-            mov         rbx,0
+            mov         rdx,(RECDATA64 PTR [rsi]).OPERAND[16]
+            mov         rbx,(RECDATA64 PTR [rsi]).OPERAND[24]
             push        (RECDATA64 PTR [rsi]).FLAG[0]
             popf
             ENDM

@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2024 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ typedef unsigned long long XVALUE;
 typedef long long SXVALUE;
 #endif
 struct RECDATA {
-    XVALUE OPERAND[2];
+    XVALUE OPERAND[4];
     XVALUE RESULT[4];
     XVALUE FLAG[2];
 };

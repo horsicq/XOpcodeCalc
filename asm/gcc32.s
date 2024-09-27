@@ -16,18 +16,19 @@
             mov         esi,DWORD PTR[ebp+8]
             mov         eax,DWORD PTR[esi+0]
             mov         ecx,DWORD PTR[esi+4]
-            mov         edx,0
-            push        DWORD PTR[esi+24]
+            mov         edx,DWORD PTR[esi+8]
+            mov         ebx,DWORD PTR[esi+12]
+            push        DWORD PTR[esi+32]
             popf
 .endm
             
 .macro      __LEAVE
-            mov         DWORD PTR[esi+8],eax
-            mov         DWORD PTR[esi+12],edx
-            mov         DWORD PTR[esi+16],ecx
-            mov         DWORD PTR[esi+20],ebx
+            mov         DWORD PTR[esi+16],eax
+            mov         DWORD PTR[esi+20],edx
+            mov         DWORD PTR[esi+24],ecx
+            mov         DWORD PTR[esi+28],ebx
             pushf       
-            pop         DWORD PTR[esi+28]
+            pop         DWORD PTR[esi+36]
             
             popf
             pop         esi

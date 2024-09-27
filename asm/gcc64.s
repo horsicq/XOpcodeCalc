@@ -18,19 +18,19 @@
             mov         rsi,rdi # System V
             mov         rax,QWORD PTR[rsi+0]
             mov         rcx,QWORD PTR[rsi+8]
-            mov         rdx,0
-            mov         rbx,0
-            push        QWORD PTR[rsi+48]
+            mov         rdx,QWORD PTR[rsi+16]
+            mov         rbx,QWORD PTR[rsi+24]
+            push        QWORD PTR[rsi+64]
             popf
 .endm
             
 .macro      __LEAVE
-            mov         QWORD PTR[rsi+16],rax
-            mov         QWORD PTR[rsi+24],rdx
-            mov         QWORD PTR[rsi+32],rcx
-            mov         QWORD PTR[rsi+40],rbx
+            mov         QWORD PTR[rsi+32],rax
+            mov         QWORD PTR[rsi+40],rdx
+            mov         QWORD PTR[rsi+48],rcx
+            mov         QWORD PTR[rsi+56],rbx
             pushf       
-            pop         QWORD PTR[rsi+56]
+            pop         QWORD PTR[rsi+72]
 
             popf
             pop         rdi

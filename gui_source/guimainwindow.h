@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2024 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,8 +62,12 @@ private slots:
     void on_comboBoxOpcode_currentIndexChanged(int nIndex);
     void on_lineEditOperand1_textChanged(const QString &arg1);
     void on_lineEditOperand2_textChanged(const QString &arg1);
+    void on_lineEditOperand3_textChanged(const QString &arg1);
+    void on_lineEditOperand4_textChanged(const QString &arg1);
     void on_lineEditResult1_textChanged(const QString &arg1);
     void on_lineEditResult2_textChanged(const QString &arg1);
+    void on_lineEditResult3_textChanged(const QString &arg1);
+    void on_lineEditResult4_textChanged(const QString &arg1);
     void on_pushButtonFlagCF_toggled(bool checked);
     void on_pushButtonFlagPF_toggled(bool checked);
     void on_pushButtonFlagAF_toggled(bool checked);
@@ -88,7 +92,7 @@ private:
     Ui::GuiMainWindow *ui;
     XOptions g_xOptions;
     QMap<ASM_DEF::OP, ASM_DEF::OPCODE_RECORD> g_mapOpcodes;
-    ModeValidator g_modeValidator[2];
+    ModeValidator g_modeValidator[4];
     ModeValidator g_modeValidatorFlag;
     ModeValidator::MODE g_currentMode;
 };

@@ -1,4 +1,4 @@
-/* Copyright (c) 2019-2023 hors<horsicq@gmail.com>
+/* Copyright (c) 2019-2024 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -63,6 +63,8 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
 
     ui->lineEditOperand1->setValidator(&(g_modeValidator[0]));
     ui->lineEditOperand2->setValidator(&(g_modeValidator[1]));
+    ui->lineEditOperand3->setValidator(&(g_modeValidator[2]));
+    ui->lineEditOperand4->setValidator(&(g_modeValidator[3]));
     ui->lineEditFlagsBefore->setValidator(&g_modeValidatorFlag);
 }
 
@@ -232,26 +234,29 @@ void GuiMainWindow::adjustMode()
 
     ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
 
-    ModeValidator::DATA validatorData[2] = {};
+    ModeValidator::DATA validatorData[4] = {};
     ModeValidator::DATA validatorDataFlag;
 
-    validatorData[0].mode = mode;
-    validatorData[0].nMaxValue = currentRecord.vrOperand[0].nMaxValue;
-
-    validatorData[1].mode = mode;
-    validatorData[1].nMaxValue = currentRecord.vrOperand[1].nMaxValue;
+    for (qint32 i = 0; i < 4; i++) {
+        validatorData[i].mode = mode;
+        validatorData[i].nMaxValue = currentRecord.vrOperand[i].nMaxValue;
+    }
 
     validatorDataFlag.mode = mode;
     validatorDataFlag.nMaxValue = 0xFFFFFFFF;
 
-    g_modeValidator[0].setData(validatorData[0]);
-    g_modeValidator[1].setData(validatorData[1]);
+    for (qint32 i = 0; i < 4; i++) {
+        g_modeValidator[i].setData(validatorData[i]);
+    }
+
     g_modeValidatorFlag.setData(validatorDataFlag);
 
     ui->toolButtonOpcode->setText(currentRecord.pszExample);
 
     adjustValue(ui->groupBoxOperand1, currentRecord.vrOperand[0]);
     adjustValue(ui->groupBoxOperand2, currentRecord.vrOperand[1]);
+    adjustValue(ui->groupBoxOperand3, currentRecord.vrOperand[2]);
+    adjustValue(ui->groupBoxOperand4, currentRecord.vrOperand[3]);
     adjustValue(ui->groupBoxResult1, currentRecord.vrResult[0]);
     adjustValue(ui->groupBoxResult2, currentRecord.vrResult[1]);
     adjustValue(ui->groupBoxResult3, currentRecord.vrResult[2]);
@@ -272,6 +277,20 @@ void GuiMainWindow::on_lineEditOperand2_textChanged(const QString &arg1)
     calc();
 }
 
+void GuiMainWindow::on_lineEditOperand3_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1)
+
+    calc();
+}
+
+void GuiMainWindow::on_lineEditOperand4_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1)
+
+    calc();
+}
+
 void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
@@ -280,6 +299,20 @@ void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1)
 }
 
 void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1)
+
+    calc();
+}
+
+void GuiMainWindow::on_lineEditResult3_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1)
+
+    calc();
+}
+
+void GuiMainWindow::on_lineEditResult4_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 
