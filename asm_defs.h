@@ -165,7 +165,7 @@ const OPCODE_RECORD asm_special[] = {
 };
 #else
 const OPCODE_RECORD asm_twooperands[] = {
-    {OP_ADD, &op_add, "add", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "ADD RAX,RCX"},
+    {OP_ADD, &op_add, "add", {{"RAX", LIM64}, {"RCX", LIM64}, {"RDX", LIM64}, {"", 0}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "ADD RAX,RCX"},
     {OP_SUB, &op_sub, "sub", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SUB RAX,RCX"},
     {OP_ADC, &op_adc, "adc", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "ADC RAX,RCX"},
     {OP_SBB, &op_sbb, "sbb", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SBB RAX,RCX"},
