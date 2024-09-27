@@ -22,6 +22,8 @@
 
 #include "ui_guimainwindow.h"
 
+#include "bigint.h"
+
 GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow)
 {
     ui->setupUi(this);
@@ -60,6 +62,8 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
 
     setLineEditValue(ui->lineEditOperand1, g_currentMode, 0);
     setLineEditValue(ui->lineEditOperand2, g_currentMode, 0);
+    setLineEditValue(ui->lineEditOperand3, g_currentMode, 0);
+    setLineEditValue(ui->lineEditOperand4, g_currentMode, 0);
 
     ui->lineEditOperand1->setValidator(&(g_modeValidator[0]));
     ui->lineEditOperand2->setValidator(&(g_modeValidator[1]));
@@ -96,6 +100,8 @@ void GuiMainWindow::calc()
 {
     ui->lineEditOperand1->blockSignals(true);
     ui->lineEditOperand2->blockSignals(true);
+    ui->lineEditOperand3->blockSignals(true);
+    ui->lineEditOperand4->blockSignals(true);
     ui->lineEditResult1->blockSignals(true);
     ui->lineEditResult2->blockSignals(true);
     ui->lineEditResult3->blockSignals(true);
@@ -108,6 +114,8 @@ void GuiMainWindow::calc()
 
     data.OPERAND[0] = getLineEditValue(ui->lineEditOperand1, mode);
     data.OPERAND[1] = getLineEditValue(ui->lineEditOperand2, mode);
+    data.OPERAND[2] = getLineEditValue(ui->lineEditOperand3, mode);
+    data.OPERAND[3] = getLineEditValue(ui->lineEditOperand4, mode);
     data.FLAG[0] = getLineEditValue(ui->lineEditFlagsBefore, mode);
 
     data.FLAG[0] &= ((ASM_DEF::AF) | (ASM_DEF::CF) | (ASM_DEF::OF) | (ASM_DEF::PF) | (ASM_DEF::SF) | (ASM_DEF::ZF));  // Filter
@@ -118,11 +126,33 @@ void GuiMainWindow::calc()
         if (data.OPERAND[1] == 0) {
             bSuccess = false;
         }
+
+        if (bSuccess) {
+            if (data.OPERAND[2]) {
+                BigInt a0(QString::number(data.OPERAND[0]).toStdString());
+                BigInt a1(QString::number(data.OPERAND[1]).toStdString());
+                BigInt a2(QString::number(data.OPERAND[2]).toStdString());
+
+#ifdef OPCODE32
+                BigInt biMax(QString::number(0xFFFFFFFF).toStdString());
+#endif
+#ifdef OPCODE64
+                BigInt biMax(QString::number(0xFFFFFFFFFFFFFFFF).toStdString());
+#endif
+                BigInt res = (a0 + (a2 * (biMax + 1))) / a1;
+
+                if (res > biMax) {
+                    bSuccess = false;
+                }
+            }
+        }
     }
 
     if (bSuccess) {
         currentRecord.asm_func(&data);
+    }
 
+    if (bSuccess) {
         setLineEditValue(ui->lineEditResult1, mode, data.RESULT[0]);
 
         if (currentRecord.opcode == ASM_DEF::OP_XADD) {
@@ -182,6 +212,8 @@ void GuiMainWindow::calc()
 
     ui->lineEditOperand1->blockSignals(false);
     ui->lineEditOperand2->blockSignals(false);
+    ui->lineEditOperand3->blockSignals(false);
+    ui->lineEditOperand4->blockSignals(false);
     ui->lineEditResult1->blockSignals(false);
     ui->lineEditResult2->blockSignals(false);
     ui->lineEditResult3->blockSignals(false);
@@ -378,6 +410,8 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
 
         _data.OPERAND[0] = getLineEditValue(ui->lineEditOperand1, g_currentMode);
         _data.OPERAND[1] = getLineEditValue(ui->lineEditOperand2, g_currentMode);
+        _data.OPERAND[2] = getLineEditValue(ui->lineEditOperand3, g_currentMode);
+        _data.OPERAND[3] = getLineEditValue(ui->lineEditOperand4, g_currentMode);
         _data.FLAG[0] = getLineEditValue(ui->lineEditFlagsBefore, g_currentMode);
 
         g_currentMode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
@@ -386,6 +420,8 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
 
         setLineEditValue(ui->lineEditOperand1, g_currentMode, _data.OPERAND[0]);
         setLineEditValue(ui->lineEditOperand2, g_currentMode, _data.OPERAND[1]);
+        setLineEditValue(ui->lineEditOperand3, g_currentMode, _data.OPERAND[2]);
+        setLineEditValue(ui->lineEditOperand4, g_currentMode, _data.OPERAND[3]);
         setLineEditValue(ui->lineEditFlagsBefore, g_currentMode, _data.FLAG[0]);
 
         calc();
