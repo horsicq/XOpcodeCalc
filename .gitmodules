@@ -16,3 +16,6 @@
 [submodule "Controls"]
 	path = Controls
 	url = https://github.com/horsicq/Controls
+[submodule "XShortcuts"]
+	path = XShortcuts
+	url = https://github.com/horsicq/XShortcuts
