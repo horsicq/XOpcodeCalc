@@ -190,8 +190,8 @@ const OPCODE_RECORD asm_oneoperand[] = {
 const OPCODE_RECORD asm_muldiv[] = {
     {OP_MUL, &op_mul, "mul", {{"RAX", LIM64}, {"RCX", LIM64}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "MUL RCX"},
     {OP_IMUL, &op_imul, "imul", {{"RAX", LIM64}, {"RCX", LIM64}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "IMUL RCX"},
-    {OP_DIV, &op_div, "div", {{"RAX", LIM64}, {"RCX", LIM64}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "DIV RCX"},
-    {OP_IDIV, &op_idiv, "idiv", {{"RAX", LIM64}, {"RCX", LIM64}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "IDIV RCX"},
+    {OP_DIV, &op_div, "div", {{"RAX", LIM64}, {"RCX", LIM64}, {"RDX", LIM64}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "DIV RCX"},
+    {OP_IDIV, &op_idiv, "idiv", {{"RAX", LIM64}, {"RCX", LIM64}, {"RDX", LIM64}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "IDIV RCX"},
 };
 const OPCODE_RECORD asm_shift[] = {
     {OP_SHR, &op_shr, "shr", {{"RAX", LIM64}, {"CL", LIMBS64}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SHR RAX,CL"},
