@@ -128,20 +128,38 @@ void GuiMainWindow::calc()
         }
 
         if (bSuccess) {
-            if (data.OPERAND[2]) {
-                BigInt a0(QString::number(data.OPERAND[0]).toStdString());
-                BigInt a1(QString::number(data.OPERAND[1]).toStdString());
-                BigInt a2(QString::number(data.OPERAND[2]).toStdString());
+            BigInt a0(QString::number(data.OPERAND[0]).toStdString());
+            BigInt a1(QString::number(data.OPERAND[1]).toStdString());
+            BigInt a2(QString::number(data.OPERAND[2]).toStdString());
 
 #ifdef OPCODE32
-                BigInt biMax(QString::number(0xFFFFFFFF).toStdString());
+            BigInt biMax(QString::number(0xFFFFFFFF).toStdString());
+            BigInt biMax0(QString::number(0x7FFFFFFF).toStdString());
 #endif
 #ifdef OPCODE64
-                BigInt biMax(QString::number(0xFFFFFFFFFFFFFFFF).toStdString());
+            BigInt biMax(QString::number(0xFFFFFFFFFFFFFFFF).toStdString());
+            BigInt biMax0(QString::number(0x7FFFFFFFFFFFFFFF).toStdString());
 #endif
-                BigInt res = (a0 + (a2 * (biMax + 1))) / a1;
+            BigInt res = (a0 + (a2 * (biMax + 1))) / a1;
 
-                if (res > biMax) {
+#ifdef QT_DEBUG
+            qDebug("a0:     %s", a0.to_string().c_str());
+            qDebug("a1:     %s", a1.to_string().c_str());
+            qDebug("a2:     %s", a2.to_string().c_str());
+            qDebug("biMax:  %s", biMax.to_string().c_str());
+            qDebug("biMax0: %s", biMax0.to_string().c_str());
+            qDebug("res:    %s", res.to_string().c_str());
+#endif
+
+            if (res >= biMax) {
+                bSuccess = false;
+            }
+
+            if (currentRecord.opcode == ASM_DEF::OP_IDIV) {
+                if ((a0 >= biMax0) && (a1 >= biMax0)) {
+                    bSuccess = false;
+                }
+                if ((a2 > 0) && (a1 >= biMax0)) {
                     bSuccess = false;
                 }
             }
