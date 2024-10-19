@@ -1,93 +1,142 @@
-How to build on Linux based on Debian
-=======
+# Instructions to build XOpcodeCalc
 
-Install packages:
+## Building on Linux based on Debian
 
-- sudo apt-get install --quiet --assume-yes git
-- sudo apt-get install --quiet --assume-yes build-essential
-- sudo apt-get install --quiet --assume-yes qtbase5-dev
-- sudo apt-get install --quiet --assume-yes qttools5-dev-tools
-- sudo apt-get install --quiet --assume-yes qt5-default (Ubuntu 14.04-20.04)
-- sudo apt-get install --quiet --assume-yes qt5-qmake -y (Ubuntu 21.04-21.10)
+- Install prerequisite packages:
 
+For Ubuntu 14.04-20.04
+
+```bash
+sudo apt-get install --quiet --assume-yes git \
+  build-essential \
+  qtbase5-dev \
+  qttools5-dev-tools \
+  qt5-default
+```
+
+For Ubuntu 22.04
+
+```bash
+sudo apt-get install --quiet --assume-yes git \
+  build-essential \
+  qtbase5-dev \
+  qttools5-dev-tools \
+  qt5-qmake
+```
+
+- Clone this repository recursively:
+
+```bash
 git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
+```
 
+- Run build script:
+
+```bash
 cd XOpcodeCalc
+bash -x build_dpkg.sh
+```
 
-Run build script: bash -x build_dpkg.sh
-
-Install deb package: sudo dpkg -i release/nfd_[Version].deb
+- Install deb package:
+```bash
+sudo dpkg -i release/nfd_[Version].deb
+```
 
 Run: *xocalc*
 
-How to build on Linux(Automake)
-=======
+## How to build on Linux(Automake)
 
 Qt framework has to be installed on the system.
 
-- (Ubuntu) Install GIT: sudo apt-get install --quiet --assume-yes git
-- (Ubuntu 20.04)Install Qt Framework: sudo apt-get install --quiet --assume-yes build-essential qt5-default qtbase5-dev qttools5-dev-tools
+- Install git:
 
-Clone project: git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
+```bash
+sudo apt-get install --quiet --assume-yes git
+```
 
+- For (Ubuntu 20.04) Install Qt Framework:
+
+```bash
+sudo apt-get install --quiet --assume-yes git \
+  build-essential \
+  qt5-default \
+  qtbase5-dev \
+  qttools5-dev-tools
+```
+
+- Clone this repository recursively:
+
+```bash
+git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
+```
+
+- Build and install
+
+```bash
 cd XOpcodeCalc
-
-- chmod a+x configure
-- ./configure
-- make
-- sudo make install
+chmod a+x configure
+./configure
+make
+sudo make install
+```
 
 Run: *xocalc*
 
-How to build on macOS
-=======
+## How to build on OSX
 
-Install Qt 5.15.2: https://github.com/horsicq/build_tools
+- Install [Qt 5.15.2](https://github.com/horsicq/build_tools)
 
-Clone project: git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
+- Clone this project recursively:
 
+```bash
+git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
 cd XOpcodeCalc
+```
 
-Edit build_mac.bat ( check QT_PATH variable)
+- Edit build_mac.bat (check QT_PATH variable)
 
-Run build_mac.bat
+- Run build_mac.bat
 
-How to build on Windows(XP)
-=======
+## How to build on Windows(XP)
 
-Install Visual Studio 2013: https://github.com/horsicq/build_tools
+- Install [Visual Studio 2013](https://github.com/horsicq/build_tools)
 
-Install Qt 5.6.3 for VS2013: https://github.com/horsicq/build_tools
+- Install [Qt 5.6.3 for VS2013](https://github.com/horsicq/build_tools)
 
-Install 7-Zip: https://www.7-zip.org/
+- Install [7-Zip](https://www.7-zip.org/)
 
-Clone project: git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
+- Clone this project recursively:
 
+```bash
+git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
 cd XOpcodeCalc
+```
 
-Edit build_winxp.bat ( check VS_PATH,  SEVENZIP_PATH, QT_PATH variables)
+- Edit build_winxp.bat ( check VS_PATH, SEVENZIP_PATH, QT_PATH variables)
 
-Run build_winxp.bat
+- Run build_winxp.bat
 
-How to build on Windows(7-11)
-=======
+## How to build on Windows(7-11)
 
-Install Visual Studio 2019: https://github.com/horsicq/build_tools
+- Install [Visual Studio 2019](https://github.com/horsicq/build_tools)
 
-Install Qt 5.15.2 for VS2019: https://github.com/horsicq/build_tools
+- Install [Qt 5.15.2 for VS2019](https://github.com/horsicq/build_tools)
 
-Install 7-Zip: https://www.7-zip.org/
+- Install [7-Zip](https://www.7-zip.org)
 
-Install Inno Setup: https://github.com/horsicq/build_tools
+- Install [Inno Setup](https://github.com/horsicq/build_tools)
 
-Clone project: git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
+- Clone this project recursively:
 
+```bash
+git clone --recursive https://github.com/horsicq/XOpcodeCalc.git
 cd XOpcodeCalc
+```
 
-Edit build_msvc_win32.bat ( check VSVARS_PATH, SEVENZIP_PATH, INNOSETUP_PATH, QMAKE_PATH variables)
+- Edit build_msvc_win32.bat ( check VSVARS_PATH, SEVENZIP_PATH, INNOSETUP_PATH, QMAKE_PATH variables)
 
-Edit build_msvc_win64.bat ( check VSVARS_PATH, SEVENZIP_PATH, INNOSETUP_PATH, QMAKE_PATH variables)
+- Edit build_msvc_win64.bat ( check VSVARS_PATH, SEVENZIP_PATH, INNOSETUP_PATH, QMAKE_PATH variables)
 
-Run build_win32.bat
+- Run build_win32.bat
 
-Run build_win64.bat
+- Run build_win64.bat
