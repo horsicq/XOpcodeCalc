@@ -30,7 +30,7 @@
 #include "../global.h"
 #include "dialogabout.h"
 #include "dialogoptions.h"
-#include "modevalidator.h"
+#include "xlineedithex.h"
 #include "xoptions.h"
 
 namespace Ui {
@@ -81,8 +81,6 @@ private slots:
     void loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize);
     void adjustValue(QGroupBox *pGroupBox, ASM_DEF::VALUE_RECORD vr);
     void adjustMode();
-    XVALUE getLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode);
-    void setLineEditValue(QLineEdit *pLineEdit, ModeValidator::MODE mode, XVALUE nValue);
     void adjustFlags(XVALUE nFlag, bool bState);
     void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
     void on_pushButtonOptions_clicked();
@@ -92,9 +90,6 @@ private:
     Ui::GuiMainWindow *ui;
     XOptions g_xOptions;
     QMap<ASM_DEF::OP, ASM_DEF::OPCODE_RECORD> g_mapOpcodes;
-    ModeValidator g_modeValidator[4];
-    ModeValidator g_modeValidatorFlag;
-    ModeValidator::MODE g_currentMode;
 };
 
 #endif  // GUIMAINWINDOW_H

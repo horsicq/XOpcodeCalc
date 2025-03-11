@@ -31,7 +31,6 @@ set(PROJECT_SOURCES
             guimainwindow.cpp
             guimainwindow.ui
             main_gui.cpp
-            modevalidator.cpp
             resources.qrc
 )
 

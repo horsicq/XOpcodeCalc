@@ -182,7 +182,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditOperand1">
+             <widget class="XLineEditHEX" name="lineEditOperand1">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -226,7 +226,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditOperand2">
+             <widget class="XLineEditHEX" name="lineEditOperand2">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -261,7 +261,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditOperand3">
+             <widget class="XLineEditHEX" name="lineEditOperand3">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -305,7 +305,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditOperand4">
+             <widget class="XLineEditHEX" name="lineEditOperand4">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -519,7 +519,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEditFlagsBefore">
+           <widget class="XLineEditHEX" name="lineEditFlagsBefore">
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
@@ -586,7 +586,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditResult1">
+             <widget class="XLineEditHEX" name="lineEditResult1">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -630,7 +630,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditResult2">
+             <widget class="XLineEditHEX" name="lineEditResult2">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -665,7 +665,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditResult3">
+             <widget class="XLineEditHEX" name="lineEditResult3">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -709,7 +709,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="lineEditResult4">
+             <widget class="XLineEditHEX" name="lineEditResult4">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -905,7 +905,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEditFlagsAfter">
+           <widget class="XLineEditHEX" name="lineEditFlagsAfter">
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
@@ -1271,6 +1271,13 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>XLineEditHEX</class>
+   <extends>QLineEdit</extends>
+   <header>xlineedithex.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
