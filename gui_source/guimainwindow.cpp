@@ -96,7 +96,7 @@ void GuiMainWindow::calc()
     ui->lineEditResult3->blockSignals(true);
     ui->lineEditResult4->blockSignals(true);
 
-   // ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
+    // ModeValidator::MODE mode = static_cast<ModeValidator::MODE>(ui->comboBoxMode->currentData().toInt());
     ASM_DEF::OPCODE_RECORD currentRecord = g_mapOpcodes.value(static_cast<ASM_DEF::OP>(ui->comboBoxOpcode->currentData().toInt()));
 
     RECDATA data = RECDATA_INIT;
