@@ -1,5 +1,5 @@
 #define MyAppName "XOpcodeCalc"
-#define MyAppVersion "0.03"
+#define MyAppVersion "0.05"
 #define MyAppPublisher "NTInfo"
 #define MyAppURL "ntinfo.biz"
 #define MyAppExeName "xocalc.exe"
