@@ -65,17 +65,6 @@
     </td>
 </tr>
 <tr>
-    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/clayne.png" /></td>
-    <td>
-      <p>
-        <big><b>Christopher Layne</b></big>
-      </p>
-      <p>
-        GitHub: <a href="https://github.com/clayne">clayne</a>
-      </p>
-    </td>
-</tr>
-<tr>
     <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/Dan0xE.png" /></td>
     <td>
       <p>
@@ -141,23 +130,6 @@
     </td>
 </tr>
 <tr>
-    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/elastic.png" /></td>
-    <td>
-      <p>
-        <big><b>elastic</b></big>
-      </p>
-      <p>
-        Website: <a href="https://www.elastic.co">https://www.elastic.co</a>
-      </p>
-      <p>
-        GitHub: <a href="https://github.com/elastic">elastic</a>
-      </p>
-      <p>
-        Twitter: <a href="https://twitter.com/elastic">elastic</a>
-      </p>
-    </td>
-</tr>
-<tr>
     <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/FernandoMerces.png" /></td>
     <td>
       <p>
@@ -189,17 +161,6 @@
     </td>
 </tr>
 <tr>
-    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/fr0zenbag.png" /></td>
-    <td>
-      <p>
-        <big><b>fr0zenbag</b></big>
-      </p>
-      <p>
-        GitHub: <a href="https://github.com/fr0zenbag">fr0zenbag</a>
-      </p>
-    </td>
-</tr>
-<tr>
     <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/FrenchYeti.png" /></td>
     <td>
       <p>
@@ -224,20 +185,6 @@
       </p>
       <p>
         GitHub: <a href="https://github.com/giladreich">giladreich</a>
-      </p>
-    </td>
-</tr>
-<tr>
-    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/hmstk.png" /></td>
-    <td>
-      <p>
-        <big><b>Derick Estrada</b></big>
-      </p>
-      <p>
-        Website: <a href="hamsteri.co">hamsteri.co</a>
-      </p>
-      <p>
-        GitHub: <a href="https://github.com/hmstk">hmstk</a>
       </p>
     </td>
 </tr>
@@ -295,13 +242,66 @@
     </td>
 </tr>
 <tr>
-    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/misonothx.png" /></td>
+    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/SpriteOvO.png" /></td>
     <td>
       <p>
-        <big><b>misonothx</b></big>
+        <big><b>SpriteOvO</b></big>
       </p>
       <p>
-        GitHub: <a href="https://github.com/miso-xyz">miso-xyz</a>
+        GitHub: <a href="https://github.com/SpriteOvO">SpriteOvO</a>
+      </p>
+    </td>
+</tr>
+<tr>
+    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/clayne.png" /></td>
+    <td>
+      <p>
+        <big><b>Christopher Layne</b></big>
+      </p>
+      <p>
+        GitHub: <a href="https://github.com/clayne">clayne</a>
+      </p>
+    </td>
+</tr>
+<tr>
+    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/elastic.png" /></td>
+    <td>
+      <p>
+        <big><b>elastic</b></big>
+      </p>
+      <p>
+        Website: <a href="https://www.elastic.co">https://www.elastic.co</a>
+      </p>
+      <p>
+        GitHub: <a href="https://github.com/elastic">elastic</a>
+      </p>
+      <p>
+        Twitter: <a href="https://twitter.com/elastic">elastic</a>
+      </p>
+    </td>
+</tr>
+<tr>
+    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/fr0zenbag.png" /></td>
+    <td>
+      <p>
+        <big><b>fr0zenbag</b></big>
+      </p>
+      <p>
+        GitHub: <a href="https://github.com/fr0zenbag">fr0zenbag</a>
+      </p>
+    </td>
+</tr>
+<tr>
+    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/hmstk.png" /></td>
+    <td>
+      <p>
+        <big><b>Derick Estrada</b></big>
+      </p>
+      <p>
+        Website: <a href="hamsteri.co">hamsteri.co</a>
+      </p>
+      <p>
+        GitHub: <a href="https://github.com/hmstk">hmstk</a>
       </p>
     </td>
 </tr>
@@ -313,6 +313,17 @@
       </p>
       <p>
         GitHub: <a href="https://github.com/miT231-spec">miT231-spec</a>
+      </p>
+    </td>
+</tr>
+<tr>
+    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/misonothx.png" /></td>
+    <td>
+      <p>
+        <big><b>misonothx</b></big>
+      </p>
+      <p>
+        GitHub: <a href="https://github.com/miso-xyz">miso-xyz</a>
       </p>
     </td>
 </tr>
@@ -355,17 +366,6 @@
       </p>
       <p>
         GitHub: <a href="https://github.com/sapdragon">sapdragon</a>
-      </p>
-    </td>
-</tr>
-<tr>
-    <td><img src="https://github.com/horsicq/XOpcodeCalc/blob/master/images/thanks/SpriteOvO.png" /></td>
-    <td>
-      <p>
-        <big><b>SpriteOvO</b></big>
-      </p>
-      <p>
-        GitHub: <a href="https://github.com/SpriteOvO">SpriteOvO</a>
       </p>
     </td>
 </tr>
