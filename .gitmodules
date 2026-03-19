@@ -19,3 +19,6 @@
 [submodule "XShortcuts"]
 	path = XShortcuts
 	url = https://github.com/horsicq/XShortcuts
+[submodule "Formats"]
+	path = Formats
+	url = https://github.com/horsicq/Formats.git
