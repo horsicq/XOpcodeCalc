@@ -1,0 +1,24 @@
+[submodule "dep/Controls"]
+	path = dep/Controls
+	url = https://github.com/horsicq/Controls
+[submodule "dep/Formats"]
+	path = dep/Formats
+	url = https://github.com/horsicq/Formats
+[submodule "dep/XAboutWidget"]
+	path = dep/XAboutWidget
+	url = https://github.com/horsicq/XAboutWidget
+[submodule "dep/XGithub"]
+	path = dep/XGithub
+	url = https://github.com/horsicq/XGithub
+[submodule "dep/XOptions"]
+	path = dep/XOptions
+	url = https://github.com/horsicq/XOptions
+[submodule "dep/XShortcuts"]
+	path = dep/XShortcuts
+	url = https://github.com/horsicq/XShortcuts
+[submodule "dep/XUpdate"]
+	path = dep/XUpdate
+	url = https://github.com/horsicq/XUpdate
+[submodule "dep/build_tools"]
+	path = dep/build_tools
+	url = https://github.com/horsicq/build_tools
