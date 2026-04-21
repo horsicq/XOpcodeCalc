@@ -1,24 +1,24 @@
-[submodule "XOptions"]
+[submodule "dep/XOptions"]
 	path = XOptions
 	url = https://github.com/horsicq/XOptions
-[submodule "build_tools"]
+[submodule "dep/build_tools"]
 	path = build_tools
 	url = https://github.com/horsicq/build_tools
-[submodule "XAboutWidget"]
+[submodule "dep/XAboutWidget"]
 	path = XAboutWidget
 	url = https://github.com/horsicq/XAboutWidget
-[submodule "XUpdate"]
+[submodule "dep/XUpdate"]
 	path = XUpdate
 	url = https://github.com/horsicq/XUpdate
-[submodule "XGithub"]
+[submodule "dep/XGithub"]
 	path = XGithub
 	url = https://github.com/horsicq/XGithub
-[submodule "Controls"]
+[submodule "dep/Controls"]
 	path = Controls
 	url = https://github.com/horsicq/Controls
-[submodule "XShortcuts"]
+[submodule "dep/XShortcuts"]
 	path = XShortcuts
 	url = https://github.com/horsicq/XShortcuts
-[submodule "Formats"]
+[submodule "dep/Formats"]
 	path = Formats
 	url = https://github.com/horsicq/Formats.git
