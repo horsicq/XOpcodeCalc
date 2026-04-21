@@ -22,3 +22,9 @@
 [submodule "dep/Formats"]
 	path = Formats
 	url = https://github.com/horsicq/Formats.git
+[submodule "dep/XStyles"]
+	path = dep/XStyles
+	url = https://github.com/horsicq/XStyles
+[submodule "dep/XTranslation"]
+	path = dep/XTranslation
+	url = https://github.com/horsicq/XTranslation
