@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=@PROJECT_VERSION@
+Type=Application
+Name=XOpcodeCalc
+Comment=Opcode calculator
+TryExec=xocalc
+Exec=xocalc
+Icon=xopcodecalc
+Terminal=false
+Categories=Development;
