@@ -1,3 +1,0 @@
-# XGitHub
-
-GitHub API
