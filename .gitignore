@@ -1,4 +1,11 @@
-*.o
-config.log
 build/
-.qmake.stash
+build-*/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.user
+private/
