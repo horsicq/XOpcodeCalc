@@ -11,7 +11,7 @@ if(UNIX AND NOT APPLE)
     include(GNUInstallDirs)
 endif()
 
-add_executable(XOpcodeCalc WIN32
+set(XOPCODECALC_GUI_SOURCES
     ${XABOUTWIDGET_SOURCES}
     ${XLINEEDITHEX_SOURCES}
     ${XOPTIONS_SOURCES}
@@ -30,6 +30,21 @@ add_executable(XOpcodeCalc WIN32
     resources.qrc
 )
 
+if(WIN32 AND EXISTS "${X_WINDOWS_RESOURCE_ICON_RC}")
+    list(APPEND XOPCODECALC_GUI_SOURCES "${X_WINDOWS_RESOURCE_ICON_RC}")
+endif()
+
+if(APPLE AND EXISTS "${X_MACOS_ICON}")
+    set_source_files_properties("${X_MACOS_ICON}" PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    list(APPEND XOPCODECALC_GUI_SOURCES "${X_MACOS_ICON}")
+endif()
+
+add_executable(XOpcodeCalc WIN32
+    ${XOPCODECALC_GUI_SOURCES}
+)
+
 set_target_properties(XOpcodeCalc PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
@@ -43,6 +58,10 @@ target_link_libraries(XOpcodeCalc PRIVATE
     Qt${XOPCODECALC_QT_MAJOR}::Widgets
     xopcodecalc_asm
 )
+
+if(TARGET xopcodecalc_translations)
+    add_dependencies(XOpcodeCalc xopcodecalc_translations)
+endif()
 
 if(UNIX AND NOT APPLE)
     set(XOPCODECALC_RUNTIME_INSTALL_DESTINATION "${CMAKE_INSTALL_BINDIR}")

@@ -63,5 +63,43 @@ else()
     message(STATUS "Skipping deploy_init.cmake because packaging resource templates are missing")
 endif()
 
+set(XOPCODECALC_TRANSLATION_HELPER "${CMAKE_CURRENT_LIST_DIR}/../dep/build_tools/cmake/deploy_translation.cmake")
+if(EXISTS "${XOPCODECALC_TRANSLATION_HELPER}")
+    include("${XOPCODECALC_TRANSLATION_HELPER}")
+
+    set(XOPCODECALC_TS_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ar_AR.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_bn_BN.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_de_DE.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_es_ES.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_fa_FA.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_fr_FR.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_he_IL.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_id_ID.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_it_IT.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ja_JP.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ko_KR.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pl_PL.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pt_BR.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pt_PT.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ru_RU.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_sv_SE.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_tr_TR.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_uk_UA.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_vi_VN.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh_CN.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh_TW.ts"
+    )
+
+    deploy_add_translations(
+        TARGET_NAME xopcodecalc_translations
+        ADD_TO_ALL
+        SOURCE_DIRS "${CMAKE_CURRENT_LIST_DIR}"
+        TS_FILES ${XOPCODECALC_TS_FILES}
+        INSTALL_DESTINATION lang
+        WINDOWS_APPDATA_SUBDIR "${X_PROJECTNAME}"
+    )
+endif()
+
 add_subdirectory(asm)
 add_subdirectory(gui)
