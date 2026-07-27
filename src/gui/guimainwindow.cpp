@@ -22,10 +22,9 @@
 
 #include "ui_guimainwindow.h"
 
-#include "bigint.h"
-
 #include <QAbstractButton>
-#include <QDebug>
+#include <QApplication>
+#include <QClipboard>
 #include <array>
 #include <utility>
 
@@ -33,7 +32,7 @@ namespace {
 
 constexpr XVALUE kSupportedFlagsMask =
     ASM_DEF::AF | ASM_DEF::CF | ASM_DEF::OF | ASM_DEF::PF | ASM_DEF::SF | ASM_DEF::ZF;
-constexpr XVALUE kHiddenFlagsMask = 0x202;
+constexpr XVALUE kHiddenFlagsMask = 0x0002 | 0x0200;  // EFLAGS reserved bit 1 (always set) and IF
 
 template <size_t N>
 qint32 opcodeRecordCount(const ASM_DEF::OPCODE_RECORD (&)[N])
@@ -65,6 +64,12 @@ void GuiMainWindow::initializeUi()
     opcodeFont.setBold(true);
     ui->toolButtonOpcode->setFont(opcodeFont);
 
+    const QList<XLineEditHEX *> outputs = resultEditors();
+    for (XLineEditHEX *editor : outputs) {
+        editor->setReadOnly(true);
+    }
+    ui->lineEditFlagsAfter->setReadOnly(true);
+
     m_options.setName(X_OPTIONSFILE);
     m_options.addID(XOptions::ID_VIEW_STYLE, QStringLiteral("Fusion"));
     m_options.addID(XOptions::ID_VIEW_STAYONTOP, false);
@@ -82,25 +87,21 @@ void GuiMainWindow::initializeOpcodeGroups()
 {
     ui->comboBoxOpcodeGroup->addItem(tr("Two operands"), OG_TWOOPERANDS);
     ui->comboBoxOpcodeGroup->addItem(tr("One operand"), OG_ONEOPERAND);
-    ui->comboBoxOpcodeGroup->addItem(QStringLiteral("Mul/Div"), OG_MULDIV);
-    ui->comboBoxOpcodeGroup->addItem(QStringLiteral("Shift"), OG_SHIFT);
-    ui->comboBoxOpcodeGroup->addItem(QStringLiteral("Bits"), OG_BITS);
+    ui->comboBoxOpcodeGroup->addItem(tr("Mul/Div"), OG_MULDIV);
+    ui->comboBoxOpcodeGroup->addItem(tr("Shift"), OG_SHIFT);
+    ui->comboBoxOpcodeGroup->addItem(tr("Bits"), OG_BITS);
 #ifndef OPCODE64
-    ui->comboBoxOpcodeGroup->addItem(QStringLiteral("BCD"), OG_BCD);
+    ui->comboBoxOpcodeGroup->addItem(tr("BCD"), OG_BCD);
 #endif
-    ui->comboBoxOpcodeGroup->addItem(QStringLiteral("Special"), OG_SPECIAL);
+    ui->comboBoxOpcodeGroup->addItem(tr("Special"), OG_SPECIAL);
 }
 
 void GuiMainWindow::initializeModes()
 {
-    ui->comboBoxMode->addItem(QStringLiteral("HEX"), XLineEditHEX::_MODE_HEX);
-    ui->comboBoxMode->addItem(QStringLiteral("Signed"), XLineEditHEX::_MODE_SIGN_DEC);
-    ui->comboBoxMode->addItem(QStringLiteral("Unsigned"), XLineEditHEX::_MODE_DEC);
-}
-
-void GuiMainWindow::triggerCalculation()
-{
-    calc();
+    ui->comboBoxMode->addItem(tr("HEX"), XLineEditHEX::_MODE_HEX);
+    ui->comboBoxMode->addItem(tr("Signed"), XLineEditHEX::_MODE_SIGN_DEC);
+    ui->comboBoxMode->addItem(tr("Unsigned"), XLineEditHEX::_MODE_DEC);
+    ui->comboBoxMode->addItem(tr("Binary"), XLineEditHEX::_MODE_BIN);
 }
 
 void GuiMainWindow::on_pushButtonExit_clicked()
@@ -153,6 +154,10 @@ RECDATA GuiMainWindow::createInputData() const
 
 bool GuiMainWindow::canExecuteOpcode(const ASM_DEF::OPCODE_RECORD &record, const RECDATA &data) const
 {
+    if (!CpuFeatures::isSupported(record.feature)) {
+        return false;  // the instruction would raise #UD on this CPU
+    }
+
     if ((record.opcode != ASM_DEF::OP_DIV) && (record.opcode != ASM_DEF::OP_IDIV)) {
         return true;
     }
@@ -162,49 +167,8 @@ bool GuiMainWindow::canExecuteOpcode(const ASM_DEF::OPCODE_RECORD &record, const
 
 bool GuiMainWindow::validateDivision(const ASM_DEF::OPCODE_RECORD &record, const RECDATA &data) const
 {
-    if (data.OPERAND[1] == 0) {
-        return false;
-    }
-
-    const BigInt dividendLow(QString::number(data.OPERAND[0]).toStdString());
-    const BigInt divisor(QString::number(data.OPERAND[1]).toStdString());
-    const BigInt dividendHigh(QString::number(data.OPERAND[2]).toStdString());
-
-#ifdef OPCODE32
-    const BigInt maxUnsigned(QString::number(0xFFFFFFFFu).toStdString());
-    const BigInt maxSigned(QString::number(0x7FFFFFFF).toStdString());
-#else
-    const BigInt maxUnsigned(QString::number(0xFFFFFFFFFFFFFFFFull).toStdString());
-    const BigInt maxSigned(QString::number(0x7FFFFFFFFFFFFFFFll).toStdString());
-#endif
-
-    const BigInt fullDividend = dividendLow + (dividendHigh * (maxUnsigned + 1));
-    const BigInt quotient = fullDividend / divisor;
-
-#ifdef QT_DEBUG
-    qDebug("a0:     %s", dividendLow.to_string().c_str());
-    qDebug("a1:     %s", divisor.to_string().c_str());
-    qDebug("a2:     %s", dividendHigh.to_string().c_str());
-    qDebug("biMax:  %s", maxUnsigned.to_string().c_str());
-    qDebug("biMax0: %s", maxSigned.to_string().c_str());
-    qDebug("res:    %s", quotient.to_string().c_str());
-#endif
-
-    if (quotient >= maxUnsigned) {
-        return false;
-    }
-
-    if (record.opcode == ASM_DEF::OP_IDIV) {
-        if ((dividendLow >= maxSigned) && (divisor >= maxSigned)) {
-            return false;
-        }
-
-        if ((dividendHigh > 0) && (divisor >= maxSigned)) {
-            return false;
-        }
-    }
-
-    return true;
+    // OPERAND[0] = EAX/RAX (low), OPERAND[1] = ECX/RCX (divisor), OPERAND[2] = EDX/RDX (high)
+    return DivisionCheck::isDivisionDefined(record.opcode == ASM_DEF::OP_IDIV, data.OPERAND[0], data.OPERAND[1], data.OPERAND[2]);
 }
 
 void GuiMainWindow::applyResultData(const ASM_DEF::OPCODE_RECORD &record, RECDATA *data, const bool success)
@@ -327,12 +291,6 @@ void GuiMainWindow::setEditorsMode(const XLineEditHEX::_MODE mode)
 
 void GuiMainWindow::calc()
 {
-    const QList<XLineEditHEX *> outputs = resultEditors();
-    for (XLineEditHEX *editor : outputs) {
-        editor->blockSignals(true);
-    }
-    ui->lineEditFlagsAfter->blockSignals(true);
-
     const ASM_DEF::OPCODE_RECORD record = currentOpcodeRecord();
     RECDATA data = createInputData();
     const bool success = record.asm_func && canExecuteOpcode(record, data);
@@ -352,11 +310,6 @@ void GuiMainWindow::calc()
                      visibleFlags & ASM_DEF::OF,
                      visibleFlags & ASM_DEF::SF,
                      visibleFlags & ASM_DEF::ZF);
-
-    ui->lineEditFlagsAfter->blockSignals(false);
-    for (XLineEditHEX *editor : outputs) {
-        editor->blockSignals(false);
-    }
 }
 
 void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 nRecordsSize)
@@ -368,6 +321,9 @@ void GuiMainWindow::loadOpcodes(const ASM_DEF::OPCODE_RECORD *pRecords, qint32 n
 
     for (qint32 index = 0; index < nRecordsSize; ++index) {
         const ASM_DEF::OPCODE_RECORD &record = pRecords[index];
+        if (!CpuFeatures::isSupported(record.feature)) {
+            continue;  // the instruction would raise #UD on this CPU
+        }
         m_opcodeMap.insert(record.opcode, record);
         ui->comboBoxOpcode->addItem(record.pszName, static_cast<int>(record.opcode));
     }
@@ -379,7 +335,7 @@ void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int nIndex)
 {
     if (nIndex != -1) {
         adjustMode();
-        triggerCalculation();
+        calc();
     }
 }
 
@@ -421,56 +377,28 @@ void GuiMainWindow::on_lineEditOperand1_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 
-    triggerCalculation();
+    calc();
 }
 
 void GuiMainWindow::on_lineEditOperand2_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 
-    triggerCalculation();
+    calc();
 }
 
 void GuiMainWindow::on_lineEditOperand3_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 
-    triggerCalculation();
+    calc();
 }
 
 void GuiMainWindow::on_lineEditOperand4_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 
-    triggerCalculation();
-}
-
-void GuiMainWindow::on_lineEditResult1_textChanged(const QString &arg1)
-{
-    Q_UNUSED(arg1)
-
-    triggerCalculation();
-}
-
-void GuiMainWindow::on_lineEditResult2_textChanged(const QString &arg1)
-{
-    Q_UNUSED(arg1)
-
-    triggerCalculation();
-}
-
-void GuiMainWindow::on_lineEditResult3_textChanged(const QString &arg1)
-{
-    Q_UNUSED(arg1)
-
-    triggerCalculation();
-}
-
-void GuiMainWindow::on_lineEditResult4_textChanged(const QString &arg1)
-{
-    Q_UNUSED(arg1)
-
-    triggerCalculation();
+    calc();
 }
 
 void GuiMainWindow::on_pushButtonFlagCF_toggled(bool checked)
@@ -509,7 +437,7 @@ void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
 
     const XVALUE flags = static_cast<XVALUE>(ui->lineEditFlagsBefore->getValue_uint64());
     updateFlagButtons(flags);
-    triggerCalculation();
+    calc();
 }
 
 void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
@@ -518,7 +446,7 @@ void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
         const XLineEditHEX::_MODE mode = static_cast<XLineEditHEX::_MODE>(ui->comboBoxMode->currentData().toInt());
         setEditorsMode(mode);
         adjustMode();
-        triggerCalculation();
+        calc();
     }
 }
 
@@ -551,7 +479,7 @@ void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
         }
 
         adjustMode();
-        triggerCalculation();
+        calc();
     }
 }
 
@@ -564,7 +492,54 @@ void GuiMainWindow::on_pushButtonOptions_clicked()
     adjustWindow();
 }
 
+QString GuiMainWindow::buildReport() const
+{
+    QString sReport;
+    sReport += ui->toolButtonOpcode->text() + QLatin1Char('\n');
+
+    struct ValueLine {
+        QGroupBox *pGroupBox;
+        XLineEditHEX *pEditor;
+    };
+
+    const std::array<ValueLine, 4> operandLines = {{
+        {ui->groupBoxOperand1, ui->lineEditOperand1},
+        {ui->groupBoxOperand2, ui->lineEditOperand2},
+        {ui->groupBoxOperand3, ui->lineEditOperand3},
+        {ui->groupBoxOperand4, ui->lineEditOperand4},
+    }};
+    const std::array<ValueLine, 4> resultLines = {{
+        {ui->groupBoxResult1, ui->lineEditResult1},
+        {ui->groupBoxResult2, ui->lineEditResult2},
+        {ui->groupBoxResult3, ui->lineEditResult3},
+        {ui->groupBoxResult4, ui->lineEditResult4},
+    }};
+
+    for (const ValueLine &line : operandLines) {
+        if (!line.pGroupBox->isHidden()) {
+            sReport += QStringLiteral("%1: %2\n").arg(line.pGroupBox->title(), line.pEditor->text());
+        }
+    }
+
+    sReport += tr("Result") + QLatin1Char('\n');
+    for (const ValueLine &line : resultLines) {
+        if (!line.pGroupBox->isHidden()) {
+            sReport += QStringLiteral("%1: %2\n").arg(line.pGroupBox->title(), line.pEditor->text());
+        }
+    }
+
+    sReport += QStringLiteral("%1: %2\n").arg(tr("Flags before"), ui->lineEditFlagsBefore->text());
+    sReport += QStringLiteral("%1: %2\n").arg(tr("Flags after"), ui->lineEditFlagsAfter->text());
+
+    return sReport;
+}
+
+void GuiMainWindow::on_pushButtonCopy_clicked()
+{
+    QApplication::clipboard()->setText(buildReport());
+}
+
 void GuiMainWindow::on_toolButtonOpcode_clicked()
 {
-    triggerCalculation();
+    calc();
 }

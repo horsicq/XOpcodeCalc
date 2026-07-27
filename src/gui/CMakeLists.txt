@@ -17,7 +17,6 @@ set(XOPCODECALC_GUI_SOURCES
     ${XOPTIONS_SOURCES}
     ${XSTYLES_SOURCES}
     main_gui.cpp
-    bigint.h
     dialogabout.cpp
     dialogabout.h
     dialogabout.ui
@@ -27,7 +26,7 @@ set(XOPCODECALC_GUI_SOURCES
     guimainwindow.cpp
     guimainwindow.h
     guimainwindow.ui
-    resources.qrc
+    "${CMAKE_CURRENT_LIST_DIR}/../../res/resources_gui.qrc"
 )
 
 if(WIN32 AND EXISTS "${X_WINDOWS_RESOURCE_ICON_RC}")

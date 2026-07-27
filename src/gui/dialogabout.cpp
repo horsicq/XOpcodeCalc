@@ -63,7 +63,7 @@ XAboutWidget::DATA DialogAbout::createAboutData()
                                     QStringLiteral("http://qt-project.org"),
                                     QStringLiteral("http://qt-project.org"));
 
-    data.sLogoPath = QStringLiteral(":/images/main.png");
+    data.sLogoPath = QStringLiteral(":/images/logo.png");
     data.sUpdatesLink = QStringLiteral("https://github.com/horsicq/XOpcodeCalc/releases");
     data.sThanksLink = QStringLiteral("https://github.com/horsicq/XOpcodeCalc/blob/master/THANKS.md");
 

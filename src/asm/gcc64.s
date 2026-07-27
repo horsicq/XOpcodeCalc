@@ -561,3 +561,139 @@ op_cqo:
             __ENTER
             cqo
             __LEAVE
+#################################
+# POPCNT
+#################################
+            .globl	op_popcnt
+op_popcnt:
+            __ENTER
+            popcnt      rax,rcx
+            __LEAVE
+#################################
+# LZCNT
+#################################
+            .globl	op_lzcnt
+op_lzcnt:
+            __ENTER
+            lzcnt       rax,rcx
+            __LEAVE
+#################################
+# TZCNT
+#################################
+            .globl	op_tzcnt
+op_tzcnt:
+            __ENTER
+            tzcnt       rax,rcx
+            __LEAVE
+#################################
+# ANDN
+#################################
+            .globl	op_andn
+op_andn:
+            __ENTER
+            andn        rax,rcx,rdx
+            __LEAVE
+#################################
+# BEXTR
+#################################
+            .globl	op_bextr
+op_bextr:
+            __ENTER
+            bextr       rax,rcx,rdx
+            __LEAVE
+#################################
+# BLSI
+#################################
+            .globl	op_blsi
+op_blsi:
+            __ENTER
+            blsi        rax,rcx
+            __LEAVE
+#################################
+# BLSMSK
+#################################
+            .globl	op_blsmsk
+op_blsmsk:
+            __ENTER
+            blsmsk      rax,rcx
+            __LEAVE
+#################################
+# BLSR
+#################################
+            .globl	op_blsr
+op_blsr:
+            __ENTER
+            blsr        rax,rcx
+            __LEAVE
+#################################
+# BZHI
+#################################
+            .globl	op_bzhi
+op_bzhi:
+            __ENTER
+            bzhi        rax,rcx,rdx
+            __LEAVE
+#################################
+# PDEP
+#################################
+            .globl	op_pdep
+op_pdep:
+            __ENTER
+            pdep        rax,rcx,rdx
+            __LEAVE
+#################################
+# PEXT
+#################################
+            .globl	op_pext
+op_pext:
+            __ENTER
+            pext        rax,rcx,rdx
+            __LEAVE
+#################################
+# SHLX
+#################################
+            .globl	op_shlx
+op_shlx:
+            __ENTER
+            shlx        rax,rcx,rdx
+            __LEAVE
+#################################
+# SHRX
+#################################
+            .globl	op_shrx
+op_shrx:
+            __ENTER
+            shrx        rax,rcx,rdx
+            __LEAVE
+#################################
+# SARX
+#################################
+            .globl	op_sarx
+op_sarx:
+            __ENTER
+            sarx        rax,rcx,rdx
+            __LEAVE
+#################################
+# CRC32
+#################################
+            .globl	op_crc32
+op_crc32:
+            __ENTER
+            crc32       rax,rcx
+            __LEAVE
+#################################
+# ADCX
+#################################
+            .globl	op_adcx
+op_adcx:
+            __ENTER
+            adcx        rax,rcx
+            __LEAVE
+#################################
+# ADOX
+#################################
+            .globl	op_adox
+op_adox:
+            __ENTER
+            adox        rax,rcx
+            __LEAVE

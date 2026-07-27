@@ -1239,6 +1239,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButtonCopy">
+        <property name="toolTip">
+         <string>Copy the calculation to the clipboard</string>
+        </property>
+        <property name="text">
+         <string>Copy</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_4">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

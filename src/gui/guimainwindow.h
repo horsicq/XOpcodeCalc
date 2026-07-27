@@ -28,6 +28,8 @@
 
 #include "../asm/asm.h"
 #include "../asm_defs.h"
+#include "../cpufeatures.h"
+#include "../divisioncheck.h"
 #include "../global.h"
 #include "dialogabout.h"
 #include "dialogoptions.h"
@@ -65,10 +67,6 @@ private slots:
     void on_lineEditOperand2_textChanged(const QString &arg1);
     void on_lineEditOperand3_textChanged(const QString &arg1);
     void on_lineEditOperand4_textChanged(const QString &arg1);
-    void on_lineEditResult1_textChanged(const QString &arg1);
-    void on_lineEditResult2_textChanged(const QString &arg1);
-    void on_lineEditResult3_textChanged(const QString &arg1);
-    void on_lineEditResult4_textChanged(const QString &arg1);
     void on_pushButtonFlagCF_toggled(bool checked);
     void on_pushButtonFlagPF_toggled(bool checked);
     void on_pushButtonFlagAF_toggled(bool checked);
@@ -85,13 +83,13 @@ private slots:
     void adjustFlags(XVALUE nFlag, bool bState);
     void on_comboBoxOpcodeGroup_currentIndexChanged(int index);
     void on_pushButtonOptions_clicked();
+    void on_pushButtonCopy_clicked();
     void on_toolButtonOpcode_clicked();
 
 private:
     void initializeUi();
     void initializeOpcodeGroups();
     void initializeModes();
-    void triggerCalculation();
     ASM_DEF::OPCODE_RECORD currentOpcodeRecord() const;
     QList<XLineEditHEX *> resultEditors() const;
     void clearResultEditors();
@@ -103,6 +101,7 @@ private:
     void updateFlagLabels(XVALUE flags);
     void updateJumpLabels(bool carry, bool parity, bool overflow, bool sign, bool zero);
     void setEditorsMode(XLineEditHEX::_MODE mode);
+    QString buildReport() const;
 
     Ui::GuiMainWindow *ui;
     XOptions m_options;

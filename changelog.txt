@@ -1,3 +1,20 @@
+1.0.0
+-----------------------------------------------------------------------
+[+] 17 new opcodes: POPCNT, LZCNT, TZCNT, ANDN, BEXTR, BLSI, BLSMSK, BLSR,
+    BZHI, PDEP, PEXT, SHLX, SHRX, SARX, CRC32, ADCX, ADOX
+    (gated by CPUID, so only opcodes the CPU supports are offered)
+[+] Fixed a crash on DIV/IDIV inputs that overflow the quotient
+[+] Opcode test harness: the assembly backends are verified against a
+    portable C reference implementation (millions of directed + fuzz cases)
+[+] Portable C opcode backend: non-x86 targets (e.g. ARM64) now build and run
+[+] Binary display mode for operands and results
+[+] Copy button: puts the whole calculation on the clipboard
+[+] Result fields are read-only now
+[+] New semantic versioning scheme (X.Y.Z)
+[+] Project refactored to the common CMake project template
+[+] GUI resources moved to res/resources_gui.qrc
+[+] Many bugs have been fixed.
+#######################################################################
 0.05
 -----------------------------------------------------------------------
 [+] Bundle for Arch Linux

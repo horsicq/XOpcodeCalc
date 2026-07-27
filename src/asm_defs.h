@@ -99,6 +99,23 @@ enum OP {
     OP_MOVZX_R16,
     OP_MOVSX_R8,
     OP_MOVSX_R16,
+    OP_POPCNT,
+    OP_LZCNT,
+    OP_TZCNT,
+    OP_ANDN,
+    OP_BEXTR,
+    OP_BLSI,
+    OP_BLSMSK,
+    OP_BLSR,
+    OP_BZHI,
+    OP_PDEP,
+    OP_PEXT,
+    OP_SHLX,
+    OP_SHRX,
+    OP_SARX,
+    OP_CRC32,
+    OP_ADCX,
+    OP_ADOX,
 #ifdef OPCODE64
     OP_MOVSXD,
     OP_CDQE,
@@ -126,14 +143,27 @@ const XVALUE ZF = 0x0040;
 const XVALUE SF = 0x0080;
 const XVALUE OF = 0x0800;
 
-const unsigned char LIMBS32 = 0x31;
-const unsigned char LIMBS64 = 0x63;
+// Shift/rotate counts are masked by the CPU to 0..31 / 0..63.
+const unsigned char LIMBS32 = 0x1F;
+const unsigned char LIMBS64 = 0x3F;
 const unsigned char LIM8 = 0xFF;
 const unsigned short LIM16 = 0xFFFF;
 const unsigned int LIM32 = 0xFFFFFFFF;
-const unsigned long long LIM64 = 0xFFFFFFFFFFFFFFFF;
+const unsigned long long LIM64 = 0xFFFFFFFFFFFFFFFFull;
 
 typedef void (*_asm_func)(RECDATA *pRecData);
+
+// CPU feature an opcode needs; FEAT_BASE opcodes run everywhere. Rows that
+// omit the field aggregate-initialize it to FEAT_BASE.
+enum FEATURE {
+    FEAT_BASE = 0,
+    FEAT_POPCNT,
+    FEAT_LZCNT,
+    FEAT_BMI1,
+    FEAT_BMI2,
+    FEAT_SSE42,
+    FEAT_ADX
+};
 
 struct OPCODE_RECORD {
     OP opcode;
@@ -142,186 +172,220 @@ struct OPCODE_RECORD {
     VALUE_RECORD vrOperand[4];
     VALUE_RECORD vrResult[4];
     const char *pszExample;
+    FEATURE feature;
 };
 
+// One table serves both widths: the register set is selected here and the row
+// macros below splice it into names, limits and example strings.
 #ifdef OPCODE32
-const OPCODE_RECORD asm_twooperands[] = {
-    {OP_ADD, &op_add, "add", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "ADD EAX,ECX"},
-    {OP_SUB, &op_sub, "sub", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SUB EAX,ECX"},
-    {OP_ADC, &op_adc, "adc", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "ADC EAX,ECX"},
-    {OP_SBB, &op_sbb, "sbb", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SBB EAX,ECX"},
-    {OP_AND, &op_and, "and", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "AND EAX,ECX"},
-    {OP_XOR, &op_xor, "xor", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "XOR EAX,ECX"},
-    {OP_OR, &op_or, "or", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "OR EAX,ECX"},
-    {OP_MOV, &op_mov, "mov", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "MOV EAX,ECX"},
-    {OP_XCHG, &op_xchg, "xchg", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, "XCHG EAX,ECX"},
-    {OP_TEST, &op_test, "test", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "TEST EAX,ECX"},
-    {OP_CMP, &op_cmp, "cmp", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "CMP EAX,ECX"},
-    {OP_XADD, &op_xadd, "xadd", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, "XADD EAX,ECX"},
-    {OP_CMOVC, &op_cmovc, "cmovc", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVC EAX,ECX"},
-    {OP_CMOVNC, &op_cmovnc, "cmovnc", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNC EAX,ECX"},
-    {OP_CMOVZ, &op_cmovz, "cmovz", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVZ EAX,ECX"},
-    {OP_CMOVNZ, &op_cmovnz, "cmovnz", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNZ EAX,ECX"},
-    {OP_CMOVS, &op_cmovs, "cmovs", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVS EAX,ECX"},
-    {OP_CMOVNS, &op_cmovns, "cmovns", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNS EAX,ECX"},
-    {OP_CMOVO, &op_cmovo, "cmovo", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVO EAX,ECX"},
-    {OP_CMOVNO, &op_cmovno, "cmovno", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNO EAX,ECX"},
-    {OP_CMOVP, &op_cmovp, "cmovp", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVP EAX,ECX"},
-    {OP_CMOVNP, &op_cmovnp, "cmovnp", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNP EAX,ECX"},
-    {OP_MOVZX_R8, &op_movzx_r8, "movzx r32,r8", {{"EAX", LIM32}, {"CL", LIM8}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "MOVZX EAX,CL"},
-    {OP_MOVZX_R16, &op_movzx_r16, "movzx r32,r16", {{"EAX", LIM32}, {"CX", LIM16}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "MOVZX EAX,CX"},
-    {OP_MOVSX_R8, &op_movsx_r8, "movsx r32,r8", {{"EAX", LIM32}, {"CL", LIM8}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "MOVSX EAX,CL"},
-    {OP_MOVSX_R16, &op_movsx_r16, "movsx r32,r16", {{"EAX", LIM32}, {"CX", LIM16}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "MOVSX EAX,CX"},
-};
-const OPCODE_RECORD asm_oneoperand[] = {
-    {OP_INC, &op_inc, "inc", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "INC EAX"},
-    {OP_DEC, &op_dec, "dec", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "DEC EAX"},
-    {OP_NOT, &op_not, "not", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "NOT EAX"},
-    {OP_NEG, &op_neg, "neg", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "NEG EAX"},
-    {OP_BSWAP, &op_bswap, "bswap", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BSWAP EAX"},
-    {OP_LAHF, &op_lahf, "lahf", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "LAHF"},
-    {OP_SAHF, &op_sahf, "sahf", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "SAHF"},
-    {OP_SETC, &op_setc, "setc", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETC AL"},
-    {OP_SETNC, &op_setnc, "setnc", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETNC AL"},
-    {OP_SETZ, &op_setz, "setz", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETZ AL"},
-    {OP_SETNZ, &op_setnz, "setnz", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETNZ AL"},
-    {OP_SETS, &op_sets, "sets", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETS AL"},
-    {OP_SETNS, &op_setns, "setns", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETNS AL"},
-    {OP_SETO, &op_seto, "seto", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETO AL"},
-    {OP_SETNO, &op_setno, "setno", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETNO AL"},
-    {OP_SETP, &op_setp, "setp", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETP AL"},
-    {OP_SETNP, &op_setnp, "setnp", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SETNP AL"},
-    {OP_CBW, &op_cbw, "cbw", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "CBW"},
-    {OP_CWDE, &op_cwde, "cwde", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "CWDE"},
-    {OP_CWD, &op_cwd, "cwd", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"DX", LIM16}, {"", 0}, {"", 0}}, "CWD"},
-    {OP_CDQ, &op_cdq, "cdq", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "CDQ"},
-};
-const OPCODE_RECORD asm_muldiv[] = {
-    {OP_MUL, &op_mul, "mul", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "MUL ECX"},
-    {OP_IMUL, &op_imul, "imul", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "IMUL ECX"},
-    {OP_DIV, &op_div, "div", {{"EAX", LIM32}, {"ECX", LIM32}, {"EDX", LIM32}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "DIV ECX"},
-    {OP_IDIV, &op_idiv, "idiv", {{"EAX", LIM32}, {"ECX", LIM32}, {"EDX", LIM32}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "IDIV ECX"},
-};
-const OPCODE_RECORD asm_shift[] = {
-    {OP_SHR, &op_shr, "shr", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SHR EAX,CL"},
-    {OP_SHL, &op_shl, "shl", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SHL EAX,CL"},
-    {OP_SAR, &op_sar, "sar", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SAR EAX,CL"},
-    {OP_SHLD, &op_shld, "shld", {{"EAX", LIM32}, {"EDX", LIM32}, {"CL", LIMBS32}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SHLD EAX,EDX,CL"},
-    {OP_SHRD, &op_shrd, "shrd", {{"EAX", LIM32}, {"EDX", LIM32}, {"CL", LIMBS32}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "SHRD EAX,EDX,CL"},
-    {OP_ROL, &op_rol, "rol", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "ROL EAX,CL"},
-    {OP_ROR, &op_ror, "ror", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "ROR EAX,CL"},
-    {OP_RCL, &op_rcl, "rcl", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "RCL EAX,CL"},
-    {OP_RCR, &op_rcr, "rcr", {{"EAX", LIM32}, {"CL", LIMBS32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "RCR EAX,CL"},
-};
-const OPCODE_RECORD asm_bits[] = {
-    {OP_BT, &op_bt, "bt", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BT EAX,ECX"},
-    {OP_BTS, &op_bts, "bts", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BTS EAX,ECX"},
-    {OP_BTR, &op_btr, "btr", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BTR EAX,ECX"},
-    {OP_BTC, &op_btc, "btc", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BTC EAX,ECX"},
-    {OP_BSF, &op_bsf, "bsf", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BSF EAX,ECX"},
-    {OP_BSR, &op_bsr, "bsr", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, "BSR EAX,ECX"},
-};
-const OPCODE_RECORD asm_bcd[] = {
-    {OP_DAA, &op_daa, "daa", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "DAA"},
-    {OP_DAS, &op_das, "das", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "DAS"},
-    {OP_AAA, &op_aaa, "aaa", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "AAA"},
-    {OP_AAS, &op_aas, "aas", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "AAS"},
-    {OP_AAM, &op_aam, "aam", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "AAM"},
-    {OP_AAD, &op_aad, "aad", {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, {{"AX", LIM16}, {"", 0}, {"", 0}, {"", 0}}, "AAD"},
-};
-const OPCODE_RECORD asm_special[] = {
-    {OP_CLC, &op_clc, "clc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "CLC"},
-    {OP_STC, &op_stc, "stc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "STC"},
-    {OP_CMC, &op_cmc, "cmc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "CMC"},
-    {OP_CMPXCHG, &op_cmpxchg, "cmpxchg", {{"EAX", LIM32}, {"ECX", LIM32}, {"EDX", LIM32}, {"", 0}}, {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, "CMPXCHG ECX,EDX"},
-    {OP_CPUID, &op_cpuid, "cpuid", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"ECX", LIM32}, {"EBX", LIM32}}, "CPUID"},
-    {OP_RDTSC, &op_rdtsc, "rdtsc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "RDTSC"},
-};
+#define XREG_A "EAX"
+#define XREG_C "ECX"
+#define XREG_D "EDX"
+#define XREG_RN "r32"
+#define XLIM LIM32
+#define XLIMBS LIMBS32
 #else
+#define XREG_A "RAX"
+#define XREG_C "RCX"
+#define XREG_D "RDX"
+#define XREG_RN "r64"
+#define XLIM LIM64
+#define XLIMBS LIMBS64
+#endif
+
+#define X_NONE \
+    {          \
+        "", 0  \
+    }
+
+// op A,C -> A                (add, cmov, bts, ...)
+#define X_ROW_2OP(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, EX " " XREG_A "," XREG_C}
+// op A,C -> A,C              (xchg, xadd)
+#define X_ROW_2OP_BOTH(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE}, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE}, EX " " XREG_A "," XREG_C}
+// op A,C -> flags only       (test, cmp)
+#define X_ROW_2OP_NORESULT(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE}, {X_NONE, X_NONE, X_NONE, X_NONE}, EX " " XREG_A "," XREG_C}
+// op A -> A                  (inc, not, bswap, ...)
+#define X_ROW_1OP(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, EX " " XREG_A}
+// op with a fixed example    (lahf, setcc)
+#define X_ROW_1OP_FIXED(op, fn, name, EXFULL) \
+    {op, fn, name, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, EXFULL}
+// mul/imul C -> A,D
+#define X_ROW_MUL(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE}, {{XREG_A, XLIM}, {XREG_D, XLIM}, X_NONE, X_NONE}, EX " " XREG_C}
+// div/idiv C with D:A -> A,D
+#define X_ROW_DIV(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, {XREG_D, XLIM}, X_NONE}, {{XREG_A, XLIM}, {XREG_D, XLIM}, X_NONE, X_NONE}, EX " " XREG_C}
+// shift A,CL -> A
+#define X_ROW_SHIFT(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {"CL", XLIMBS}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, EX " " XREG_A ",CL"}
+// shld/shrd A,D,CL -> A
+#define X_ROW_SHIFTD(op, fn, name, EX) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_D, XLIM}, {"CL", XLIMBS}, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, EX " " XREG_A "," XREG_D ",CL"}
+// op with no register operands (clc, stc, cmc)
+#define X_ROW_FLAGSONLY(op, fn, name, EXFULL) \
+    {op, fn, name, {X_NONE, X_NONE, X_NONE, X_NONE}, {X_NONE, X_NONE, X_NONE, X_NONE}, EXFULL}
+// feature-gated op A,C -> A     (popcnt, blsi, crc32, ...)
+#define X_ROW_2OP_F(op, fn, name, EX, feat) \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, EX " " XREG_A "," XREG_C, feat}
+// feature-gated op A,C,D -> A   (andn, bextr, shlx, ...); dlim bounds the D operand
+#define X_ROW_3OP_F(op, fn, name, EX, dlim, feat)                                                                                        \
+    {op, fn, name, {{XREG_A, XLIM}, {XREG_C, XLIM}, {XREG_D, dlim}, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE},                   \
+     EX " " XREG_A "," XREG_C "," XREG_D, feat}
+
 const OPCODE_RECORD asm_twooperands[] = {
-    {OP_ADD, &op_add, "add", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "ADD RAX,RCX"},
-    {OP_SUB, &op_sub, "sub", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SUB RAX,RCX"},
-    {OP_ADC, &op_adc, "adc", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "ADC RAX,RCX"},
-    {OP_SBB, &op_sbb, "sbb", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SBB RAX,RCX"},
-    {OP_AND, &op_and, "and", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "AND RAX,RCX"},
-    {OP_XOR, &op_xor, "xor", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "XOR RAX,RCX"},
-    {OP_OR, &op_or, "or", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "OR RAX,RCX"},
-    {OP_MOV, &op_mov, "mov", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "MOV RAX,RCX"},
-    {OP_XCHG, &op_xchg, "xchg", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, "XCHG RAX,RCX"},
-    {OP_TEST, &op_test, "test", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "TEST RAX,RCX"},
-    {OP_CMP, &op_cmp, "cmp", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "CMP RAX,RCX"},
-    {OP_XADD, &op_xadd, "xadd", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, "XADD RAX,RCX"},
-    {OP_CMOVC, &op_cmovc, "cmovc", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVC RAX,RCX"},
-    {OP_CMOVNC, &op_cmovnc, "cmovnc", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNC RAX,RCX"},
-    {OP_CMOVZ, &op_cmovz, "cmovz", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVZ RAX,RCX"},
-    {OP_CMOVNZ, &op_cmovnz, "cmovnz", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNZ RAX,RCX"},
-    {OP_CMOVS, &op_cmovs, "cmovs", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVS RAX,RCX"},
-    {OP_CMOVNS, &op_cmovns, "cmovns", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNS RAX,RCX"},
-    {OP_CMOVO, &op_cmovo, "cmovo", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVO RAX,RCX"},
-    {OP_CMOVNO, &op_cmovno, "cmovno", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNO RAX,RCX"},
-    {OP_CMOVP, &op_cmovp, "cmovp", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVP RAX,RCX"},
-    {OP_CMOVNP, &op_cmovnp, "cmovnp", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CMOVNP RAX,RCX"},
-    {OP_MOVZX_R8, &op_movzx_r8, "movzx r64,r8", {{"RAX", LIM64}, {"CL", LIM8}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "MOVZX RAX,CL"},
-    {OP_MOVZX_R16, &op_movzx_r16, "movzx r64,r16", {{"RAX", LIM64}, {"CX", LIM16}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "MOVZX RAX,CX"},
-    {OP_MOVSX_R8, &op_movsx_r8, "movsx r64,r8", {{"RAX", LIM64}, {"CL", LIM8}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "MOVSX RAX,CL"},
-    {OP_MOVSX_R16, &op_movsx_r16, "movsx r64,r16", {{"RAX", LIM64}, {"CX", LIM16}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "MOVSX RAX,CX"},
-    {OP_MOVSXD, &op_movsxd, "movsxd r64,r32", {{"RAX", LIM64}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "MOVSXD RAX,ECX"},
+    X_ROW_2OP(OP_ADD, &op_add, "add", "ADD"),
+    X_ROW_2OP(OP_SUB, &op_sub, "sub", "SUB"),
+    X_ROW_2OP(OP_ADC, &op_adc, "adc", "ADC"),
+    X_ROW_2OP(OP_SBB, &op_sbb, "sbb", "SBB"),
+    X_ROW_2OP(OP_AND, &op_and, "and", "AND"),
+    X_ROW_2OP(OP_XOR, &op_xor, "xor", "XOR"),
+    X_ROW_2OP(OP_OR, &op_or, "or", "OR"),
+    X_ROW_2OP(OP_MOV, &op_mov, "mov", "MOV"),
+    X_ROW_2OP_BOTH(OP_XCHG, &op_xchg, "xchg", "XCHG"),
+    X_ROW_2OP_NORESULT(OP_TEST, &op_test, "test", "TEST"),
+    X_ROW_2OP_NORESULT(OP_CMP, &op_cmp, "cmp", "CMP"),
+    X_ROW_2OP_BOTH(OP_XADD, &op_xadd, "xadd", "XADD"),
+    X_ROW_2OP_F(OP_ADCX, &op_adcx, "adcx", "ADCX", FEAT_ADX),
+    X_ROW_2OP_F(OP_ADOX, &op_adox, "adox", "ADOX", FEAT_ADX),
+    X_ROW_2OP(OP_CMOVC, &op_cmovc, "cmovc", "CMOVC"),
+    X_ROW_2OP(OP_CMOVNC, &op_cmovnc, "cmovnc", "CMOVNC"),
+    X_ROW_2OP(OP_CMOVZ, &op_cmovz, "cmovz", "CMOVZ"),
+    X_ROW_2OP(OP_CMOVNZ, &op_cmovnz, "cmovnz", "CMOVNZ"),
+    X_ROW_2OP(OP_CMOVS, &op_cmovs, "cmovs", "CMOVS"),
+    X_ROW_2OP(OP_CMOVNS, &op_cmovns, "cmovns", "CMOVNS"),
+    X_ROW_2OP(OP_CMOVO, &op_cmovo, "cmovo", "CMOVO"),
+    X_ROW_2OP(OP_CMOVNO, &op_cmovno, "cmovno", "CMOVNO"),
+    X_ROW_2OP(OP_CMOVP, &op_cmovp, "cmovp", "CMOVP"),
+    X_ROW_2OP(OP_CMOVNP, &op_cmovnp, "cmovnp", "CMOVNP"),
+    {OP_MOVZX_R8, &op_movzx_r8, "movzx " XREG_RN ",r8", {{XREG_A, XLIM}, {"CL", LIM8}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE},
+     "MOVZX " XREG_A ",CL"},
+    {OP_MOVZX_R16, &op_movzx_r16, "movzx " XREG_RN ",r16", {{XREG_A, XLIM}, {"CX", LIM16}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE},
+     "MOVZX " XREG_A ",CX"},
+    {OP_MOVSX_R8, &op_movsx_r8, "movsx " XREG_RN ",r8", {{XREG_A, XLIM}, {"CL", LIM8}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE},
+     "MOVSX " XREG_A ",CL"},
+    {OP_MOVSX_R16, &op_movsx_r16, "movsx " XREG_RN ",r16", {{XREG_A, XLIM}, {"CX", LIM16}, X_NONE, X_NONE}, {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE},
+     "MOVSX " XREG_A ",CX"},
+#ifdef OPCODE64
+    {OP_MOVSXD, &op_movsxd, "movsxd r64,r32", {{"RAX", LIM64}, {"ECX", LIM32}, X_NONE, X_NONE}, {{"RAX", LIM64}, X_NONE, X_NONE, X_NONE}, "MOVSXD RAX,ECX"},
+#endif
 };
+
 const OPCODE_RECORD asm_oneoperand[] = {
-    {OP_INC, &op_inc, "inc", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "INC RAX"},
-    {OP_DEC, &op_dec, "dec", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "DEC RAX"},
-    {OP_NOT, &op_not, "not", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "NOT RAX"},
-    {OP_NEG, &op_neg, "neg", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "NEG RAX"},
-    {OP_BSWAP, &op_bswap, "bswap", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BSWAP RAX"},
-    {OP_LAHF, &op_lahf, "lahf", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "LAHF"},
-    {OP_SAHF, &op_sahf, "sahf", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "SAHF"},
-    {OP_SETC, &op_setc, "setc", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETC AL"},
-    {OP_SETNC, &op_setnc, "setnc", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETNC AL"},
-    {OP_SETZ, &op_setz, "setz", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETZ AL"},
-    {OP_SETNZ, &op_setnz, "setnz", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETNZ AL"},
-    {OP_SETS, &op_sets, "sets", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETS AL"},
-    {OP_SETNS, &op_setns, "setns", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETNS AL"},
-    {OP_SETO, &op_seto, "seto", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETO AL"},
-    {OP_SETNO, &op_setno, "setno", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETNO AL"},
-    {OP_SETP, &op_setp, "setp", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETP AL"},
-    {OP_SETNP, &op_setnp, "setnp", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SETNP AL"},
-    {OP_CDQE, &op_cdqe, "cdqe", {{"EAX", LIM32}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "CDQE"},
-    {OP_CQO, &op_cqo, "cqo", {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "CQO"},
+    X_ROW_1OP(OP_INC, &op_inc, "inc", "INC"),
+    X_ROW_1OP(OP_DEC, &op_dec, "dec", "DEC"),
+    X_ROW_1OP(OP_NOT, &op_not, "not", "NOT"),
+    X_ROW_1OP(OP_NEG, &op_neg, "neg", "NEG"),
+    X_ROW_1OP(OP_BSWAP, &op_bswap, "bswap", "BSWAP"),
+    X_ROW_1OP_FIXED(OP_LAHF, &op_lahf, "lahf", "LAHF"),
+    {OP_SAHF, &op_sahf, "sahf", {{XREG_A, XLIM}, X_NONE, X_NONE, X_NONE}, {X_NONE, X_NONE, X_NONE, X_NONE}, "SAHF"},
+    X_ROW_1OP_FIXED(OP_SETC, &op_setc, "setc", "SETC AL"),
+    X_ROW_1OP_FIXED(OP_SETNC, &op_setnc, "setnc", "SETNC AL"),
+    X_ROW_1OP_FIXED(OP_SETZ, &op_setz, "setz", "SETZ AL"),
+    X_ROW_1OP_FIXED(OP_SETNZ, &op_setnz, "setnz", "SETNZ AL"),
+    X_ROW_1OP_FIXED(OP_SETS, &op_sets, "sets", "SETS AL"),
+    X_ROW_1OP_FIXED(OP_SETNS, &op_setns, "setns", "SETNS AL"),
+    X_ROW_1OP_FIXED(OP_SETO, &op_seto, "seto", "SETO AL"),
+    X_ROW_1OP_FIXED(OP_SETNO, &op_setno, "setno", "SETNO AL"),
+    X_ROW_1OP_FIXED(OP_SETP, &op_setp, "setp", "SETP AL"),
+    X_ROW_1OP_FIXED(OP_SETNP, &op_setnp, "setnp", "SETNP AL"),
+#ifdef OPCODE64
+    {OP_CDQE, &op_cdqe, "cdqe", {{"EAX", LIM32}, X_NONE, X_NONE, X_NONE}, {{"RAX", LIM64}, X_NONE, X_NONE, X_NONE}, "CDQE"},
+    {OP_CQO, &op_cqo, "cqo", {{"RAX", LIM64}, X_NONE, X_NONE, X_NONE}, {{"RAX", LIM64}, {"RDX", LIM64}, X_NONE, X_NONE}, "CQO"},
+#else
+    {OP_CBW, &op_cbw, "cbw", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "CBW"},
+    {OP_CWDE, &op_cwde, "cwde", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"EAX", LIM32}, X_NONE, X_NONE, X_NONE}, "CWDE"},
+    {OP_CWD, &op_cwd, "cwd", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, {"DX", LIM16}, X_NONE, X_NONE}, "CWD"},
+    {OP_CDQ, &op_cdq, "cdq", {{"EAX", LIM32}, X_NONE, X_NONE, X_NONE}, {{"EAX", LIM32}, {"EDX", LIM32}, X_NONE, X_NONE}, "CDQ"},
+#endif
 };
+
 const OPCODE_RECORD asm_muldiv[] = {
-    {OP_MUL, &op_mul, "mul", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "MUL RCX"},
-    {OP_IMUL, &op_imul, "imul", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "IMUL RCX"},
-    {OP_DIV, &op_div, "div", {{"RAX", LIM64}, {"RCX", LIM64}, {"RDX", LIM64}, {"", 0}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "DIV RCX"},
-    {OP_IDIV, &op_idiv, "idiv", {{"RAX", LIM64}, {"RCX", LIM64}, {"RDX", LIM64}, {"", 0}}, {{"RAX", LIM64}, {"RDX", LIM64}, {"", 0}, {"", 0}}, "IDIV RCX"},
+    X_ROW_MUL(OP_MUL, &op_mul, "mul", "MUL"),
+    X_ROW_MUL(OP_IMUL, &op_imul, "imul", "IMUL"),
+    X_ROW_DIV(OP_DIV, &op_div, "div", "DIV"),
+    X_ROW_DIV(OP_IDIV, &op_idiv, "idiv", "IDIV"),
 };
+
 const OPCODE_RECORD asm_shift[] = {
-    {OP_SHR, &op_shr, "shr", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SHR RAX,CL"},
-    {OP_SHL, &op_shl, "shl", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SHL RAX,CL"},
-    {OP_SAR, &op_sar, "sar", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SAR RAX,CL"},
-    {OP_SHLD, &op_shld, "shld", {{"RAX", LIM64}, {"RDX", LIM64}, {"CL", LIMBS64}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SHLD RAX,RDX,CL"},
-    {OP_SHRD, &op_shrd, "shrd", {{"RAX", LIM64}, {"RDX", LIM64}, {"CL", LIMBS64}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "SHRD RAX,RDX,CL"},
-    {OP_ROL, &op_rol, "rol", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "ROL RAX,CL"},
-    {OP_ROR, &op_ror, "ror", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "ROR RAX,CL"},
-    {OP_RCL, &op_rcl, "rcl", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "RCL RAX,CL"},
-    {OP_RCR, &op_rcr, "rcr", {{"RAX", LIM64}, {"CL", LIMBS64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "RCR RAX,CL"},
+    X_ROW_SHIFT(OP_SHR, &op_shr, "shr", "SHR"),
+    X_ROW_SHIFT(OP_SHL, &op_shl, "shl", "SHL"),
+    X_ROW_SHIFT(OP_SAR, &op_sar, "sar", "SAR"),
+    X_ROW_SHIFTD(OP_SHLD, &op_shld, "shld", "SHLD"),
+    X_ROW_SHIFTD(OP_SHRD, &op_shrd, "shrd", "SHRD"),
+    X_ROW_SHIFT(OP_ROL, &op_rol, "rol", "ROL"),
+    X_ROW_SHIFT(OP_ROR, &op_ror, "ror", "ROR"),
+    X_ROW_SHIFT(OP_RCL, &op_rcl, "rcl", "RCL"),
+    X_ROW_SHIFT(OP_RCR, &op_rcr, "rcr", "RCR"),
+    X_ROW_3OP_F(OP_SHLX, &op_shlx, "shlx", "SHLX", XLIMBS, FEAT_BMI2),
+    X_ROW_3OP_F(OP_SHRX, &op_shrx, "shrx", "SHRX", XLIMBS, FEAT_BMI2),
+    X_ROW_3OP_F(OP_SARX, &op_sarx, "sarx", "SARX", XLIMBS, FEAT_BMI2),
 };
+
 const OPCODE_RECORD asm_bits[] = {
-    {OP_BT, &op_bt, "bt", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BT RAX,RCX"},
-    {OP_BTS, &op_bts, "bts", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BTS RAX,RCX"},
-    {OP_BTR, &op_btr, "btr", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BTR RAX,RCX"},
-    {OP_BTC, &op_btc, "btc", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BTC RAX,RCX"},
-    {OP_BSF, &op_bsf, "bsf", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BSF RAX,RCX"},
-    {OP_BSR, &op_bsr, "bsr", {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, {{"RAX", LIM64}, {"", 0}, {"", 0}, {"", 0}}, "BSR RAX,RCX"},
+    X_ROW_2OP(OP_BT, &op_bt, "bt", "BT"),
+    X_ROW_2OP(OP_BTS, &op_bts, "bts", "BTS"),
+    X_ROW_2OP(OP_BTR, &op_btr, "btr", "BTR"),
+    X_ROW_2OP(OP_BTC, &op_btc, "btc", "BTC"),
+    X_ROW_2OP(OP_BSF, &op_bsf, "bsf", "BSF"),
+    X_ROW_2OP(OP_BSR, &op_bsr, "bsr", "BSR"),
+    X_ROW_2OP_F(OP_POPCNT, &op_popcnt, "popcnt", "POPCNT", FEAT_POPCNT),
+    X_ROW_2OP_F(OP_LZCNT, &op_lzcnt, "lzcnt", "LZCNT", FEAT_LZCNT),
+    X_ROW_2OP_F(OP_TZCNT, &op_tzcnt, "tzcnt", "TZCNT", FEAT_BMI1),
+    X_ROW_3OP_F(OP_ANDN, &op_andn, "andn", "ANDN", XLIM, FEAT_BMI1),
+    X_ROW_3OP_F(OP_BEXTR, &op_bextr, "bextr", "BEXTR", LIM16, FEAT_BMI1),
+    X_ROW_2OP_F(OP_BLSI, &op_blsi, "blsi", "BLSI", FEAT_BMI1),
+    X_ROW_2OP_F(OP_BLSMSK, &op_blsmsk, "blsmsk", "BLSMSK", FEAT_BMI1),
+    X_ROW_2OP_F(OP_BLSR, &op_blsr, "blsr", "BLSR", FEAT_BMI1),
+    X_ROW_3OP_F(OP_BZHI, &op_bzhi, "bzhi", "BZHI", LIM8, FEAT_BMI2),
+    X_ROW_3OP_F(OP_PDEP, &op_pdep, "pdep", "PDEP", XLIM, FEAT_BMI2),
+    X_ROW_3OP_F(OP_PEXT, &op_pext, "pext", "PEXT", XLIM, FEAT_BMI2),
 };
-const OPCODE_RECORD asm_special[] = {
-    {OP_CLC, &op_clc, "clc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "CLC"},
-    {OP_STC, &op_stc, "stc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "STC"},
-    {OP_CMC, &op_cmc, "cmc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, "CMC"},
-    {OP_CMPXCHG, &op_cmpxchg, "cmpxchg", {{"RAX", LIM64}, {"RCX", LIM64}, {"RDX", LIM64}, {"", 0}}, {{"RAX", LIM64}, {"RCX", LIM64}, {"", 0}, {"", 0}}, "CMPXCHG RCX,RDX"},
-    {OP_CPUID, &op_cpuid, "cpuid", {{"EAX", LIM32}, {"ECX", LIM32}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"ECX", LIM32}, {"EBX", LIM32}}, "CPUID"},
-    {OP_RDTSC, &op_rdtsc, "rdtsc", {{"", 0}, {"", 0}, {"", 0}, {"", 0}}, {{"EAX", LIM32}, {"EDX", LIM32}, {"", 0}, {"", 0}}, "RDTSC"},
+
+#ifndef OPCODE64
+const OPCODE_RECORD asm_bcd[] = {
+    {OP_DAA, &op_daa, "daa", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "DAA"},
+    {OP_DAS, &op_das, "das", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "DAS"},
+    {OP_AAA, &op_aaa, "aaa", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "AAA"},
+    {OP_AAS, &op_aas, "aas", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "AAS"},
+    {OP_AAM, &op_aam, "aam", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "AAM"},
+    {OP_AAD, &op_aad, "aad", {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, {{"AX", LIM16}, X_NONE, X_NONE, X_NONE}, "AAD"},
 };
 #endif
+
+const OPCODE_RECORD asm_special[] = {
+    X_ROW_FLAGSONLY(OP_CLC, &op_clc, "clc", "CLC"),
+    X_ROW_FLAGSONLY(OP_STC, &op_stc, "stc", "STC"),
+    X_ROW_FLAGSONLY(OP_CMC, &op_cmc, "cmc", "CMC"),
+    {OP_CMPXCHG, &op_cmpxchg, "cmpxchg", {{XREG_A, XLIM}, {XREG_C, XLIM}, {XREG_D, XLIM}, X_NONE}, {{XREG_A, XLIM}, {XREG_C, XLIM}, X_NONE, X_NONE},
+     "CMPXCHG " XREG_C "," XREG_D},
+    {OP_CPUID, &op_cpuid, "cpuid", {{"EAX", LIM32}, {"ECX", LIM32}, X_NONE, X_NONE}, {{"EAX", LIM32}, {"EDX", LIM32}, {"ECX", LIM32}, {"EBX", LIM32}}, "CPUID"},
+    {OP_RDTSC, &op_rdtsc, "rdtsc", {X_NONE, X_NONE, X_NONE, X_NONE}, {{"EAX", LIM32}, {"EDX", LIM32}, X_NONE, X_NONE}, "RDTSC"},
+    X_ROW_2OP_F(OP_CRC32, &op_crc32, "crc32", "CRC32", FEAT_SSE42),
+};
+
+#undef XREG_A
+#undef XREG_C
+#undef XREG_D
+#undef XREG_RN
+#undef XLIM
+#undef XLIMBS
+#undef X_NONE
+#undef X_ROW_2OP
+#undef X_ROW_2OP_BOTH
+#undef X_ROW_2OP_NORESULT
+#undef X_ROW_1OP
+#undef X_ROW_1OP_FIXED
+#undef X_ROW_MUL
+#undef X_ROW_DIV
+#undef X_ROW_SHIFT
+#undef X_ROW_SHIFTD
+#undef X_ROW_FLAGSONLY
+#undef X_ROW_2OP_F
+#undef X_ROW_3OP_F
 }  // namespace ASM_DEF
 
 #endif  // ASM_DEFS_H

@@ -21,29 +21,19 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-// Check Windows
-#if defined(_WIN32) || defined(_WIN64)
-#if defined(_WIN64)
+// The opcode mode follows the build's pointer width so the calculator matches
+// the register width of the target process on every architecture.
+#if defined(_WIN64) || defined(__LP64__) || (defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ == 8)
 #define OPCODE64
 #else
 #define OPCODE32
-#endif
-#endif
-
-// Check GCC
-#if defined(__GNUC__)
-#if defined(__x86_64__) || defined(__ppc64__)
-#define OPCODE64
-#else
-#define OPCODE32
-#endif
 #endif
 
 #include <QtGlobal>
 
 #define X_APPLICATIONDISPLAYNAME "XOpcodeCalc"
 #define X_APPLICATIONNAME "xocalc"
-#define X_APPLICATIONVERSION "0.06"
+#define X_APPLICATIONVERSION "1.0.0"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_OPTIONSFILE "xocalc.ini"

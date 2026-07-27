@@ -12,35 +12,48 @@ foreach(candidate IN ITEMS
     endif()
 endforeach()
 
-if(NOT XOPCODECALC_IS_X86)
-    message(FATAL_ERROR
-        "XOpcodeCalc can only be built for x86/x86_64 targets because it links x86 assembly.")
-endif()
+set(XOPCODECALC_ASM_LIB_SOURCES
+    asm.h
+    asm_c.h
+    asm_c.cpp
+)
 
-if(MSVC)
-    enable_language(ASM_MASM)
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(XOPCODECALC_ASM_SOURCE msvc64.asm)
+if(XOPCODECALC_IS_X86)
+    if(MSVC)
+        enable_language(ASM_MASM)
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(XOPCODECALC_ASM_SOURCE msvc64.asm)
+        else()
+            set(XOPCODECALC_ASM_SOURCE msvc32.asm)
+        endif()
     else()
-        set(XOPCODECALC_ASM_SOURCE msvc32.asm)
+        enable_language(ASM)
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(XOPCODECALC_ASM_SOURCE gcc64.s)
+        else()
+            set(XOPCODECALC_ASM_SOURCE gcc32.s)
+        endif()
     endif()
+    list(APPEND XOPCODECALC_ASM_LIB_SOURCES ${XOPCODECALC_ASM_SOURCE})
 else()
-    enable_language(ASM)
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(XOPCODECALC_ASM_SOURCE gcc64.s)
-    else()
-        set(XOPCODECALC_ASM_SOURCE gcc32.s)
-    endif()
+    message(STATUS "XOpcodeCalc: non-x86 target, opcodes run on the portable C backend")
 endif()
 
 add_library(xopcodecalc_asm STATIC
-    asm.h
-    ${XOPCODECALC_ASM_SOURCE}
+    ${XOPCODECALC_ASM_LIB_SOURCES}
 )
+
+if(NOT XOPCODECALC_IS_X86)
+    target_compile_definitions(xopcodecalc_asm PRIVATE XOPCODECALC_C_BACKEND)
+endif()
 
 target_include_directories(xopcodecalc_asm PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
+
+target_link_libraries(xopcodecalc_asm PRIVATE
+    Qt${XOPCODECALC_QT_MAJOR}::Core
 )
 
 set_target_properties(xopcodecalc_asm PROPERTIES
@@ -48,3 +61,7 @@ set_target_properties(xopcodecalc_asm PROPERTIES
     AUTOUIC OFF
     AUTORCC OFF
 )
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)

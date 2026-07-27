@@ -1,4 +1,5 @@
-.686
+.686P
+.XMM
 .MODEL FLAT, C
 .STACK
 .DATA
@@ -616,6 +617,142 @@ op_cdq      PROC
             cdq
             __LEAVE
 op_cdq      ENDP
+;################################
+; POPCNT
+;################################
+op_popcnt   PROC
+            __ENTER
+            popcnt      eax,ecx
+            __LEAVE
+op_popcnt   ENDP
+;################################
+; LZCNT
+;################################
+op_lzcnt    PROC
+            __ENTER
+            lzcnt       eax,ecx
+            __LEAVE
+op_lzcnt    ENDP
+;################################
+; TZCNT
+;################################
+op_tzcnt    PROC
+            __ENTER
+            tzcnt       eax,ecx
+            __LEAVE
+op_tzcnt    ENDP
+;################################
+; ANDN
+;################################
+op_andn     PROC
+            __ENTER
+            andn        eax,ecx,edx
+            __LEAVE
+op_andn     ENDP
+;################################
+; BEXTR
+;################################
+op_bextr    PROC
+            __ENTER
+            bextr       eax,ecx,edx
+            __LEAVE
+op_bextr    ENDP
+;################################
+; BLSI
+;################################
+op_blsi     PROC
+            __ENTER
+            blsi        eax,ecx
+            __LEAVE
+op_blsi     ENDP
+;################################
+; BLSMSK
+;################################
+op_blsmsk   PROC
+            __ENTER
+            blsmsk      eax,ecx
+            __LEAVE
+op_blsmsk   ENDP
+;################################
+; BLSR
+;################################
+op_blsr     PROC
+            __ENTER
+            blsr        eax,ecx
+            __LEAVE
+op_blsr     ENDP
+;################################
+; BZHI
+;################################
+op_bzhi     PROC
+            __ENTER
+            bzhi        eax,ecx,edx
+            __LEAVE
+op_bzhi     ENDP
+;################################
+; PDEP
+;################################
+op_pdep     PROC
+            __ENTER
+            pdep        eax,ecx,edx
+            __LEAVE
+op_pdep     ENDP
+;################################
+; PEXT
+;################################
+op_pext     PROC
+            __ENTER
+            pext        eax,ecx,edx
+            __LEAVE
+op_pext     ENDP
+;################################
+; SHLX
+;################################
+op_shlx     PROC
+            __ENTER
+            shlx        eax,ecx,edx
+            __LEAVE
+op_shlx     ENDP
+;################################
+; SHRX
+;################################
+op_shrx     PROC
+            __ENTER
+            shrx        eax,ecx,edx
+            __LEAVE
+op_shrx     ENDP
+;################################
+; SARX
+;################################
+op_sarx     PROC
+            __ENTER
+            sarx        eax,ecx,edx
+            __LEAVE
+op_sarx     ENDP
+;################################
+; CRC32
+;################################
+op_crc32    PROC
+            __ENTER
+            crc32       eax,ecx
+            __LEAVE
+op_crc32    ENDP
+;################################
+; ADCX
+;################################
+op_adcx     PROC
+            __ENTER
+            adcx        eax,ecx
+            __LEAVE
+op_adcx     ENDP
+;################################
+; ADOX
+;################################
+op_adox     PROC
+            __ENTER
+            adox        eax,ecx
+            __LEAVE
+op_adox     ENDP
 ;################################
 ;################################
 END

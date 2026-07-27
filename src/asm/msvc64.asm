@@ -563,6 +563,142 @@ op_cqo      PROC
             cqo
             __LEAVE
 op_cqo      ENDP
+;################################
+; POPCNT
+;################################
+op_popcnt   PROC
+            __ENTER
+            popcnt      rax,rcx
+            __LEAVE
+op_popcnt   ENDP
+;################################
+; LZCNT
+;################################
+op_lzcnt    PROC
+            __ENTER
+            lzcnt       rax,rcx
+            __LEAVE
+op_lzcnt    ENDP
+;################################
+; TZCNT
+;################################
+op_tzcnt    PROC
+            __ENTER
+            tzcnt       rax,rcx
+            __LEAVE
+op_tzcnt    ENDP
+;################################
+; ANDN
+;################################
+op_andn     PROC
+            __ENTER
+            andn        rax,rcx,rdx
+            __LEAVE
+op_andn     ENDP
+;################################
+; BEXTR
+;################################
+op_bextr    PROC
+            __ENTER
+            bextr       rax,rcx,rdx
+            __LEAVE
+op_bextr    ENDP
+;################################
+; BLSI
+;################################
+op_blsi     PROC
+            __ENTER
+            blsi        rax,rcx
+            __LEAVE
+op_blsi     ENDP
+;################################
+; BLSMSK
+;################################
+op_blsmsk   PROC
+            __ENTER
+            blsmsk      rax,rcx
+            __LEAVE
+op_blsmsk   ENDP
+;################################
+; BLSR
+;################################
+op_blsr     PROC
+            __ENTER
+            blsr        rax,rcx
+            __LEAVE
+op_blsr     ENDP
+;################################
+; BZHI
+;################################
+op_bzhi     PROC
+            __ENTER
+            bzhi        rax,rcx,rdx
+            __LEAVE
+op_bzhi     ENDP
+;################################
+; PDEP
+;################################
+op_pdep     PROC
+            __ENTER
+            pdep        rax,rcx,rdx
+            __LEAVE
+op_pdep     ENDP
+;################################
+; PEXT
+;################################
+op_pext     PROC
+            __ENTER
+            pext        rax,rcx,rdx
+            __LEAVE
+op_pext     ENDP
+;################################
+; SHLX
+;################################
+op_shlx     PROC
+            __ENTER
+            shlx        rax,rcx,rdx
+            __LEAVE
+op_shlx     ENDP
+;################################
+; SHRX
+;################################
+op_shrx     PROC
+            __ENTER
+            shrx        rax,rcx,rdx
+            __LEAVE
+op_shrx     ENDP
+;################################
+; SARX
+;################################
+op_sarx     PROC
+            __ENTER
+            sarx        rax,rcx,rdx
+            __LEAVE
+op_sarx     ENDP
+;################################
+; CRC32
+;################################
+op_crc32    PROC
+            __ENTER
+            crc32       rax,rcx
+            __LEAVE
+op_crc32    ENDP
+;################################
+; ADCX
+;################################
+op_adcx     PROC
+            __ENTER
+            adcx        rax,rcx
+            __LEAVE
+op_adcx     ENDP
+;################################
+; ADOX
+;################################
+op_adox     PROC
+            __ENTER
+            adox        rax,rcx
+            __LEAVE
+op_adox     ENDP
 
 _TEXT       ENDS
 

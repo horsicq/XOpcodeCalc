@@ -101,5 +101,10 @@ if(EXISTS "${XOPCODECALC_TRANSLATION_HELPER}")
     )
 endif()
 
+option(XOPCODECALC_BUILD_TESTS "Build the opcode test harness" ON)
+
 add_subdirectory(asm)
 add_subdirectory(gui)
+if(XOPCODECALC_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()

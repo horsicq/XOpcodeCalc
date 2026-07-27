@@ -134,6 +134,26 @@ extern "C" void op_cmovno(RECDATA *pRecData) XASM("op_cmovno");
 extern "C" void op_cmovp(RECDATA *pRecData) XASM("op_cmovp");
 extern "C" void op_cmovnp(RECDATA *pRecData) XASM("op_cmovnp");
 
+// Modern bit-manipulation / checksum extensions; gated at runtime by CPUID
+// (see cpufeatures.h), so they are only offered on CPUs that support them.
+extern "C" void op_popcnt(RECDATA *pRecData) XASM("op_popcnt");
+extern "C" void op_lzcnt(RECDATA *pRecData) XASM("op_lzcnt");
+extern "C" void op_tzcnt(RECDATA *pRecData) XASM("op_tzcnt");
+extern "C" void op_andn(RECDATA *pRecData) XASM("op_andn");
+extern "C" void op_bextr(RECDATA *pRecData) XASM("op_bextr");
+extern "C" void op_blsi(RECDATA *pRecData) XASM("op_blsi");
+extern "C" void op_blsmsk(RECDATA *pRecData) XASM("op_blsmsk");
+extern "C" void op_blsr(RECDATA *pRecData) XASM("op_blsr");
+extern "C" void op_bzhi(RECDATA *pRecData) XASM("op_bzhi");
+extern "C" void op_pdep(RECDATA *pRecData) XASM("op_pdep");
+extern "C" void op_pext(RECDATA *pRecData) XASM("op_pext");
+extern "C" void op_shlx(RECDATA *pRecData) XASM("op_shlx");
+extern "C" void op_shrx(RECDATA *pRecData) XASM("op_shrx");
+extern "C" void op_sarx(RECDATA *pRecData) XASM("op_sarx");
+extern "C" void op_crc32(RECDATA *pRecData) XASM("op_crc32");
+extern "C" void op_adcx(RECDATA *pRecData) XASM("op_adcx");
+extern "C" void op_adox(RECDATA *pRecData) XASM("op_adox");
+
 #ifdef OPCODE64
 extern "C" void op_movsxd(RECDATA *pRecData) XASM("op_movsxd");
 extern "C" void op_cdqe(RECDATA *pRecData) XASM("op_cdqe");
