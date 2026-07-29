@@ -87,6 +87,7 @@ if(EXISTS "${XOPCODECALC_TRANSLATION_HELPER}")
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_tr_TR.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_uk_UA.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_vi_VN.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_sq_AL.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh_CN.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh_TW.ts"
     )
