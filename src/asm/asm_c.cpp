@@ -481,12 +481,12 @@ void ref_op_rcr(RECDATA *pRecData)
 
 void ref_op_shld(RECDATA *pRecData)
 {
-    // asm: rbx = rcx; cl = dl; shld rax,rbx,cl (clobbers modeled identically)
+    // SHLD A,<source>,<count>. The assembly backend needs the source in a register
+    // and the count in CL, so it borrows B and CL and restores them before storing;
+    // neither is architecturally touched, and neither is modelled here.
     Regs r = load(pRecData);
     const XVALUE nSource = r.C;
     const XVALUE nCount8 = r.D & 0xFF;
-    r.B = nSource;
-    r.C = (r.C & ~XVALUE(0xFF)) | nCount8;
     const qint32 nCount = static_cast<qint32>(nCount8 & (BITS - 1));
     if (nCount) {
         const XVALUE nResult = (r.A << nCount) | (nSource >> (BITS - nCount));
@@ -503,8 +503,6 @@ void ref_op_shrd(RECDATA *pRecData)
     Regs r = load(pRecData);
     const XVALUE nSource = r.C;
     const XVALUE nCount8 = r.D & 0xFF;
-    r.B = nSource;
-    r.C = (r.C & ~XVALUE(0xFF)) | nCount8;
     const qint32 nCount = static_cast<qint32>(nCount8 & (BITS - 1));
     if (nCount) {
         const XVALUE nResult = (r.A >> nCount) | (nSource << (BITS - nCount));

@@ -11,6 +11,12 @@
             push        edx
             push        ecx
             push        esi
+            # EBX is callee-saved in i386 System V, MinGW cdecl and macOS i386, and
+            # __ENTER overwrites it with OPERAND[3] below. msvc32.asm gets this for
+            # free from pusha/popa and gcc64.s pushes rbx explicitly; this file was
+            # the only backend returning with the caller's EBX destroyed. Under the
+            # -fPIC that Qt uses on Linux, EBX is the GOT base pointer.
+            push        ebx
             pushf
             
             mov         esi,DWORD PTR[ebp+8]
@@ -31,6 +37,7 @@
             pop         DWORD PTR[esi+36]
             
             popf
+            pop         ebx
             pop         esi
             pop         ecx
             pop         edx
@@ -421,9 +428,13 @@ op_cmpxchg:
             .globl	op_shld
 op_shld:
             __ENTER
+            push        ebx
+            push        ecx
             mov         ebx,ecx
             mov         cl,dl
             shld        eax,ebx,cl
+            pop         ecx
+            pop         ebx
             __LEAVE
 #################################
 # SHRD
@@ -431,9 +442,13 @@ op_shld:
             .globl	op_shrd
 op_shrd:
             __ENTER
+            push        ebx
+            push        ecx
             mov         ebx,ecx
             mov         cl,dl
             shrd        eax,ebx,cl
+            pop         ecx
+            pop         ebx
             __LEAVE
 #################################
 # CLC

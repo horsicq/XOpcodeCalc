@@ -49,6 +49,30 @@
     </layout>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBoxLang">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="comboBoxLang"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBoxStyle">
      <property name="title">
       <string>Style</string>
@@ -118,6 +142,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>checkBoxStayOnTop</tabstop>
+  <tabstop>comboBoxLang</tabstop>
+  <tabstop>comboBoxStyle</tabstop>
+  <tabstop>pushButtonOK</tabstop>
+  <tabstop>pushButtonCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

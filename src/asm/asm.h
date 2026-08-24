@@ -91,13 +91,6 @@ extern "C" void op_bts(RECDATA *pRecData) XASM("op_bts");
 extern "C" void op_btr(RECDATA *pRecData) XASM("op_btr");
 extern "C" void op_btc(RECDATA *pRecData) XASM("op_btc");
 
-extern "C" void op_daa(RECDATA *pRecData) XASM("op_daa");
-extern "C" void op_das(RECDATA *pRecData) XASM("op_das");
-extern "C" void op_aaa(RECDATA *pRecData) XASM("op_aaa");
-extern "C" void op_aas(RECDATA *pRecData) XASM("op_aas");
-extern "C" void op_aam(RECDATA *pRecData) XASM("op_aam");
-extern "C" void op_aad(RECDATA *pRecData) XASM("op_aad");
-
 // Additional scalar opcodes supported by the current calculator model.
 extern "C" void op_mov(RECDATA *pRecData) XASM("op_mov");
 extern "C" void op_xchg(RECDATA *pRecData) XASM("op_xchg");
@@ -163,6 +156,16 @@ extern "C" void op_cbw(RECDATA *pRecData) XASM("op_cbw");
 extern "C" void op_cwde(RECDATA *pRecData) XASM("op_cwde");
 extern "C" void op_cwd(RECDATA *pRecData) XASM("op_cwd");
 extern "C" void op_cdq(RECDATA *pRecData) XASM("op_cdq");
+
+// BCD adjust: invalid in 64-bit mode, so these exist only in an OPCODE32 build
+// (asm_c.h's XOPCODECALC_OPS_WIDTH, msvc32.asm, gcc32.s). Declaring them
+// unconditionally used to invite a link error from the first 64-bit caller.
+extern "C" void op_daa(RECDATA *pRecData) XASM("op_daa");
+extern "C" void op_das(RECDATA *pRecData) XASM("op_das");
+extern "C" void op_aaa(RECDATA *pRecData) XASM("op_aaa");
+extern "C" void op_aas(RECDATA *pRecData) XASM("op_aas");
+extern "C" void op_aam(RECDATA *pRecData) XASM("op_aam");
+extern "C" void op_aad(RECDATA *pRecData) XASM("op_aad");
 #endif
 
 #endif  // ASM_H

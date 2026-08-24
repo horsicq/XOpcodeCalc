@@ -377,9 +377,13 @@ op_cmpxchg:
             .globl	op_shld
 op_shld:
             __ENTER
+            push        rbx
+            push        rcx
             mov         rbx,rcx
             mov         cl,dl
             shld        rax,rbx,cl
+            pop         rcx
+            pop         rbx
             __LEAVE
 #################################
 # SHRD
@@ -387,9 +391,13 @@ op_shld:
             .globl	op_shrd
 op_shrd:
             __ENTER
+            push        rbx
+            push        rcx
             mov         rbx,rcx
             mov         cl,dl
             shrd        rax,rbx,cl
+            pop         rcx
+            pop         rbx
             __LEAVE
 #################################
 # CLC

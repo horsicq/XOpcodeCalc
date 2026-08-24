@@ -1,5 +1,8 @@
 [Desktop Entry]
-Version=@PROJECT_VERSION@
+# Per the Desktop Entry Specification, Version is the version of the SPEC this
+# file follows, not the application's. desktop-file-validate rejects anything
+# else, and lintian flags it on the .deb.
+Version=1.0
 Type=Application
 Name=XOpcodeCalc
 Comment=Opcode calculator

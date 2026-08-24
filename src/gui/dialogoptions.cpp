@@ -29,6 +29,9 @@ DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : QDialog(pPa
     m_options = pOptions;
 
     m_options->setCheckBox(ui->checkBoxStayOnTop, XOptions::ID_VIEW_STAYONTOP);
+    // XOptions fills this from $data/lang/*.qm, so the list is whatever the
+    // installation actually ships.
+    m_options->setComboBox(ui->comboBoxLang, XOptions::ID_VIEW_LANG);
     m_options->setComboBox(ui->comboBoxStyle, XOptions::ID_VIEW_STYLE);
 }
 
@@ -40,6 +43,7 @@ DialogOptions::~DialogOptions()
 void DialogOptions::on_pushButtonOK_clicked()
 {
     m_options->getCheckBox(ui->checkBoxStayOnTop, XOptions::ID_VIEW_STAYONTOP);
+    m_options->getComboBox(ui->comboBoxLang, XOptions::ID_VIEW_LANG);
     m_options->getComboBox(ui->comboBoxStyle, XOptions::ID_VIEW_STYLE);
 
     if (m_options->isRestartNeeded()) {

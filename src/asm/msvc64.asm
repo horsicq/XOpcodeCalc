@@ -378,9 +378,13 @@ op_cmpxchg  ENDP
 ;################################
 op_shld     PROC
             __ENTER
+            push        rbx
+            push        rcx
             mov         rbx,rcx
             mov         cl,dl
             shld        rax,rbx,cl
+            pop         rcx
+            pop         rbx
             __LEAVE
 op_shld     ENDP
 ;################################
@@ -388,9 +392,13 @@ op_shld     ENDP
 ;################################
 op_shrd     PROC
             __ENTER
+            push        rbx
+            push        rcx
             mov         rbx,rcx
             mov         cl,dl
             shrd        rax,rbx,cl
+            pop         rcx
+            pop         rbx
             __LEAVE
 op_shrd     ENDP
 ;################################

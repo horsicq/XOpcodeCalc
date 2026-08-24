@@ -199,7 +199,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
           </spacer>
@@ -278,7 +278,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
           </spacer>
@@ -603,7 +603,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
           </spacer>
@@ -682,7 +682,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
           </spacer>
@@ -1288,6 +1288,32 @@
    <header>xlineedithex.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxOpcodeGroup</tabstop>
+  <tabstop>comboBoxMode</tabstop>
+  <tabstop>comboBoxOpcode</tabstop>
+  <tabstop>toolButtonOpcode</tabstop>
+  <tabstop>lineEditOperand1</tabstop>
+  <tabstop>lineEditOperand2</tabstop>
+  <tabstop>lineEditOperand3</tabstop>
+  <tabstop>lineEditOperand4</tabstop>
+  <tabstop>pushButtonFlagCF</tabstop>
+  <tabstop>pushButtonFlagPF</tabstop>
+  <tabstop>pushButtonFlagAF</tabstop>
+  <tabstop>pushButtonFlagZF</tabstop>
+  <tabstop>pushButtonFlagSF</tabstop>
+  <tabstop>pushButtonFlagOF</tabstop>
+  <tabstop>lineEditFlagsBefore</tabstop>
+  <tabstop>lineEditResult1</tabstop>
+  <tabstop>lineEditResult2</tabstop>
+  <tabstop>lineEditResult3</tabstop>
+  <tabstop>lineEditResult4</tabstop>
+  <tabstop>lineEditFlagsAfter</tabstop>
+  <tabstop>pushButtonOptions</tabstop>
+  <tabstop>pushButtonCopy</tabstop>
+  <tabstop>pushButtonAbout</tabstop>
+  <tabstop>pushButtonExit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -64,38 +64,42 @@ struct Flags {
     bool bAdx;
 };
 
-inline const Flags &flags()
+inline Flags computeFlags()
 {
-    static bool bInitialized = false;
-    static Flags result = {};
+    Flags result = {};
+    unsigned int anInfo[4];
 
-    if (!bInitialized) {
-        unsigned int anInfo[4];
+    cpuidCall(0, 0, anInfo);
+    const unsigned int nMaxLeaf = anInfo[0];
 
-        cpuidCall(0, 0, anInfo);
-        const unsigned int nMaxLeaf = anInfo[0];
+    cpuidCall(1, 0, anInfo);
+    result.bSse42 = (anInfo[2] >> 20) & 1;   // ECX.SSE4_2
+    result.bPopcnt = (anInfo[2] >> 23) & 1;  // ECX.POPCNT
 
-        cpuidCall(1, 0, anInfo);
-        result.bSse42 = (anInfo[2] >> 20) & 1;   // ECX.SSE4_2
-        result.bPopcnt = (anInfo[2] >> 23) & 1;  // ECX.POPCNT
+    if (nMaxLeaf >= 7) {
+        cpuidCall(7, 0, anInfo);
+        result.bBmi1 = (anInfo[1] >> 3) & 1;  // EBX.BMI1
+        result.bBmi2 = (anInfo[1] >> 8) & 1;  // EBX.BMI2
+        result.bAdx = (anInfo[1] >> 19) & 1;  // EBX.ADX
+    }
 
-        if (nMaxLeaf >= 7) {
-            cpuidCall(7, 0, anInfo);
-            result.bBmi1 = (anInfo[1] >> 3) & 1;  // EBX.BMI1
-            result.bBmi2 = (anInfo[1] >> 8) & 1;  // EBX.BMI2
-            result.bAdx = (anInfo[1] >> 19) & 1;  // EBX.ADX
-        }
-
-        cpuidCall(0x80000000, 0, anInfo);
-        if (anInfo[0] >= 0x80000001) {
-            cpuidCall(0x80000001, 0, anInfo);
-            result.bLzcnt = (anInfo[2] >> 5) & 1;  // ECX.LZCNT/ABM
-        }
-
-        bInitialized = true;
+    cpuidCall(0x80000000, 0, anInfo);
+    if (anInfo[0] >= 0x80000001) {
+        cpuidCall(0x80000001, 0, anInfo);
+        result.bLzcnt = (anInfo[2] >> 5) & 1;  // ECX.LZCNT/ABM
     }
 
     return result;
+}
+
+inline const Flags &flags()
+{
+    // A function-local static is initialised exactly once and thread-safely
+    // (C++11 [stmt.dcl]/4); the previous plain "bInitialized" flag was written
+    // after the payload and gave no such guarantee.
+    static const Flags g_flags = computeFlags();
+
+    return g_flags;
 }
 
 }  // namespace Detail

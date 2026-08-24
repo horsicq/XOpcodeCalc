@@ -36,11 +36,14 @@ QString centeredLink(const QString &label, const QString &caption, const QString
         .arg(label, url, caption);
 }
 
-QString centeredDonateLink(const QString &label, const QString &method, const QString &value)
+// Not a link: the value is a PayPal account address and a Bitcoin address, and
+// neither is a URL. Rendering them as anchors produced a link that did nothing
+// when clicked, because the href had no scheme. Shown as selectable plain text
+// instead. (If these should become clickable, the project's own PayPal donate
+// URL is the one in README.md - that is the maintainer's call, not a guess.)
+QString centeredDonateValue(const QString &label, const QString &method, const QString &value)
 {
-    return QStringLiteral(
-               "<p align=\"center\"><span style=\" font-weight:600;\">%1(%2): </span><a href=\"%3\"><span style=\" text-decoration: underline; color:#ff0000;\">%3</span></a></p>")
-        .arg(label, method, value);
+    return QStringLiteral("<p align=\"center\"><span style=\" font-weight:600;\">%1(%2): </span><span>%3</span></p>").arg(label, method, value);
 }
 
 }  // namespace
@@ -53,8 +56,8 @@ XAboutWidget::DATA DialogAbout::createAboutData()
     data.sInfo += centeredParagraph(QStringLiteral("Copyright (C) 2019-2026 hors"));
     data.sInfo += centeredLink(QObject::tr("Bugreports"), QStringLiteral("horsicq@gmail.com"), QStringLiteral("mailto:horsicq@gmail.com"));
     data.sInfo += centeredLink(QObject::tr("Website"), QStringLiteral("http://ntinfo.biz"), QStringLiteral("http://ntinfo.biz"));
-    data.sInfo += centeredDonateLink(QObject::tr("Donate"), QStringLiteral("Paypal"), QStringLiteral("ntinfo.re@gmail.com"));
-    data.sInfo += centeredDonateLink(QObject::tr("Donate"), QStringLiteral("BTC"), QStringLiteral("3DqddVBX9PKqMvNPXZ3gPHBNNRtD9CnmJo"));
+    data.sInfo += centeredDonateValue(QObject::tr("Donate"), QStringLiteral("Paypal"), QStringLiteral("ntinfo.re@gmail.com"));
+    data.sInfo += centeredDonateValue(QObject::tr("Donate"), QStringLiteral("BTC"), QStringLiteral("3DqddVBX9PKqMvNPXZ3gPHBNNRtD9CnmJo"));
     data.sInfo += centeredLink(QObject::tr("Source code"),
                                QStringLiteral("https://github.com/horsicq/XOpcodeCalc"),
                                QStringLiteral("https://github.com/horsicq/XOpcodeCalc"));

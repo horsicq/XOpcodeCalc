@@ -11,12 +11,15 @@ if(UNIX AND NOT APPLE)
     include(GNUInstallDirs)
 endif()
 
+# Everything except main(): an object library so the GUI smoke test in src/tests
+# can link the very same translation units. Compiling them a second time in
+# another target is not an option -- the shared _mylibs .ui files sit outside the
+# source tree, so two AUTOUIC scopes would generate the same ui_*.h path twice.
 set(XOPCODECALC_GUI_SOURCES
     ${XABOUTWIDGET_SOURCES}
     ${XLINEEDITHEX_SOURCES}
     ${XOPTIONS_SOURCES}
     ${XSTYLES_SOURCES}
-    main_gui.cpp
     dialogabout.cpp
     dialogabout.h
     dialogabout.ui
@@ -29,31 +32,75 @@ set(XOPCODECALC_GUI_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/../../res/resources_gui.qrc"
 )
 
+add_library(xopcodecalc_gui OBJECT
+    ${XOPCODECALC_GUI_SOURCES}
+)
+
+# The shared _mylibs helpers only publish their headers through a directory-level
+# include_directories(), which does not reach another directory's targets. Re-export
+# them here so the GUI smoke test in src/tests compiles against the same headers.
+target_include_directories(xopcodecalc_gui PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "${CMAKE_CURRENT_LIST_DIR}/../../dep/XAboutWidget"
+    "${CMAKE_CURRENT_LIST_DIR}/../../dep/Controls"
+    "${CMAKE_CURRENT_LIST_DIR}/../../dep/XOptions"
+    "${CMAKE_CURRENT_LIST_DIR}/../../dep/XShortcuts"
+    "${CMAKE_CURRENT_LIST_DIR}/../../dep/XStyles"
+)
+
+target_link_libraries(xopcodecalc_gui PUBLIC
+    Qt${XOPCODECALC_QT_MAJOR}::Widgets
+    xopcodecalc_asm
+)
+
+set(XOPCODECALC_APP_SOURCES
+    main_gui.cpp
+)
+
 if(WIN32 AND EXISTS "${X_WINDOWS_RESOURCE_ICON_RC}")
-    list(APPEND XOPCODECALC_GUI_SOURCES "${X_WINDOWS_RESOURCE_ICON_RC}")
+    list(APPEND XOPCODECALC_APP_SOURCES "${X_WINDOWS_RESOURCE_ICON_RC}")
 endif()
 
 if(APPLE AND EXISTS "${X_MACOS_ICON}")
     set_source_files_properties("${X_MACOS_ICON}" PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources"
     )
-    list(APPEND XOPCODECALC_GUI_SOURCES "${X_MACOS_ICON}")
+    list(APPEND XOPCODECALC_APP_SOURCES "${X_MACOS_ICON}")
 endif()
 
 add_executable(XOpcodeCalc WIN32
-    ${XOPCODECALC_GUI_SOURCES}
+    ${XOPCODECALC_APP_SOURCES}
 )
 
+# main_gui.cpp carries no Q_OBJECT, no .ui and no .qrc; xopcodecalc_gui already
+# ran the generators for those. Leaving them on here makes the executable's
+# autogen scope claim the same ui_*.h outputs as the object library's.
 set_target_properties(XOpcodeCalc PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
     MACOSX_BUNDLE_GUI_IDENTIFIER "${MACOSX_BUNDLE_GUI_IDENTIFIER}"
     OUTPUT_NAME xocalc
+    AUTOMOC OFF
+    AUTOUIC OFF
+    AUTORCC OFF
 )
+
+# Without this the bundle gets CMake's stock Info.plist, in which CFBundleIconFile
+# is empty - so main.icns ships inside Contents/Resources but nothing points at it,
+# and the CFBundleExecutable in res/macos/Info.plist.in never reaches anything that
+# ships (deploy_init.cmake only feeds it to CPACK_BUNDLE_PLIST, and the macOS
+# packaging script builds ZIP and productbuild, never Bundle). Same pattern as
+# xmachoviewer_source and XVMPUnpacker_source.
+if(APPLE AND EXISTS "${X_MACOS_INFO_PLIST}")
+    set_target_properties(XOpcodeCalc PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${X_MACOS_INFO_PLIST}"
+    )
+endif()
 
 target_include_directories(XOpcodeCalc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(XOpcodeCalc PRIVATE
+    xopcodecalc_gui
     Qt${XOPCODECALC_QT_MAJOR}::Widgets
     xopcodecalc_asm
 )

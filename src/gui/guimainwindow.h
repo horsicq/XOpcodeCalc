@@ -22,6 +22,7 @@
 #define GUIMAINWINDOW_H
 
 #include <QGroupBox>
+#include <QLabel>
 #include <QList>
 #include <QMainWindow>
 #include <QMap>
@@ -100,12 +101,20 @@ private:
     void updateFlagButtons(XVALUE flags);
     void updateFlagLabels(XVALUE flags);
     void updateJumpLabels(bool carry, bool parity, bool overflow, bool sign, bool zero);
-    void setEditorsMode(XLineEditHEX::_MODE mode);
+    XLineEditHEX::_MODE currentDisplayMode() const;
+    static qint32 registerBits(quint64 nMaxValue);
+    static XLineEditValidator::MODE validatorModeFor(XLineEditHEX::_MODE displayMode, qint32 nBits);
+    void applyEditorWidth(XLineEditHEX *pEditor, quint64 nMaxValue);
+    void setEditorValue(XLineEditHEX *pEditor, XVALUE nValue);
+    QList<XLineEditHEX *> operandEditors() const;
     QString buildReport() const;
+    QString unavailableReason(const ASM_DEF::OPCODE_RECORD &record, const RECDATA &data) const;
+    void setStatus(const QString &sText);
 
     Ui::GuiMainWindow *ui;
     XOptions m_options;
     QMap<ASM_DEF::OP, ASM_DEF::OPCODE_RECORD> m_opcodeMap;
+    QLabel *m_pLabelStatus;
 };
 
 #endif  // GUIMAINWINDOW_H

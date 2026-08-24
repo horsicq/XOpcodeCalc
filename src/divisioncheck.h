@@ -91,6 +91,23 @@ inline bool isDivisionDefined(bool bSigned, XVALUE nLow, XVALUE nDivisor, XVALUE
     return nQuotient < nSignBit;  // positive quotients stop at 2^(W-1) - 1
 }
 
+// Why a divide would raise #DE, for the message the GUI shows.
+enum ERROR_CODE {
+    ERROR_NONE = 0,
+    ERROR_DIVISOR_ZERO,
+    ERROR_QUOTIENT_OVERFLOW
+};
+
+inline ERROR_CODE divisionError(bool bSigned, XVALUE nLow, XVALUE nDivisor, XVALUE nHigh)
+{
+    if (nDivisor == 0) {
+        return ERROR_DIVISOR_ZERO;
+    }
+
+    // isDivisionDefined() stays the single source of truth for the predicate.
+    return isDivisionDefined(bSigned, nLow, nDivisor, nHigh) ? ERROR_NONE : ERROR_QUOTIENT_OVERFLOW;
+}
+
 }  // namespace DivisionCheck
 
 #endif  // DIVISIONCHECK_H

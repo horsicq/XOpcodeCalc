@@ -25,6 +25,7 @@
 #include <QAbstractButton>
 #include <QApplication>
 #include <QClipboard>
+#include <QVBoxLayout>
 #include <array>
 #include <utility>
 
@@ -42,7 +43,7 @@ qint32 opcodeRecordCount(const ASM_DEF::OPCODE_RECORD (&)[N])
 
 }  // namespace
 
-GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow)
+GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow), m_pLabelStatus(nullptr)
 {
     ui->setupUi(this);
     initializeUi();
@@ -59,6 +60,20 @@ void GuiMainWindow::initializeUi()
 {
     setWindowTitle(XOptions::getTitle(X_APPLICATIONDISPLAYNAME, X_APPLICATIONVERSION));
 
+    // Sits directly under the result values and explains why they are blank. It is
+    // created here rather than in the .ui so it can stay next to the code that fills
+    // it; it is always visible with empty text, so the layout never jumps.
+    m_pLabelStatus = new QLabel(this);
+    m_pLabelStatus->setObjectName(QStringLiteral("labelStatus"));
+    m_pLabelStatus->setAlignment(Qt::AlignCenter);
+    m_pLabelStatus->setWordWrap(true);
+    m_pLabelStatus->setStyleSheet(QStringLiteral("QLabel { color: #c42b1c; font-weight: bold; }"));
+
+    QVBoxLayout *pResultLayout = qobject_cast<QVBoxLayout *>(ui->groupBoxResult->layout());
+    if (pResultLayout) {
+        pResultLayout->insertWidget(1, m_pLabelStatus);
+    }
+
     QFont opcodeFont = ui->toolButtonOpcode->font();
     opcodeFont.setPointSizeF(opcodeFont.pointSizeF() * 1.5);
     opcodeFont.setBold(true);
@@ -72,6 +87,7 @@ void GuiMainWindow::initializeUi()
 
     m_options.setName(X_OPTIONSFILE);
     m_options.addID(XOptions::ID_VIEW_STYLE, QStringLiteral("Fusion"));
+    m_options.addID(XOptions::ID_VIEW_LANG, QStringLiteral("System"));
     m_options.addID(XOptions::ID_VIEW_STAYONTOP, false);
     m_options.load();
 
@@ -131,6 +147,84 @@ QList<XLineEditHEX *> GuiMainWindow::resultEditors() const
     return {ui->lineEditResult1, ui->lineEditResult2, ui->lineEditResult3, ui->lineEditResult4};
 }
 
+QList<XLineEditHEX *> GuiMainWindow::operandEditors() const
+{
+    return {ui->lineEditOperand1, ui->lineEditOperand2, ui->lineEditOperand3, ui->lineEditOperand4};
+}
+
+XLineEditHEX::_MODE GuiMainWindow::currentDisplayMode() const
+{
+    const XLineEditHEX::_MODE mode = static_cast<XLineEditHEX::_MODE>(ui->comboBoxMode->currentData().toInt());
+
+    // Before the combo box is populated there is no selection to read.
+    return (mode == XLineEditHEX::_MODE_UNKNOWN) ? XLineEditHEX::_MODE_HEX : mode;
+}
+
+// Width of the register a field stands for, taken from the mask the opcode table
+// declares for it: CL -> 8, CX -> 16, EAX -> 32, RAX -> 64.
+qint32 GuiMainWindow::registerBits(quint64 nMaxValue)
+{
+    if (nMaxValue <= 0xFFull) {
+        return 8;
+    } else if (nMaxValue <= 0xFFFFull) {
+        return 16;
+    } else if (nMaxValue <= 0xFFFFFFFFull) {
+        return 32;
+    }
+
+    return 64;
+}
+
+XLineEditValidator::MODE GuiMainWindow::validatorModeFor(XLineEditHEX::_MODE displayMode, qint32 nBits)
+{
+    if (displayMode == XLineEditHEX::_MODE_DEC) {
+        if (nBits == 8) return XLineEditValidator::MODE_DEC_8;
+        if (nBits == 16) return XLineEditValidator::MODE_DEC_16;
+        if (nBits == 32) return XLineEditValidator::MODE_DEC_32;
+        return XLineEditValidator::MODE_DEC_64;
+    } else if (displayMode == XLineEditHEX::_MODE_SIGN_DEC) {
+        if (nBits == 8) return XLineEditValidator::MODE_SIGN_DEC_8;
+        if (nBits == 16) return XLineEditValidator::MODE_SIGN_DEC_16;
+        if (nBits == 32) return XLineEditValidator::MODE_SIGN_DEC_32;
+        return XLineEditValidator::MODE_SIGN_DEC_64;
+    } else if (displayMode == XLineEditHEX::_MODE_BIN) {
+        if (nBits == 8) return XLineEditValidator::MODE_BIN_8;
+        if (nBits == 16) return XLineEditValidator::MODE_BIN_16;
+        if (nBits == 32) return XLineEditValidator::MODE_BIN_32;
+        return XLineEditValidator::MODE_BIN_64;
+    }
+
+    if (nBits == 8) return XLineEditValidator::MODE_HEX_8;
+    if (nBits == 16) return XLineEditValidator::MODE_HEX_16;
+    if (nBits == 32) return XLineEditValidator::MODE_HEX_32;
+    return XLineEditValidator::MODE_HEX_64;
+}
+
+// XLineEditHEX derives its digit count from the validator mode it is already in,
+// and nothing else in the app ever promotes an operand field past the 32-bit
+// default it is constructed with. Pin both the width and the accepted range here,
+// from the register the opcode table names for this slot.
+void GuiMainWindow::applyEditorWidth(XLineEditHEX *pEditor, quint64 nMaxValue)
+{
+    // A hidden slot still needs a usable validator if it is shown again later.
+    const quint64 nEffectiveMax = nMaxValue ? nMaxValue : static_cast<quint64>(~XVALUE(0));
+
+    pEditor->setMaxValue(nEffectiveMax);
+    pEditor->setValidatorMode(validatorModeFor(currentDisplayMode(), registerBits(nEffectiveMax)));
+}
+
+// Render a value at the width the field is pinned to, instead of letting the
+// magnitude of the value pick the width.
+void GuiMainWindow::setEditorValue(XLineEditHEX *pEditor, XVALUE nValue)
+{
+    switch (XLineEditValidator::getNumberOfBits(pEditor->getValidatorMode())) {
+        case 8: pEditor->setValue_uint8(static_cast<quint8>(nValue), XLineEditHEX::_MODE_UNKNOWN); break;
+        case 16: pEditor->setValue_uint16(static_cast<quint16>(nValue), XLineEditHEX::_MODE_UNKNOWN); break;
+        case 32: pEditor->setValue_uint32(static_cast<quint32>(nValue), XLineEditHEX::_MODE_UNKNOWN); break;
+        default: pEditor->setValue_uint64(static_cast<quint64>(nValue), XLineEditHEX::_MODE_UNKNOWN); break;
+    }
+}
+
 void GuiMainWindow::clearResultEditors()
 {
     const QList<XLineEditHEX *> editors = resultEditors();
@@ -187,7 +281,7 @@ void GuiMainWindow::applyResultData(const ASM_DEF::OPCODE_RECORD &record, RECDAT
 
         const QList<XLineEditHEX *> editors = resultEditors();
         for (int index = 0; index < editors.count(); ++index) {
-            editors.at(index)->setValue32_64(resultValues.at(index), XLineEditHEX::_MODE_UNKNOWN);
+            setEditorValue(editors.at(index), resultValues.at(index));
         }
     } else {
         clearResultEditors();
@@ -211,16 +305,19 @@ void GuiMainWindow::updateFlagButtons(const XVALUE flags)
         {ui->pushButtonFlagZF, ASM_DEF::ZF},
     }};
 
-    for (const FlagButtonBinding &binding : bindings) {
-        binding.button->blockSignals(true);
+    // Restore whatever each button was blocking before, not an assumed false.
+    std::array<bool, 6> wasBlocked = {};
+
+    for (qint32 i = 0; i < 6; ++i) {
+        wasBlocked[i] = bindings.at(i).button->blockSignals(true);
     }
 
     for (const FlagButtonBinding &binding : bindings) {
         binding.button->setChecked(flags & binding.mask);
     }
 
-    for (const FlagButtonBinding &binding : bindings) {
-        binding.button->blockSignals(false);
+    for (qint32 i = 0; i < 6; ++i) {
+        bindings.at(i).button->blockSignals(wasBlocked[i]);
     }
 }
 
@@ -269,26 +366,6 @@ void GuiMainWindow::updateJumpLabels(const bool carry,
     ui->labelJNO->setEnabled(!overflow);
 }
 
-void GuiMainWindow::setEditorsMode(const XLineEditHEX::_MODE mode)
-{
-    const QList<XLineEditHEX *> editors = {
-        ui->lineEditOperand1,
-        ui->lineEditOperand2,
-        ui->lineEditOperand3,
-        ui->lineEditOperand4,
-        ui->lineEditResult1,
-        ui->lineEditResult2,
-        ui->lineEditResult3,
-        ui->lineEditResult4,
-        ui->lineEditFlagsBefore,
-        ui->lineEditFlagsAfter,
-    };
-
-    for (XLineEditHEX *editor : editors) {
-        editor->setMode(mode);
-    }
-}
-
 void GuiMainWindow::calc()
 {
     const ASM_DEF::OPCODE_RECORD record = currentOpcodeRecord();
@@ -300,9 +377,10 @@ void GuiMainWindow::calc()
     }
 
     applyResultData(record, &data, success);
+    setStatus(success ? QString() : unavailableReason(record, data));
 
     const XVALUE visibleFlags = data.FLAG[1] & (~static_cast<XVALUE>(kHiddenFlagsMask));
-    ui->lineEditFlagsAfter->setValue32_64(visibleFlags, XLineEditHEX::_MODE_UNKNOWN);
+    setEditorValue(ui->lineEditFlagsAfter, visibleFlags);
 
     updateFlagLabels(visibleFlags);
     updateJumpLabels(visibleFlags & ASM_DEF::CF,
@@ -341,9 +419,13 @@ void GuiMainWindow::on_comboBoxOpcode_currentIndexChanged(int nIndex)
 
 void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, const ASM_DEF::VALUE_RECORD vr)
 {
+    // Title the box even when hiding it: an unused slot keeps its Designer
+    // placeholder ("Operand3") otherwise, which then shows up in screen readers
+    // and in the accessibility tree.
+    pGroupBox->setTitle(QString::fromLatin1(vr.pszRegName));
+
     if (vr.nMaxValue) {
         pGroupBox->show();
-        pGroupBox->setTitle(vr.pszRegName);
     } else {
         pGroupBox->hide();
     }
@@ -352,14 +434,21 @@ void GuiMainWindow::adjustValue(QGroupBox *pGroupBox, const ASM_DEF::VALUE_RECOR
 void GuiMainWindow::adjustMode()
 {
     const ASM_DEF::OPCODE_RECORD currentRecord = currentOpcodeRecord();
+
+    // EFLAGS is 32 bits wide whatever the register width is.
+    applyEditorWidth(ui->lineEditFlagsBefore, ASM_DEF::LIM32);
+    applyEditorWidth(ui->lineEditFlagsAfter, ASM_DEF::LIM32);
+
     if (!currentRecord.asm_func) {
         return;
     }
 
-    ui->lineEditOperand1->setMaxValue(currentRecord.vrOperand[0].nMaxValue);
-    ui->lineEditOperand2->setMaxValue(currentRecord.vrOperand[1].nMaxValue);
-    ui->lineEditOperand3->setMaxValue(currentRecord.vrOperand[2].nMaxValue);
-    ui->lineEditOperand4->setMaxValue(currentRecord.vrOperand[3].nMaxValue);
+    const QList<XLineEditHEX *> operands = operandEditors();
+    const QList<XLineEditHEX *> results = resultEditors();
+    for (qint32 i = 0; i < 4; ++i) {
+        applyEditorWidth(operands.at(i), currentRecord.vrOperand[i].nMaxValue);
+        applyEditorWidth(results.at(i), currentRecord.vrResult[i].nMaxValue);
+    }
 
     ui->toolButtonOpcode->setText(currentRecord.pszExample);
 
@@ -443,8 +532,6 @@ void GuiMainWindow::on_lineEditFlagsBefore_textChanged(const QString &arg1)
 void GuiMainWindow::on_comboBoxMode_currentIndexChanged(int index)
 {
     if (index != -1) {
-        const XLineEditHEX::_MODE mode = static_cast<XLineEditHEX::_MODE>(ui->comboBoxMode->currentData().toInt());
-        setEditorsMode(mode);
         adjustMode();
         calc();
     }
@@ -460,7 +547,7 @@ void GuiMainWindow::adjustFlags(XVALUE nFlag, bool bState)
         nValue &= (~nFlag);
     }
 
-    ui->lineEditFlagsBefore->setValue32_64(nValue, XLineEditHEX::_MODE_UNKNOWN);
+    setEditorValue(ui->lineEditFlagsBefore, nValue);
 }
 
 void GuiMainWindow::on_comboBoxOpcodeGroup_currentIndexChanged(int index)
@@ -490,6 +577,38 @@ void GuiMainWindow::on_pushButtonOptions_clicked()
     dialogOptions.exec();
 
     adjustWindow();
+}
+
+void GuiMainWindow::setStatus(const QString &sText)
+{
+    if (m_pLabelStatus) {
+        m_pLabelStatus->setText(sText);
+    }
+}
+
+// Why calc() produced nothing. Empty when the opcode ran.
+QString GuiMainWindow::unavailableReason(const ASM_DEF::OPCODE_RECORD &record, const RECDATA &data) const
+{
+    if (!record.asm_func) {
+        return QString();
+    }
+
+    if (!CpuFeatures::isSupported(record.feature)) {
+        return tr("#UD: this CPU does not implement %1").arg(QString::fromLatin1(record.pszName).toUpper());
+    }
+
+    if ((record.opcode == ASM_DEF::OP_DIV) || (record.opcode == ASM_DEF::OP_IDIV)) {
+        const DivisionCheck::ERROR_CODE errorCode =
+            DivisionCheck::divisionError(record.opcode == ASM_DEF::OP_IDIV, data.OPERAND[0], data.OPERAND[1], data.OPERAND[2]);
+
+        if (errorCode == DivisionCheck::ERROR_DIVISOR_ZERO) {
+            return tr("#DE: divide error - the divisor is zero");
+        } else if (errorCode == DivisionCheck::ERROR_QUOTIENT_OVERFLOW) {
+            return tr("#DE: divide error - the quotient does not fit into %1").arg(QString::fromLatin1(record.vrResult[0].pszRegName));
+        }
+    }
+
+    return QString();
 }
 
 QString GuiMainWindow::buildReport() const
@@ -530,6 +649,10 @@ QString GuiMainWindow::buildReport() const
 
     sReport += QStringLiteral("%1: %2\n").arg(tr("Flags before"), ui->lineEditFlagsBefore->text());
     sReport += QStringLiteral("%1: %2\n").arg(tr("Flags after"), ui->lineEditFlagsAfter->text());
+
+    if (m_pLabelStatus && !m_pLabelStatus->text().isEmpty()) {
+        sReport += m_pLabelStatus->text() + QLatin1Char('\n');
+    }
 
     return sReport;
 }

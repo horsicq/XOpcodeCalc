@@ -68,27 +68,27 @@ if(EXISTS "${XOPCODECALC_TRANSLATION_HELPER}")
     include("${XOPCODECALC_TRANSLATION_HELPER}")
 
     set(XOPCODECALC_TS_FILES
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ar_AR.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_bn_BN.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_de_DE.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_es_ES.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_fa_FA.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_fr_FR.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_he_IL.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_id_ID.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_it_IT.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ja_JP.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ko_KR.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pl_PL.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ar.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_bn.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_de.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_es.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_fa.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_fr.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_he.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_id.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_it.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ja.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ko.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pl.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pt_BR.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_pt_PT.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ru_RU.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_sv_SE.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_tr_TR.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_uk_UA.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_vi_VN.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_sq_AL.ts"
-        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh_CN.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_ru.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_sv.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_tr.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_uk.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_vi.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_sq.ts"
+        "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh.ts"
         "${CMAKE_CURRENT_LIST_DIR}/../translations/xocalc_zh_TW.ts"
     )
 
@@ -98,8 +98,19 @@ if(EXISTS "${XOPCODECALC_TRANSLATION_HELPER}")
         SOURCE_DIRS "${CMAKE_CURRENT_LIST_DIR}"
         TS_FILES ${XOPCODECALC_TS_FILES}
         INSTALL_DESTINATION lang
-        WINDOWS_APPDATA_SUBDIR "${X_PROJECTNAME}"
+        # QStandardPaths::AppDataLocation is %APPDATA%/<organization>/<application>,
+        # which is what XOptions::convertPathName("$data/...") probes. The project
+        # name is neither, so the copy used to land in %APPDATA%/XOpcodeCalc/lang
+        # where nothing would ever look for it.
+        WINDOWS_APPDATA_SUBDIR "${X_COMPANYNAME}/${X_ORIGINAL_FILENAME}"
     )
+endif()
+
+# Debian requires a machine-readable copyright file; without it lintian reports
+# E: no-copyright-file and the package cannot enter an archive. deploy_init.cmake
+# installs this when X_DEBIAN_COPYRIGHT_FILE names an existing file.
+if(UNIX AND NOT APPLE)
+    set(X_DEBIAN_COPYRIGHT_FILE "${CMAKE_CURRENT_LIST_DIR}/../packaging/debian/copyright")
 endif()
 
 option(XOPCODECALC_BUILD_TESTS "Build the opcode test harness" ON)
